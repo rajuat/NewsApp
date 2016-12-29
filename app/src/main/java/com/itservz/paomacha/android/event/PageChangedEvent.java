@@ -5,12 +5,6 @@ package com.itservz.paomacha.android.event;
  * page to the left page.
  */
 public class PageChangedEvent {
-
-	// -----------------------------------------------------------------------
-	//
-	// Constructors
-	//
-	// -----------------------------------------------------------------------
 	/**
 	 * @param hasVerticalNeighbors
 	 *            true if the current selected page has vertical (below and/or above) neighbor pages, false - if not.
@@ -19,18 +13,8 @@ public class PageChangedEvent {
 		mHasVerticalNeighbors = hasVerticalNeighbors;
 	}
 
-	// -----------------------------------------------------------------------
-	//
-	// Fields
-	//
-	// -----------------------------------------------------------------------
 	private boolean mHasVerticalNeighbors = true;
 
-	// -----------------------------------------------------------------------
-	//
-	// Methods
-	//
-	// -----------------------------------------------------------------------
 	/**
 	 * @return true if the page has vertical (below and/or above) neighbor pages, false - if not.
 	 */

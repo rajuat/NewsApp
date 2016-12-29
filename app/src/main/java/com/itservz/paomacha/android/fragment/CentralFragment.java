@@ -14,11 +14,6 @@ import com.itservz.paomacha.android.R;
  */
 public class CentralFragment extends Fragment {
 
-	// -----------------------------------------------------------------------
-	//
-	// Methods
-	//
-	// -----------------------------------------------------------------------
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View fragmentView = inflater.inflate(R.layout.fragment_central, container, false);

@@ -9,22 +9,12 @@ import com.squareup.otto.Bus;
 
 public class EventBus {
 
-	// -----------------------------------------------------------------------
-	//
-	// Statics
-	//
-	// -----------------------------------------------------------------------
 	private static final Bus sBus = new Bus();
 
 	public static Bus getInstance() {
 		return sBus;
 	}
 
-	// -----------------------------------------------------------------------
-	//
-	// Constructors
-	//
-	// -----------------------------------------------------------------------
 	private EventBus() {
 		// do nothing here, EventBus is just a keeper for real a Bus instance
 	}

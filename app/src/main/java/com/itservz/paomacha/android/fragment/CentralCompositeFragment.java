@@ -21,12 +21,6 @@ import java.util.ArrayList;
  * bottom, left, right).
  */
 public class CentralCompositeFragment extends Fragment {
-
-	// -----------------------------------------------------------------------
-	//
-	// Fields
-	//
-	// -----------------------------------------------------------------------
 	private ViewPager mHorizontalPager;
 	private int mCentralPageIndex = 0;
 	private OnPageChangeListener mPagerChangeListener = new OnPageChangeListener() {
@@ -45,11 +39,6 @@ public class CentralCompositeFragment extends Fragment {
 		}
 	};
 
-	// -----------------------------------------------------------------------
-	//
-	// Methods
-	//
-	// -----------------------------------------------------------------------
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View fragmentView = inflater.inflate(R.layout.fragment_composite_central, container, false);

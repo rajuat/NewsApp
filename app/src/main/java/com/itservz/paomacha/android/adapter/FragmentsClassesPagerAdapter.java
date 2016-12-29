@@ -14,11 +14,6 @@ import android.support.v4.view.ViewPager;
  */
 public class FragmentsClassesPagerAdapter extends FragmentPagerAdapter {
 
-	// -----------------------------------------------------------------------
-	//
-	// Constructors
-	//
-	// -----------------------------------------------------------------------
 	public FragmentsClassesPagerAdapter(FragmentManager fragmentManager, Context context,
 			List<Class<? extends Fragment>> pages) {
 		super(fragmentManager);
@@ -26,22 +21,12 @@ public class FragmentsClassesPagerAdapter extends FragmentPagerAdapter {
 		mContext = context;
 	}
 
-	// -----------------------------------------------------------------------
-	//
-	// Fields
-	//
-	// -----------------------------------------------------------------------
 	private List<Class<? extends Fragment>> mPagesClasses;
 	private Context mContext;
 
-	// -----------------------------------------------------------------------
-	//
-	// Methods
-	//
-	// -----------------------------------------------------------------------
 	@Override
-	public Fragment getItem(int posiiton) {
-		return Fragment.instantiate(mContext, mPagesClasses.get(posiiton).getName());
+	public Fragment getItem(int position) {
+		return Fragment.instantiate(mContext, mPagesClasses.get(position).getName());
 	}
 
 	@Override

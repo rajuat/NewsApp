@@ -1,47 +1,46 @@
 package com.itservz.paomacha.android;
 import android.annotation.TargetApi;
+
+
 import android.os.Build;
 import android.os.Bundle;
+
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+
+import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
+import android.support.v4.app.FragmentManager;
 
 import com.itservz.paomacha.android.event.EventBus;
 import com.itservz.paomacha.android.event.PageChangedEvent;
+import com.itservz.paomacha.android.fragment.CentralCompositeFragment;
 import com.itservz.paomacha.android.view.VerticalPager;
 import com.squareup.otto.Subscribe;
 
-/**
- * Manages start screen of the application.
- */
 public class MainActivity extends FragmentActivity {
 
-    // -----------------------------------------------------------------------
-    //
-    // Statics
-    //
-    // -----------------------------------------------------------------------
     /**
      * Start page index. 0 - top page, 1 - central page, 2 - bottom page.
      */
     private static final int CENTRAL_PAGE_INDEX = 1;
-
-    // -----------------------------------------------------------------------
-    //
-    // Fields
-    //
-    // -----------------------------------------------------------------------
     private VerticalPager mVerticalPager;
 
-    // -----------------------------------------------------------------------
-    //
-    // Methods
-    //
-    // -----------------------------------------------------------------------
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.add(R.id.activity_main_vertical_pager, new CentralCompositeFragment());
+        fragmentTransaction.add(R.id.activity_main_vertical_pager, new CentralCompositeFragment());
+        fragmentTransaction.add(R.id.activity_main_vertical_pager, new CentralCompositeFragment());
+        fragmentTransaction.add(R.id.activity_main_vertical_pager, new CentralCompositeFragment());
+        fragmentTransaction.add(R.id.activity_main_vertical_pager, new CentralCompositeFragment());
+        fragmentTransaction.commit();
+
         findViews();
     }
 

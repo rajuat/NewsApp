@@ -13,11 +13,6 @@ import com.itservz.paomacha.android.R;
  */
 public class LeftFragment extends Fragment {
 
-	// -----------------------------------------------------------------------
-	//
-	// Methods
-	//
-	// -----------------------------------------------------------------------
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View fragmentView = inflater.inflate(R.layout.fragment_left, container, false);

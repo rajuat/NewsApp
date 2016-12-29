@@ -22,29 +22,14 @@ import android.widget.ScrollView;
  */
 public class SmartViewPager extends ViewPager {
 
-	// -----------------------------------------------------------------------
-	//
-	// Constructor
-	//
-	// -----------------------------------------------------------------------
 	public SmartViewPager(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		mGestureDetector = new GestureDetector(context, new XScrollDetector());
 	}
 
-	// -----------------------------------------------------------------------
-	//
-	// Fields
-	//
-	// -----------------------------------------------------------------------
 	private GestureDetector mGestureDetector;
 	private boolean mIsLockOnHorizontalAxis = false;
 
-	// -----------------------------------------------------------------------
-	//
-	// Methods
-	//
-	// -----------------------------------------------------------------------
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
 		// decide if horizontal axis is locked already or we need to check the scrolling direction
@@ -59,18 +44,7 @@ public class SmartViewPager extends ViewPager {
 		return super.onTouchEvent(event);
 	}
 
-	// -----------------------------------------------------------------------
-	//
-	// Inner Classes
-	//
-	// -----------------------------------------------------------------------
 	private class XScrollDetector extends SimpleOnGestureListener {
-
-		// -----------------------------------------------------------------------
-		//
-		// Methods
-		//
-		// -----------------------------------------------------------------------
 		/**
 		 * @return true - if we're scrolling in X direction, false - in Y direction.
 		 */
