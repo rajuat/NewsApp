@@ -1,17 +1,16 @@
 package com.itservz.paomacha.android;
+
 import android.annotation.TargetApi;
-
-
 import android.os.Build;
 import android.os.Bundle;
-
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
-import android.support.v4.app.FragmentManager;
+import android.view.animation.DecelerateInterpolator;
 
 import com.itservz.paomacha.android.event.EventBus;
 import com.itservz.paomacha.android.event.PageChangedEvent;
@@ -19,7 +18,7 @@ import com.itservz.paomacha.android.fragment.CentralCompositeFragment;
 import com.itservz.paomacha.android.view.VerticalPager;
 import com.squareup.otto.Subscribe;
 
-public class MainActivity extends FragmentActivity {
+public class MainActivity extends AppCompatActivity {
 
     /**
      * Start page index. 0 - top page, 1 - central page, 2 - bottom page.
@@ -31,6 +30,21 @@ public class MainActivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbarTop);
+        setSupportActionBar(toolbar);
+        toolbar.setTitle(getTitle());
+        toolbar.animate()
+                .translationY(0)
+                .alpha(1).setDuration(1000)
+                .setInterpolator(new DecelerateInterpolator());
+        //toolbar.animate().translationY(-toolbar.getBottom()).setInterpolator(new AccelerateInterpolator()).start();
+        // Show the Up button in the action bar.
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            //actionBar.setDisplayShowHomeEnabled(true);
+        }
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
