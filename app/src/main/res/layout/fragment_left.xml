@@ -3,5 +3,5 @@
     style="@style/PageTitle"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/blue"
+    android:background="@color/md_blue_50"
     android:text="@string/left" />
