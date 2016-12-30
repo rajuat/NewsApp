@@ -26,7 +26,7 @@
     <com.itservz.paomacha.android.view.VerticalPager xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/activity_main_vertical_pager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"></com.itservz.paomacha.android.view.VerticalPager>
+        android:layout_height="match_parent"/>
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbarBottom"
