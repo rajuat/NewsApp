@@ -1,159 +1,113 @@
 package com.itservz.paomacha.android;
 
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
+import android.annotation.TargetApi;
+import android.os.Build;
+import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.ViewPager;
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
+import android.view.animation.DecelerateInterpolator;
 
-import android.widget.TextView;
+import com.itservz.paomacha.android.event.EventBus;
+import com.itservz.paomacha.android.event.PageChangedEvent;
+import com.itservz.paomacha.android.fragment.CentralCompositeFragment;
+import com.itservz.paomacha.android.view.VerticalPager;
+import com.squareup.otto.Subscribe;
 
 public class PaoActivity extends AppCompatActivity {
 
+    static final String TAG = "PaoActivity";
     /**
-     * The {@link android.support.v4.view.PagerAdapter} that will provide
-     * fragments for each of the sections. We use a
-     * {@link FragmentPagerAdapter} derivative, which will keep every
-     * loaded fragment in memory. If this becomes too memory intensive, it
-     * may be best to switch to a
-     * {@link android.support.v4.app.FragmentStatePagerAdapter}.
+     * Start page index. 0 - top page, 1 - central page, 2 - bottom page.
      */
-    private SectionsPagerAdapter mSectionsPagerAdapter;
-
-    /**
-     * The {@link ViewPager} that will host the section contents.
-     */
-    private ViewPager mViewPager;
+    private static final int CENTRAL_PAGE_INDEX = 1;
+    public boolean FULLSCREEN;
+    private VerticalPager mVerticalPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pao);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbarTop);
         setSupportActionBar(toolbar);
-        // Create the adapter that will return a fragment for each of the three
-        // primary sections of the activity.
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+        toolbar.setTitle(getTitle());
+        toolbar.animate()
+                .translationY(0)
+                .alpha(1).setDuration(1000)
+                .setInterpolator(new DecelerateInterpolator());
+        //toolbar.animate().translationY(-toolbar.getBottom()).setInterpolator(new AccelerateInterpolator()).start();
+        // Show the Up button in the action bar.
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            //actionBar.setDisplayShowHomeEnabled(true);
+        }
 
-        // Set up the ViewPager with the sections adapter.
-        mViewPager = (ViewPager) findViewById(R.id.container);
-        mViewPager.setAdapter(mSectionsPagerAdapter);
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.add(R.id.activity_main_vertical_pager, new CentralCompositeFragment());
+        fragmentTransaction.add(R.id.activity_main_vertical_pager, new CentralCompositeFragment());
+        fragmentTransaction.add(R.id.activity_main_vertical_pager, new CentralCompositeFragment());
+        fragmentTransaction.add(R.id.activity_main_vertical_pager, new CentralCompositeFragment());
+        fragmentTransaction.add(R.id.activity_main_vertical_pager, new CentralCompositeFragment());
+        fragmentTransaction.commit();
 
+        findViews();
+    }
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+    private void findViews() {
+        mVerticalPager = (VerticalPager) findViewById(R.id.activity_main_vertical_pager);
+        initViews();
+    }
+
+    private void initViews() {
+        snapPageWhenLayoutIsReady(mVerticalPager, CENTRAL_PAGE_INDEX);
+    }
+
+    private void snapPageWhenLayoutIsReady(final View pageView, final int page) {
+        /*
+		 * VerticalPager is not fully initialized at the moment, so we want to snap to the central page only when it
+		 * layout and measure all its pages.
+		 */
+        pageView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @SuppressWarnings("deprecation")
             @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+            public void onGlobalLayout() {
+                mVerticalPager.snapToPage(page, VerticalPager.PAGE_SNAP_DURATION_INSTANT);
+
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN)
+                    // recommended removeOnGlobalLayoutListener method is available since API 16 only
+                    pageView.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+                else
+                    removeGlobalOnLayoutListenerForJellyBean(pageView);
+            }
+
+            @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+            private void removeGlobalOnLayoutListenerForJellyBean(final View pageView) {
+                pageView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
             }
         });
-
-    }
-
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_pao, menu);
-        return true;
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
+    protected void onResume() {
+        super.onResume();
+        EventBus.getInstance().register(this);
     }
 
-    /**
-     * A placeholder fragment containing a simple view.
-     */
-    public static class PlaceholderFragment extends Fragment {
-        /**
-         * The fragment argument representing the section number for this
-         * fragment.
-         */
-        private static final String ARG_SECTION_NUMBER = "section_number";
-
-        public PlaceholderFragment() {
-        }
-
-        /**
-         * Returns a new instance of this fragment for the given section
-         * number.
-         */
-        public static PlaceholderFragment newInstance(int sectionNumber) {
-            PlaceholderFragment fragment = new PlaceholderFragment();
-            Bundle args = new Bundle();
-            args.putInt(ARG_SECTION_NUMBER, sectionNumber);
-            fragment.setArguments(args);
-            return fragment;
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_pao, container, false);
-            TextView textView = (TextView) rootView.findViewById(R.id.section_label);
-            textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
-            return rootView;
-        }
+    @Override
+    protected void onPause() {
+        EventBus.getInstance().unregister(this);
+        super.onPause();
     }
 
-    /**
-     * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
-     * one of the sections/tabs/pages.
-     */
-    public class SectionsPagerAdapter extends FragmentPagerAdapter {
-
-        public SectionsPagerAdapter(FragmentManager fm) {
-            super(fm);
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            // getItem is called to instantiate the fragment for the given page.
-            // Return a PlaceholderFragment (defined as a static inner class below).
-            return PlaceholderFragment.newInstance(position + 1);
-        }
-
-        @Override
-        public int getCount() {
-            // Show 3 total pages.
-            return 3;
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            switch (position) {
-                case 0:
-                    return "SECTION 1";
-                case 1:
-                    return "SECTION 2";
-                case 2:
-                    return "SECTION 3";
-            }
-            return null;
-        }
+    @Subscribe
+    public void onLocationChanged(PageChangedEvent event) {
+        mVerticalPager.setPagingEnabled(event.hasVerticalNeighbors());
     }
 }
