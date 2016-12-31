@@ -1,13 +1,18 @@
 package com.itservz.paomacha.android.fragment;
 
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.itservz.paomacha.android.ActionBarToggler;
+import com.itservz.paomacha.android.PaoActivity;
 import com.itservz.paomacha.android.R;
 import com.itservz.paomacha.android.adapter.FragmentsClassesPagerAdapter;
 import com.itservz.paomacha.android.event.EventBus;
@@ -21,13 +26,29 @@ import java.util.ArrayList;
  * bottom, left, right).
  */
 public class CentralCompositeFragment extends Fragment {
-	private ViewPager mHorizontalPager;
+    static final String TAG = "CentralCompositeFrag";
+    private ViewPager mHorizontalPager;
 	private int mCentralPageIndex = 0;
-	private OnPageChangeListener mPagerChangeListener = new OnPageChangeListener() {
-		@Override
+    private int leftFrag = 0;
+    private int rightFrag = 2;
+    private OnPageChangeListener mPagerChangeListener = new OnPageChangeListener() {
+        PaoActivity paoActivity = (PaoActivity) getActivity();
+
+        @Override
 		public void onPageSelected(int position) {
 			EventBus.getInstance().post(new PageChangedEvent(mCentralPageIndex == position));
-		}
+            if (position == leftFrag) {
+                Log.d(TAG, "hide bars");
+                AppBarLayout appBarLayout = (AppBarLayout) paoActivity.findViewById(R.id.appbar);
+                Toolbar toolbarBottom = (Toolbar) paoActivity.findViewById(R.id.toolbarBottom);
+                ActionBarToggler.hideAppBar(appBarLayout);
+                ActionBarToggler.hideToolBar(toolbarBottom);
+                paoActivity.FULLSCREEN = true;
+            }
+            if (position == rightFrag) {
+                //getActivity().getWindow().requestFeature(Window.FEATURE_PROGRESS);
+            }
+        }
 
 		@Override
 		public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
