@@ -1,4 +1,4 @@
-package com.itservz.paomacha.android;
+package com.itservz.paomacha.android.view;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;

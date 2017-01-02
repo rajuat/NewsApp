@@ -5,19 +5,17 @@ import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 
-import com.itservz.paomacha.android.ActionBarToggler;
 import com.itservz.paomacha.android.PaoActivity;
 import com.itservz.paomacha.android.R;
 import com.itservz.paomacha.android.adapter.FragmentsClassesPagerAdapter;
 import com.itservz.paomacha.android.event.EventBus;
 import com.itservz.paomacha.android.event.PageChangedEvent;
+import com.itservz.paomacha.android.view.ActionBarToggler;
 
 import java.util.ArrayList;
 
