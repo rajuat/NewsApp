@@ -5,12 +5,11 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.ViewTreeObserver;
-import android.view.animation.DecelerateInterpolator;
+import android.view.Window;
 
 import com.itservz.paomacha.android.event.EventBus;
 import com.itservz.paomacha.android.event.PageChangedEvent;
@@ -31,6 +30,8 @@ public class PaoActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().requestFeature(Window.FEATURE_PROGRESS);
+
         setContentView(R.layout.activity_pao);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbarTop);

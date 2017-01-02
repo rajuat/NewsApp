@@ -7,6 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
+import android.widget.Toast;
 
 import com.itservz.paomacha.android.R;
 
@@ -27,6 +29,12 @@ public class RightFragment extends Fragment {
 				getActivity().setProgress(progress * 1000);
 			}
 		});
+		webview.setWebViewClient(new WebViewClient() {
+			public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
+				Toast.makeText(getActivity(), "Oh no! " + description, Toast.LENGTH_SHORT).show();
+			}
+		});
+
 		webview.loadUrl("http://www.itservz.com");
 		return fragmentView;
 	}
