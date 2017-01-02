@@ -1,6 +1,7 @@
 package com.itservz.paomacha.android;
 
 import android.annotation.TargetApi;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
@@ -10,6 +11,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.Window;
+import android.widget.ImageButton;
 
 import com.itservz.paomacha.android.event.EventBus;
 import com.itservz.paomacha.android.event.PageChangedEvent;
@@ -49,6 +51,15 @@ public class PaoActivity extends AppCompatActivity {
         fragmentTransaction.commit();
 
         findViews();
+
+        ImageButton post = (ImageButton) findViewById(R.id.pao_post);
+        post.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(PaoActivity.this, PostActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     private void findViews() {
