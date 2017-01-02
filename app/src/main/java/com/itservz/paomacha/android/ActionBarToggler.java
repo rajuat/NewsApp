@@ -17,15 +17,15 @@ public class ActionBarToggler {
 
     public static void hideAppBar(final View appBar) {
         appBar.animate().translationY(-appBar.getHeight()).setInterpolator(new LinearInterpolator()).setDuration(500);
-
+        //toolbar.animate().translationY(-toolbar.getBottom()).setInterpolator(new AccelerateInterpolator()).start();
     }
 
     public static void hideToolBar(final View appBar) {
         appBar.animate().translationY(appBar.getHeight()).setInterpolator(new LinearInterpolator()).setDuration(500);
-
     }
 
     public static void showAppBar(final View appBar) {
+        //toolbar.animate().translationY(0).alpha(1).setDuration(1000).setInterpolator(new DecelerateInterpolator());
         appBar.animate().translationY(0).setInterpolator(new LinearInterpolator()).setDuration(500).setListener(new AnimatorListenerAdapter() {
             @TargetApi(Build.VERSION_CODES.LOLLIPOP)
             @Override

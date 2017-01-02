@@ -36,17 +36,7 @@ public class PaoActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbarTop);
         setSupportActionBar(toolbar);
         toolbar.setTitle(getTitle());
-        toolbar.animate()
-                .translationY(0)
-                .alpha(1).setDuration(1000)
-                .setInterpolator(new DecelerateInterpolator());
-        //toolbar.animate().translationY(-toolbar.getBottom()).setInterpolator(new AccelerateInterpolator()).start();
-        // Show the Up button in the action bar.
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-            //actionBar.setDisplayShowHomeEnabled(true);
-        }
+        toolbar.setTitleTextColor(getResources().getColor(R.color.primary_dark));
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -62,10 +52,6 @@ public class PaoActivity extends AppCompatActivity {
 
     private void findViews() {
         mVerticalPager = (VerticalPager) findViewById(R.id.activity_main_vertical_pager);
-        initViews();
-    }
-
-    private void initViews() {
         snapPageWhenLayoutIsReady(mVerticalPager, CENTRAL_PAGE_INDEX);
     }
 

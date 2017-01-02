@@ -29,7 +29,7 @@ public class CentralFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 AppBarLayout appBarLayout = (AppBarLayout) paoActivity.findViewById(R.id.appbar);
-                Toolbar toolbarBottom = (Toolbar) paoActivity.findViewById(R.id.toolbarBottom);
+                View toolbarBottom = paoActivity.findViewById(R.id.toolbarBottom);
                 if (paoActivity.FULLSCREEN) {
                     Log.d(TAG, "fragmentView.setOnClickListener show");
                     ActionBarToggler.showAppBar(appBarLayout);
@@ -41,8 +41,7 @@ public class CentralFragment extends Fragment {
                     ActionBarToggler.hideToolBar(toolbarBottom);
                     paoActivity.FULLSCREEN = true;
                 }
-                //toolbar.animate().translationY(0).alpha(1).setDuration(1000).setInterpolator(new DecelerateInterpolator());
-                //toolbar.animate().translationY(-toolbar.getBottom()).setInterpolator(new AccelerateInterpolator()).start();
+
             }
         });
         return fragmentView;

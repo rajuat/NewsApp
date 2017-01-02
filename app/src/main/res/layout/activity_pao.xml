@@ -19,7 +19,6 @@
             android:id="@+id/toolbarTop"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
             app:layout_scrollFlags="scroll|enterAlways"
             app:popupTheme="@style/AppTheme.PopupOverlay">
 
@@ -32,73 +31,72 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <android.support.v7.widget.Toolbar
+    <LinearLayout
         android:id="@+id/toolbarBottom"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:layout_gravity="bottom"
-        android:elevation="4dp"
-        app:buttonGravity="bottom"
-        app:popupTheme="@style/AppTheme.PopupOverlay">
+        android:orientation="vertical">
 
-        <LinearLayout
+        <View
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_height="1dp"
+            android:background="@color/divider" />
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/colorDivider" />
+        <android.support.v7.widget.Toolbar
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:layout_gravity="bottom"
+            android:layout_weight="1"
+            app:buttonGravity="bottom"
+            app:popupTheme="@style/AppTheme.PopupOverlay">
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal">
+                android:layout_height="match_parent">
 
-                <TextView
-                    android:id="@+id/books_alert"
+                <ImageButton
+                    android:id="@+id/like"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight=".40"
-                    android:gravity="center"
-                    android:text="Create alert"
-                    android:textColor="@color/colorPrimary" />
+                    android:layout_weight=".25"
+                    android:background="@android:color/background_light"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/ic_thumb_up_black_24dp" />
 
-                <View
-                    android:layout_width="1dp"
-                    android:layout_height="match_parent"
-                    android:layout_margin="10dp"
-                    android:background="@color/colorDivider" />
-
-                <TextView
-                    android:id="@+id/books_sort"
+                <ImageButton
+                    android:id="@+id/share"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight=".30"
-                    android:gravity="center"
-                    android:text="Sort"
-                    android:textColor="@color/colorPrimary" />
+                    android:layout_gravity="center"
+                    android:layout_weight=".25"
+                    android:background="@android:color/background_light"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/ic_share_black_24dp" />
 
-                <View
-                    android:layout_width="1dp"
-                    android:layout_height="match_parent"
-                    android:layout_margin="10dp"
-                    android:background="@color/colorDivider" />
-
-                <TextView
-                    android:id="@+id/books_filter"
+                <ImageButton
+                    android:id="@+id/bookmark"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight=".30"
-                    android:gravity="center"
-                    android:text="Filter"
-                    android:textColor="@color/colorPrimary" />
+                    android:layout_weight=".25"
+                    android:background="@android:color/background_light"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/ic_bookmark_border_black_24dp" />
+
+                <ImageButton
+                    android:id="@+id/pao"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight=".25"
+                    android:background="@android:color/background_light"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/ic_add_circle_black_24dp" />
+
             </LinearLayout>
-        </LinearLayout>
-    </android.support.v7.widget.Toolbar>
+        </android.support.v7.widget.Toolbar>
+    </LinearLayout>
 
-    <android.support.design.widget.FloatingActionButton
+    <!--<android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -107,6 +105,6 @@
         android:layout_marginLeft="@dimen/fab_margin"
         android:layout_marginRight="@dimen/fab_margin"
         android:layout_marginTop="@dimen/fab_margin"
-        app:srcCompat="@android:drawable/ic_dialog_email" />
+        app:srcCompat="@android:drawable/ic_dialog_email" />-->
 
 </android.support.design.widget.CoordinatorLayout>

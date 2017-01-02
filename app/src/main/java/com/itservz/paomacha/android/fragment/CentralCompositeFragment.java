@@ -1,13 +1,18 @@
 package com.itservz.paomacha.android.fragment;
 
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 
+import com.itservz.paomacha.android.ActionBarToggler;
 import com.itservz.paomacha.android.PaoActivity;
 import com.itservz.paomacha.android.R;
 import com.itservz.paomacha.android.adapter.FragmentsClassesPagerAdapter;
@@ -23,41 +28,39 @@ import java.util.ArrayList;
  */
 public class CentralCompositeFragment extends Fragment {
     static final String TAG = "CentralCompositeFrag";
+	private PaoActivity paoActivity;
     private ViewPager mHorizontalPager;
 	private int mCentralPageIndex = 0;
     private int leftFrag = 0;
     private int rightFrag = 2;
     private OnPageChangeListener mPagerChangeListener = new OnPageChangeListener() {
-        PaoActivity paoActivity = (PaoActivity) getActivity();
 
         @Override
 		public void onPageSelected(int position) {
 			EventBus.getInstance().post(new PageChangedEvent(mCentralPageIndex == position));
-            /*if (position == rightFrag || position == leftFrag) {
+            if (position == rightFrag || position == leftFrag) {
                 Log.d(TAG, "hide bars");
                 AppBarLayout appBarLayout = (AppBarLayout) paoActivity.findViewById(R.id.appbar);
-                Toolbar toolbarBottom = (Toolbar) paoActivity.findViewById(R.id.toolbarBottom);
+                View toolbarBottom = paoActivity.findViewById(R.id.toolbarBottom);
                 ActionBarToggler.hideAppBar(appBarLayout);
                 ActionBarToggler.hideToolBar(toolbarBottom);
                 paoActivity.FULLSCREEN = true;
             }
-            if (position == rightFrag) {
-                getActivity().getWindow().requestFeature(Window.FEATURE_PROGRESS);
+            /*if (position == rightFrag) {
+				paoActivity.getWindow().requestFeature(Window.FEATURE_PROGRESS);
             }*/
         }
 
 		@Override
-		public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-		}
+		public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
 
 		@Override
-		public void onPageScrollStateChanged(int state) {
-		}
+		public void onPageScrollStateChanged(int state) {}
 	};
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		paoActivity = (PaoActivity) getActivity();
 		View fragmentView = inflater.inflate(R.layout.fragment_composite_central, container, false);
 		findViews(fragmentView);
 		return fragmentView;
