@@ -20,8 +20,9 @@ public class ActionBarToggler {
         //toolbar.animate().translationY(-toolbar.getBottom()).setInterpolator(new AccelerateInterpolator()).start();
     }
 
-    public static void hideToolBar(final View appBar) {
+    public static void hideBottomBar(final View appBar, final View fab) {
         appBar.animate().translationY(appBar.getHeight()).setInterpolator(new LinearInterpolator()).setDuration(500);
+        fab.animate().translationY(appBar.getHeight()).setInterpolator(new LinearInterpolator()).setDuration(500);
     }
 
     public static void showAppBar(final View appBar) {

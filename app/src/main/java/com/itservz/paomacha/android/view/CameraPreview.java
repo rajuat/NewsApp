@@ -18,6 +18,7 @@ import static com.google.android.gms.internal.zzs.TAG;
  * A basic Camera preview class
  */
 public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback {
+    static final String TAG = "CameraPreview";
     private SurfaceHolder mHolder;
     private Camera mCamera;
 
@@ -25,8 +26,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
         super(context);
         mCamera = camera;
 
-        // Install a SurfaceHolder.Callback so we get notified when the
-        // underlying surface is created and destroyed.
+        // Install a SurfaceHolder.Callback so we get notified when the underlying surface is created and destroyed.
         mHolder = getHolder();
         mHolder.addCallback(this);
         // deprecated setting, but required on Android versions prior to 3.0
@@ -48,8 +48,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
     }
 
     public void surfaceChanged(SurfaceHolder holder, int format, int w, int h) {
-        // If your preview can change or rotate, take care of those events here.
-        // Make sure to stop the preview before resizing or reformatting it.
+        // If your preview can change or rotate, take care of those events here. Make sure to stop the preview before resizing or reformatting it.
 
         if (mHolder.getSurface() == null) {
             // preview surface does not exist
@@ -63,8 +62,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
             // ignore: tried to stop a non-existent preview
         }
 
-        // set preview size and make any resize, rotate or
-        // reformatting changes here
+        // set preview size and make any resize, rotate or reformatting changes here
 
         // start preview with new settings
         try {

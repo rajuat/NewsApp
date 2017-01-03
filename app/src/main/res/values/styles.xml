@@ -23,20 +23,20 @@
     </style>
 
     <style name="title">
-        <item name="android:textSize">14sp</item>
+        <item name="android:textSize">@dimen/text_large</item>
         <item name="android:textColor">@color/primary_text</item>
         <item name="android:textStyle">bold</item>
         <item name="android:padding">16dp</item>
     </style>
 
     <style name="body">
-        <item name="android:textSize">12sp</item>
+        <item name="android:textSize">@dimen/text_medium</item>
         <item name="android:textColor">@color/primary_text</item>
         <item name="android:padding">16dp</item>
     </style>
 
     <style name="footer">
-        <item name="android:textSize">10sp</item>
+        <item name="android:textSize">@dimen/text_small</item>
         <item name="android:textColor">@color/secondary_text</item>
         <item name="android:padding">16dp</item>
     </style>

@@ -29,15 +29,17 @@ public class CentralFragment extends Fragment {
             public void onClick(View view) {
                 AppBarLayout appBarLayout = (AppBarLayout) paoActivity.findViewById(R.id.appbar);
                 View toolbarBottom = paoActivity.findViewById(R.id.toolbarBottom);
+                View fab = paoActivity.findViewById(R.id.fab);
                 if (paoActivity.FULLSCREEN) {
                     Log.d(TAG, "fragmentView.setOnClickListener show");
                     ActionBarToggler.showAppBar(appBarLayout);
                     ActionBarToggler.showAppBar(toolbarBottom);
+                    ActionBarToggler.showAppBar(fab);
                     paoActivity.FULLSCREEN = false;
                 } else {
                     Log.d(TAG, "fragmentView.setOnClickListener hide");
                     ActionBarToggler.hideAppBar(appBarLayout);
-                    ActionBarToggler.hideToolBar(toolbarBottom);
+                    ActionBarToggler.hideBottomBar(toolbarBottom, fab);
                     paoActivity.FULLSCREEN = true;
                 }
 

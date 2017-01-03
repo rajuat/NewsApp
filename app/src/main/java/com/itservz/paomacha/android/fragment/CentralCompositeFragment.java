@@ -40,13 +40,11 @@ public class CentralCompositeFragment extends Fragment {
                 Log.d(TAG, "hide bars");
                 AppBarLayout appBarLayout = (AppBarLayout) paoActivity.findViewById(R.id.appbar);
                 View toolbarBottom = paoActivity.findViewById(R.id.toolbarBottom);
+				View fab = paoActivity.findViewById(R.id.fab);
                 ActionBarToggler.hideAppBar(appBarLayout);
-                ActionBarToggler.hideToolBar(toolbarBottom);
+                ActionBarToggler.hideBottomBar(toolbarBottom, fab);
                 paoActivity.FULLSCREEN = true;
             }
-            /*if (position == rightFrag) {
-				paoActivity.getWindow().requestFeature(Window.FEATURE_PROGRESS);
-            }*/
         }
 
 		@Override

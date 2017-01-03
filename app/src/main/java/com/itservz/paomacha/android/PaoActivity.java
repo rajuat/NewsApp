@@ -8,6 +8,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.Window;
@@ -60,6 +62,32 @@ public class PaoActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.menu_pao, menu);
+        return true;
+    }
+
+    boolean refreshed = true;
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.refresh) {
+            //toggle
+            if(refreshed){
+                item.setIcon(getResources().getDrawable(R.drawable.ic_refresh_black_24dp));
+                refreshed = false;
+            } else {
+                item.setIcon(getResources().getDrawable(R.drawable.ic_arrow_upward_black_24dp));
+                refreshed = true;
+            }
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     private void findViews() {
