@@ -15,9 +15,10 @@ import android.widget.TextView;
 
 import com.itservz.paomacha.android.PaoActivity;
 import com.itservz.paomacha.android.R;
+import com.itservz.paomacha.android.model.Pao;
 import com.itservz.paomacha.android.preference.PrefManager;
+import com.itservz.paomacha.android.utils.Share;
 import com.itservz.paomacha.android.view.ActionBarToggler;
-import com.itservz.paomacha.utils.Share;
 
 
 /**
@@ -28,9 +29,11 @@ public class CentralFragment extends Fragment {
     private PrefManager prefManager;
     private static final int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 1;
     private PaoActivity paoActivity = null;
+    private Pao pao = null;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        //pao = (Pao) this.getArguments().getSerializable("paof");
         final View fragmentView = inflater.inflate(R.layout.fragment_central, container, false);
         paoActivity = (PaoActivity) getActivity();
         fragmentView.setOnClickListener(new View.OnClickListener() {

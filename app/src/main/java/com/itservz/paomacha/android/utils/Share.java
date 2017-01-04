@@ -1,4 +1,4 @@
-package com.itservz.paomacha.utils;
+package com.itservz.paomacha.android.utils;
 
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
@@ -9,8 +9,6 @@ import android.os.Environment;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
-
-import com.itservz.paomacha.android.PaoActivity;
 
 import java.io.File;
 import java.io.FileOutputStream;

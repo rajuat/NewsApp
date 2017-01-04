@@ -15,6 +15,7 @@ import com.itservz.paomacha.android.R;
 import com.itservz.paomacha.android.adapter.FragmentsClassesPagerAdapter;
 import com.itservz.paomacha.android.event.EventBus;
 import com.itservz.paomacha.android.event.PageChangedEvent;
+import com.itservz.paomacha.android.model.Pao;
 import com.itservz.paomacha.android.view.ActionBarToggler;
 
 import java.util.ArrayList;
@@ -32,9 +33,9 @@ public class CentralCompositeFragment extends Fragment {
 	private int mCentralPageIndex = 0;
     private int leftFrag = 0;
     private int rightFrag = 2;
-    private OnPageChangeListener mPagerChangeListener = new OnPageChangeListener() {
 
-        @Override
+	private OnPageChangeListener mPagerChangeListener = new OnPageChangeListener() {
+		@Override
 		public void onPageSelected(int position) {
 			EventBus.getInstance().post(new PageChangedEvent(mCentralPageIndex == position));
             if (position == rightFrag || position == leftFrag) {
@@ -54,16 +55,18 @@ public class CentralCompositeFragment extends Fragment {
 		@Override
 		public void onPageScrollStateChanged(int state) {}
 	};
+	private Pao pao;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		//pao = (Pao) this.getArguments().getSerializable("pao");
 		paoActivity = (PaoActivity) getActivity();
 		fragmentView = inflater.inflate(R.layout.fragment_composite_central, container, false);
-		findViews(fragmentView);
+		findViews();
 		return fragmentView;
 	}
 
-	private void findViews(View fragmentView) {
+	private void findViews() {
 		mHorizontalPager = (ViewPager) fragmentView.findViewById(R.id.fragment_composite_central_pager);
 		initViews();
 	}
@@ -80,6 +83,6 @@ public class CentralCompositeFragment extends Fragment {
 		pages.add(CentralFragment.class);
 		pages.add(RightFragment.class);
 		mCentralPageIndex = pages.indexOf(CentralFragment.class);
-		mHorizontalPager.setAdapter(new FragmentsClassesPagerAdapter(getChildFragmentManager(), getActivity(), pages));
+		mHorizontalPager.setAdapter(new FragmentsClassesPagerAdapter(getChildFragmentManager(), getActivity(), pages, pao));
 	}
 }

@@ -2,14 +2,11 @@ package com.itservz.paomacha.android;
 
 import android.annotation.TargetApi;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -19,15 +16,15 @@ import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.widget.ImageButton;
 
+import com.itservz.paomacha.android.backend.FirebaseDatabaseService;
 import com.itservz.paomacha.android.event.EventBus;
 import com.itservz.paomacha.android.event.PageChangedEvent;
 import com.itservz.paomacha.android.fragment.CentralCompositeFragment;
-import com.itservz.paomacha.android.preference.PrefManager;
+import com.itservz.paomacha.android.model.Pao;
 import com.itservz.paomacha.android.view.VerticalPager;
-import com.itservz.paomacha.utils.Share;
 import com.squareup.otto.Subscribe;
 
-public class PaoActivity extends AppCompatActivity {
+public class PaoActivity extends AppCompatActivity implements FirebaseDatabaseService.PaoListener {
 
     static final String TAG = "PaoActivity";
     /**
@@ -36,31 +33,23 @@ public class PaoActivity extends AppCompatActivity {
     private static final int CENTRAL_PAGE_INDEX = 1;
     public boolean FULLSCREEN;
     private VerticalPager mVerticalPager;
-
-
     boolean refreshed = false;
-
+    private FragmentManager fragmentManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().requestFeature(Window.FEATURE_PROGRESS);
-
         setContentView(R.layout.activity_pao);
+
+        FirebaseDatabaseService.getInstance(null).getDatabaseReference(this);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbarTop);
         setSupportActionBar(toolbar);
         toolbar.setTitle(getTitle());
         toolbar.setTitleTextColor(getResources().getColor(R.color.primary_dark));
 
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.add(R.id.activity_main_vertical_pager, new CentralCompositeFragment());
-        fragmentTransaction.add(R.id.activity_main_vertical_pager, new CentralCompositeFragment());
-        fragmentTransaction.add(R.id.activity_main_vertical_pager, new CentralCompositeFragment());
-        fragmentTransaction.add(R.id.activity_main_vertical_pager, new CentralCompositeFragment());
-        fragmentTransaction.add(R.id.activity_main_vertical_pager, new CentralCompositeFragment());
-        fragmentTransaction.commit();
+        fragmentManager = getSupportFragmentManager();
 
         findViews();
 
@@ -72,11 +61,18 @@ public class PaoActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
-
     }
 
-
+    @Override
+    public void onNewPao(Pao pao) {
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("pao", pao);
+        CentralCompositeFragment centralCompositeFragment = new CentralCompositeFragment();
+        centralCompositeFragment.setArguments(bundle);
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.add(R.id.activity_main_vertical_pager, centralCompositeFragment);
+        fragmentTransaction.commit();
+    }
 
     public Bitmap getResizedBitmap(Bitmap image, int maxSize) {
         int width = image.getWidth();
@@ -164,4 +160,6 @@ public class PaoActivity extends AppCompatActivity {
     public void onLocationChanged(PageChangedEvent event) {
         mVerticalPager.setPagingEnabled(event.hasVerticalNeighbors());
     }
+
+
 }

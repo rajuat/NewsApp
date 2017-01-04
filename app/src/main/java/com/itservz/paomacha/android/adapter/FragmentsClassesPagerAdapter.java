@@ -1,6 +1,7 @@
 package com.itservz.paomacha.android.adapter;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -9,6 +10,7 @@ import android.support.v4.view.ViewPager;
 import com.itservz.paomacha.android.fragment.CentralFragment;
 import com.itservz.paomacha.android.fragment.LeftFragment;
 import com.itservz.paomacha.android.fragment.RightFragment;
+import com.itservz.paomacha.android.model.Pao;
 
 import java.util.List;
 
@@ -17,12 +19,16 @@ import java.util.List;
  * will be instantiated on demand and used as a pages views.
  */
 public class FragmentsClassesPagerAdapter extends FragmentPagerAdapter {
+	private CentralFragment centralFragment = null;
 
-	public FragmentsClassesPagerAdapter(FragmentManager fragmentManager, Context context,
-			List<Class<? extends Fragment>> pages) {
+	public FragmentsClassesPagerAdapter(FragmentManager fragmentManager, Context context, List<Class<? extends Fragment>> pages, Pao pao) {
 		super(fragmentManager);
 		mPagesClasses = pages;
 		mContext = context;
+		Bundle bundle = new Bundle();
+		bundle.putSerializable("paof", pao);
+		centralFragment = new CentralFragment();
+		centralFragment.setArguments(bundle);
 	}
 
 	private List<Class<? extends Fragment>> mPagesClasses;

@@ -1,11 +1,7 @@
 package com.itservz.paomacha.android;
 
-import android.content.Context;
-import android.support.v4.util.Pair;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -33,7 +29,7 @@ public class SplashActivity extends AppCompatActivity {
         // Add items via the Button and EditText at the bottom of the window.
         final EditText text = (EditText) findViewById(R.id.todoText);
         final Button button = (Button) findViewById(R.id.addButton);
-        final DatabaseReference myRef = FirebaseDatabaseService.getInstance("").getDatabaseReference(adapter);
+        final DatabaseReference myRef = FirebaseDatabaseService.getInstance("").getDatabaseReference(null);
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // Create a new child with a auto-generated ID.
