@@ -27,6 +27,7 @@ import java.util.ArrayList;
 public class CentralCompositeFragment extends Fragment {
     static final String TAG = "CentralCompositeFrag";
 	private PaoActivity paoActivity;
+	private View fragmentView;
     private ViewPager mHorizontalPager;
 	private int mCentralPageIndex = 0;
     private int leftFrag = 0;
@@ -39,7 +40,7 @@ public class CentralCompositeFragment extends Fragment {
             if (position == rightFrag || position == leftFrag) {
                 Log.d(TAG, "hide bars");
                 AppBarLayout appBarLayout = (AppBarLayout) paoActivity.findViewById(R.id.appbar);
-                View toolbarBottom = paoActivity.findViewById(R.id.toolbarBottom);
+                View toolbarBottom = fragmentView.findViewById(R.id.toolbarBottom);
 				View fab = paoActivity.findViewById(R.id.fab);
                 ActionBarToggler.hideAppBar(appBarLayout);
                 ActionBarToggler.hideBottomBar(toolbarBottom, fab);
@@ -57,7 +58,7 @@ public class CentralCompositeFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		paoActivity = (PaoActivity) getActivity();
-		View fragmentView = inflater.inflate(R.layout.fragment_composite_central, container, false);
+		fragmentView = inflater.inflate(R.layout.fragment_composite_central, container, false);
 		findViews(fragmentView);
 		return fragmentView;
 	}

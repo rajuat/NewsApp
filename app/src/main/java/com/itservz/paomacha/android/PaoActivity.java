@@ -2,12 +2,14 @@ package com.itservz.paomacha.android;
 
 import android.annotation.TargetApi;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -20,12 +22,10 @@ import android.widget.ImageButton;
 import com.itservz.paomacha.android.event.EventBus;
 import com.itservz.paomacha.android.event.PageChangedEvent;
 import com.itservz.paomacha.android.fragment.CentralCompositeFragment;
+import com.itservz.paomacha.android.preference.PrefManager;
 import com.itservz.paomacha.android.view.VerticalPager;
+import com.itservz.paomacha.utils.Share;
 import com.squareup.otto.Subscribe;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.util.Date;
 
 public class PaoActivity extends AppCompatActivity {
 
@@ -37,8 +37,9 @@ public class PaoActivity extends AppCompatActivity {
     public boolean FULLSCREEN;
     private VerticalPager mVerticalPager;
 
-    boolean refreshed = true;
-    boolean bookmarked = true;
+
+    boolean refreshed = false;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,7 +64,7 @@ public class PaoActivity extends AppCompatActivity {
 
         findViews();
 
-        ImageButton post = (ImageButton) findViewById(R.id.pao_post);
+        ImageButton post = (ImageButton) findViewById(R.id.fab);
         post.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -72,37 +73,10 @@ public class PaoActivity extends AppCompatActivity {
             }
         });
 
-        final ImageButton bookmark = (ImageButton) findViewById(R.id.bookmark);
-        bookmark.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(bookmarked){
-                    bookmark.setImageDrawable(getResources().getDrawable(R.drawable.ic_bookmark_black_24dp));
-                    bookmarked =  false;
-                } else {
-                    bookmark.setImageDrawable(getResources().getDrawable(R.drawable.ic_bookmark_border_black_24dp));
-                    bookmarked =  true;
-                }
-            }
-        });
 
-        ImageButton share = (ImageButton) findViewById(R.id.share);
-        share.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                View v1 = getWindow().getDecorView().getRootView();
-                v1.setDrawingCacheEnabled(true);
-                Bitmap bitmap = Bitmap.createBitmap(v1.getDrawingCache());
-                v1.setDrawingCacheEnabled(false);
-
-                Intent shareIntent = new Intent();
-                shareIntent.setAction(Intent.ACTION_SEND);
-                shareIntent.putExtra(Intent.EXTRA_STREAM, getResizedBitmap(bitmap, 50));
-                shareIntent.setType("image/jpeg");
-                startActivity(Intent.createChooser(shareIntent, "Send to"));
-            }
-        });
     }
+
+
 
     public Bitmap getResizedBitmap(Bitmap image, int maxSize) {
         int width = image.getWidth();
@@ -184,33 +158,6 @@ public class PaoActivity extends AppCompatActivity {
     protected void onPause() {
         EventBus.getInstance().unregister(this);
         super.onPause();
-    }
-
-    private void takeScreenshot() {
-        /*Date now = new Date();
-        android.text.format.DateFormat.format("yyyy-MM-dd_hh:mm:ss", now);*/
-        try {
-            // image naming and path  to include sd card  appending name you choose for file
-            //String mPath = Environment.getExternalStorageDirectory().toString() + "/" + now + ".jpg";
-            // create bitmap screen capture
-            View v1 = getWindow().getDecorView().getRootView();
-            v1.setDrawingCacheEnabled(true);
-            Bitmap bitmap = Bitmap.createBitmap(v1.getDrawingCache());
-            v1.setDrawingCacheEnabled(false);
-
-            /*File imageFile = new File(mPath);
-
-            FileOutputStream outputStream = new FileOutputStream(imageFile);
-            int quality = 100;
-            bitmap.compress(Bitmap.CompressFormat.JPEG, quality, outputStream);
-            outputStream.flush();
-            outputStream.close();
-
-            openScreenshot(imageFile);*/
-        } catch (Throwable e) {
-            // Several error may come out with file handling or OOM
-            e.printStackTrace();
-        }
     }
 
     @Subscribe
