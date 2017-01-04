@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import com.itservz.paomacha.android.PaoActivity;
 import com.itservz.paomacha.android.R;
@@ -25,7 +26,6 @@ import com.itservz.paomacha.utils.Share;
 public class CentralFragment extends Fragment {
     static final String TAG = "CentralFragment";
     private PrefManager prefManager;
-    private boolean bookmarked = false;
     private static final int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 1;
     private PaoActivity paoActivity = null;
 
@@ -60,14 +60,54 @@ public class CentralFragment extends Fragment {
         bookmark.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(bookmarked){
+                if(prefManager.hasBookmark("newsid")){
                     bookmark.setImageDrawable(getResources().getDrawable(R.drawable.ic_bookmark_black_24dp));
                     prefManager.removeBookmark("newsid");
-                    bookmarked =  false;
                 } else {
                     bookmark.setImageDrawable(getResources().getDrawable(R.drawable.ic_bookmark_border_black_24dp));
                     prefManager.addBookmark("newsid");
-                    bookmarked =  true;
+                }
+            }
+        });
+
+        final View likeContainer = fragmentView.findViewById(R.id.like_container);
+        final ImageButton like = (ImageButton) fragmentView.findViewById(R.id.like);
+        final TextView likeCount = (TextView) fragmentView.findViewById(R.id.like_count);
+        likeContainer.setOnClickListener(new View.OnClickListener() {
+            int count = Integer.parseInt(likeCount.getText().toString());
+            @Override
+            public void onClick(View view) {
+                if(prefManager.hasLike("newsid")){
+                    like.setImageDrawable(getResources().getDrawable(R.drawable.ic_thumb_up_pdark_24dp));
+                    count ++;
+                    likeCount.setText(""+count);
+                    prefManager.removeLike("newsid");
+                } else {
+                    like.setImageDrawable(getResources().getDrawable(R.drawable.ic_thumb_up_p_24dp));
+                    count --;
+                    likeCount.setText(""+count);
+                    prefManager.addLike("newsid");
+                }
+            }
+        });
+
+        final View dislikeContainer = fragmentView.findViewById(R.id.dislike_container);
+        final ImageButton dislike = (ImageButton) fragmentView.findViewById(R.id.dislike);
+        final TextView dislikeCount = (TextView) fragmentView.findViewById(R.id.dislike_count);
+        dislikeContainer.setOnClickListener(new View.OnClickListener() {
+            int count = Integer.parseInt(dislikeCount.getText().toString());
+            @Override
+            public void onClick(View view) {
+                if(prefManager.hasDislike("newsid")){
+                    dislike.setImageDrawable(getResources().getDrawable(R.drawable.ic_thumb_down_pdark_24dp));
+                    count ++;
+                    dislikeCount.setText(""+count);
+                    prefManager.removeDislike("newsid");
+                } else {
+                    dislike.setImageDrawable(getResources().getDrawable(R.drawable.ic_thumb_down_p_24dp));
+                    count --;
+                    dislikeCount.setText(""+count);
+                    prefManager.addDislike("newsid");
                 }
             }
         });

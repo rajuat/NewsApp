@@ -56,6 +56,7 @@
             android:layout_weight="1">
 
             <RelativeLayout
+                android:id="@+id/like_container"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
@@ -76,12 +77,13 @@
                     android:layout_height="wrap_content"
                     android:background="@android:color/background_light"
                     android:scaleType="centerInside"
-                    android:src="@drawable/ic_thumb_up_black_24dp"
+                    android:src="@drawable/ic_thumb_up_p_24dp"
                     android:layout_centerVertical="true"
                     android:layout_centerHorizontal="true" />
             </RelativeLayout>
 
             <RelativeLayout
+                android:id="@+id/dislike_container"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
@@ -102,7 +104,7 @@
                     android:layout_height="wrap_content"
                     android:background="@android:color/background_light"
                     android:scaleType="centerInside"
-                    android:src="@drawable/ic_thumb_down_black_24dp"
+                    android:src="@drawable/ic_thumb_down_p_24dp"
                     android:layout_centerVertical="true"
                     android:layout_centerHorizontal="true" />
             </RelativeLayout>

@@ -30,6 +30,11 @@ public class PrefManager {
 
     private String BOOKMARK = "bookmark";
 
+    public boolean hasBookmark(String bookmark) {
+        Set<String> bookmarks = pref.getStringSet(BOOKMARK, new HashSet<String>());
+        return bookmarks.contains(bookmark);
+    }
+
     public Set<String> getBookmark() {
         return pref.getStringSet(BOOKMARK, new HashSet<String>());
     }
@@ -47,6 +52,60 @@ public class PrefManager {
             bookmarks.remove(bookmark);
         }
         editor.putStringSet(BOOKMARK, bookmarks);
+        editor.commit();
+    }
+
+    private String LIKE = "like";
+
+    public boolean hasLike(String like) {
+        Set<String> likes = pref.getStringSet(LIKE, new HashSet<String>());
+        return likes.contains(like);
+    }
+
+    public Set<String> getLike() {
+        return pref.getStringSet(LIKE, new HashSet<String>());
+    }
+
+    public void addLike(String like) {
+        Set<String> likes = pref.getStringSet(LIKE, new HashSet<String>());
+        likes.add(like);
+        editor.putStringSet(LIKE, likes);
+        editor.commit();
+    }
+
+    public void removeLike(String like) {
+        Set<String> likes = pref.getStringSet(LIKE, new HashSet<String>());
+        if(likes.contains(like)){
+            likes.remove(like);
+        }
+        editor.putStringSet(LIKE, likes);
+        editor.commit();
+    }
+
+    private String DISLIKE = "dislike";
+
+    public boolean hasDislike(String dislike) {
+        Set<String> dislikes = pref.getStringSet(DISLIKE, new HashSet<String>());
+        return dislikes.contains(dislike);
+    }
+
+    public Set<String> getDislike() {
+        return pref.getStringSet(DISLIKE, new HashSet<String>());
+    }
+
+    public void addDislike(String dislike) {
+        Set<String> dislikes = pref.getStringSet(DISLIKE, new HashSet<String>());
+        dislikes.add(dislike);
+        editor.putStringSet(DISLIKE, dislikes);
+        editor.commit();
+    }
+
+    public void removeDislike(String dislike) {
+        Set<String> dislikes = pref.getStringSet(DISLIKE, new HashSet<String>());
+        if(dislikes.contains(dislike)){
+            dislikes.remove(dislike);
+        }
+        editor.putStringSet(DISLIKE, dislikes);
         editor.commit();
     }
 }
