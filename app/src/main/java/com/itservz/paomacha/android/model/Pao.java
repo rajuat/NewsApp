@@ -19,6 +19,7 @@ public class Pao implements Serializable {
     public int disLikes;
     public List<String> tags; // for category like manipur election, top news
     public String originalNewsUrl; //for displaying webpage
+    public String needsApproval;
 
     public Pao() {
         //for firebase
@@ -31,13 +32,14 @@ public class Pao implements Serializable {
                 ", createdOn='" + createdOn + '\'' +
                 ", createdBy='" + createdBy + '\'' +
                 ", imageUrl='" + imageUrl + '\'' +
-                ", image='" + image + '\'' +
+                ", image='" + (image == null) + '\'' +
                 ", title='" + title + '\'' +
                 ", body='" + body + '\'' +
                 ", likes=" + likes +
                 ", disLikes=" + disLikes +
                 ", tags=" + tags +
                 ", originalNewsUrl='" + originalNewsUrl + '\'' +
+                ", needsApproval='" + needsApproval + '\'' +
                 '}';
     }
 }

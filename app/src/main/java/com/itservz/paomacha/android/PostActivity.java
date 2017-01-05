@@ -1,21 +1,25 @@
 package com.itservz.paomacha.android;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.hardware.Camera;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.HandlerThread;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.itservz.paomacha.android.fragment.PostFragment;
 import com.itservz.paomacha.android.view.CameraPreview;
 
 import java.io.File;
@@ -26,36 +30,70 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 //https://developer.android.com/guide/topics/media/camera.html#custom-camera
-public class PostActivity extends Activity {
+public class PostActivity extends BaseActivity {
     static final String TAG = "PostActivity";
-    private Camera mCamera;
+    private static Camera mCamera;
+    private static File mediaFile;
     private CameraPreview mPreview;
 
     private static final int MY_PERMISSIONS_REQUEST_CAMERA = 1;
     private static final int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 2;
     public static final int MEDIA_TYPE_IMAGE = 1;
     public static final int MEDIA_TYPE_VIDEO = 2;
+    private Button captureButton;
+    private LinearLayout llDecide;
+    private Button noButton;
+    private Button yesButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post);
-
+        if (mGoogleApiClient.isConnected() && mLastLocation != null) {
+            startIntentService();
+        }
         getCameraInstance();
-        mPreview = new CameraPreview(this, mCamera);
-        FrameLayout preview = (FrameLayout) findViewById(R.id.camera_preview);
-        preview.addView(mPreview);
+        captureButton = (Button) findViewById(R.id.button_capture);
+        llDecide = (LinearLayout) findViewById(R.id.ll_decide);
+        noButton = (Button) findViewById(R.id.no);
+        noButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                captureButton.setVisibility(View.VISIBLE);
+                llDecide.setVisibility(View.GONE);
+                mCamera.startPreview();
+            }
+        });
+        yesButton = (Button) findViewById(R.id.yes);
+        yesButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                Bundle bundle = new Bundle();
+                bundle.putString("file", mediaFile.getPath());
+                bundle.putString("mAddressOutput", mAddressOutput);
+                bundle.putParcelable("mLastLocation", mLastLocation);
+                PostFragment postFragment = new PostFragment();
+                postFragment.setArguments(bundle);
+                fragmentTransaction.replace(R.id.post_root, postFragment);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
 
-        Button captureButton = (Button) findViewById(R.id.button_capture);
+            }
+        });
         captureButton.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         mCamera.takePicture(null, null, mPicture);
+                        //now set reset taken pic
+                        captureButton.setVisibility(View.GONE);
+                        llDecide.setVisibility(View.VISIBLE);
+
                     }
                 }
         );
-
+        updateValuesFromBundle(savedInstanceState);
     }
 
     @Override
@@ -94,19 +132,60 @@ public class PostActivity extends Activity {
                 // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an app-defined int constant. The callback method gets the result of the request.
             }
         } else {
-            mCamera = getCamera();
+            getCamera();
         }
     }
 
-    private Camera getCamera() {
-        Camera c = null;
+    private CameraHandlerThread mThread = null;
+
+    private static class CameraHandlerThread extends HandlerThread {
+        Handler mHandler = null;
+
+        CameraHandlerThread() {
+            super("CameraHandlerThread");
+            start();
+            mHandler = new Handler(getLooper());
+        }
+
+        synchronized void notifyCameraOpened() {
+            notify();
+        }
+
+        void openCamera() {
+            mHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    getOldCamera();
+                    notifyCameraOpened();
+                }
+            });
+            try {
+                wait();
+            } catch (InterruptedException e) {
+                Log.d(TAG, "wait was interrupted");
+            }
+        }
+    }
+
+    private void getCamera() {
+        if (mThread == null) {
+            mThread = new CameraHandlerThread();
+        }
+        synchronized (mThread) {
+            mThread.openCamera();
+            mPreview = new CameraPreview(this, mCamera);
+            FrameLayout preview = (FrameLayout) findViewById(R.id.camera_preview);
+            preview.addView(mPreview);
+        }
+    }
+
+    private static void getOldCamera() {
         try {
-            c = Camera.open();
+            mCamera = Camera.open();
         } catch (Exception e) {
             Log.d(TAG, "Camera problem" + e.getMessage());
             e.printStackTrace();
         }
-        return c;
     }
 
     @Override
@@ -115,7 +194,7 @@ public class PostActivity extends Activity {
             case MY_PERMISSIONS_REQUEST_CAMERA: {
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    mCamera = getCamera();
+                    getCamera();
                 } else {
                     // permission denied, boo! Disable the functionality that depends on this permission.
                 }
@@ -135,11 +214,32 @@ public class PostActivity extends Activity {
         }
     }
 
+    private void updateValuesFromBundle(Bundle savedInstanceState) {
+        if (savedInstanceState != null) {
+            // Check savedInstanceState to see if the address was previously requested.
+            if (savedInstanceState.keySet().contains(ADDRESS_REQUESTED_KEY)) {
+                mAddressRequested = savedInstanceState.getBoolean(ADDRESS_REQUESTED_KEY);
+            }
+            // Check savedInstanceState to see if the location address string was previously found
+            // and stored in the Bundle. If it was found, display the address string in the UI.
+            if (savedInstanceState.keySet().contains(LOCATION_ADDRESS_KEY)) {
+                mAddressOutput = savedInstanceState.getString(LOCATION_ADDRESS_KEY);
+                displayAddressOutput();
+            }
+        }
+    }
+
+    @Override
+    void displayAddressOutput() {
+        Log.d(TAG, "displayAddressOutput: " + mAddressOutput);
+    }
+
+    private File pictureFile;
     //media
     private Camera.PictureCallback mPicture = new Camera.PictureCallback() {
         @Override
         public void onPictureTaken(byte[] data, Camera camera) {
-            File pictureFile = null;
+            pictureFile = null;
             if (ContextCompat.checkSelfPermission(PostActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                 // Should we show an explanation?
                 if (ActivityCompat.shouldShowRequestPermissionRationale(PostActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
@@ -166,6 +266,7 @@ public class PostActivity extends Activity {
             } catch (IOException e) {
                 Log.d(TAG, "Error accessing file: " + e.getMessage());
             }
+
         }
     };
 
@@ -189,7 +290,6 @@ public class PostActivity extends Activity {
         }
         // Create a media file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        File mediaFile;
         if (type == MEDIA_TYPE_IMAGE) {
             mediaFile = new File(mediaStorageDir.getPath() + File.separator + "IMG_" + timeStamp + ".jpg");
         } else if (type == MEDIA_TYPE_VIDEO) {

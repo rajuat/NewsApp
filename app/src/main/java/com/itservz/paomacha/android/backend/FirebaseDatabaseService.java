@@ -27,15 +27,56 @@ public class FirebaseDatabaseService {
         FirebaseService.getInstance().getDatabase().getReference("messages").child(uuid).child("likes").setValue(likes);
     }
 
+    public static String postPao(Pao pao) {
+        DatabaseReference childRef = FirebaseService.getInstance().getDatabase().getReference("test").child("fromuser");
+        DatabaseReference reference = childRef.push();
+        String uId = reference.getKey();
+        pao.uuid = uId;
+        Log.d(TAG, "Pao posting: " + pao.toString());
+        reference.setValue(pao);
+        return uId;
+    }
+
     @NonNull
-    public DatabaseReference getDatabaseReference(final PaoListener listener) {
+    public void getUserPao(final PaoListener listener) {
+        final DatabaseReference paoref = FirebaseService.getInstance().getDatabase().getReference("test").child("fromuser");
+        paoref.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Pao value = dataSnapshot.getValue(Pao.class);
+                if ("true".equalsIgnoreCase(value.needsApproval)) return;
+                listener.onNewPao(value);
+                Log.d(TAG, "getUserPao.onChildAdded: " + value.toString());
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+    }
+
+    @NonNull
+    public DatabaseReference getPaoaps(final PaoListener listener) {
         final DatabaseReference paoref = FirebaseService.getInstance().getDatabase().getReference("messages");
         paoref.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String previousChildName) {
                 Pao value = dataSnapshot.getValue(Pao.class);
+                if ("true".equalsIgnoreCase(value.needsApproval)) return;
                 listener.onNewPao(value);
-                Log.d(TAG, "onChildAdded: " + value.toString());
+                Log.d(TAG, "getPaoaps.onChildAdded: " + value.toString());
             }
             public void onChildRemoved(DataSnapshot dataSnapshot) {
                 Pao value = dataSnapshot.getValue(Pao.class);

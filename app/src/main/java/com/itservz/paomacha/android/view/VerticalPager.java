@@ -509,10 +509,12 @@ public class VerticalPager extends ViewGroup {
 
 				// Apply friction to scrolling past boundaries.
 				final int count = getChildCount();
-				if (getScrollY() < 0 || getScrollY() + pageHeight > getChildAt(count - 1).getBottom()) {
-					deltaY /= 2;
+				View childAt = getChildAt(count - 1);
+				if (childAt != null) {
+					if (getScrollY() < 0 || getScrollY() + pageHeight > childAt.getBottom()) {
+						deltaY /= 2;
+					}
 				}
-
 				scrollBy(0, deltaY);
 			}
 			break;

@@ -1,7 +1,6 @@
 package com.itservz.paomacha.android.fragment;
 
 import android.content.pm.PackageManager;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.ActivityCompat;
@@ -20,6 +19,7 @@ import com.itservz.paomacha.android.R;
 import com.itservz.paomacha.android.backend.FirebaseDatabaseService;
 import com.itservz.paomacha.android.model.Pao;
 import com.itservz.paomacha.android.preference.PrefManager;
+import com.itservz.paomacha.android.utils.BitmapHelper;
 import com.itservz.paomacha.android.utils.DownloadImageTask;
 import com.itservz.paomacha.android.utils.Share;
 import com.itservz.paomacha.android.view.ActionBarToggler;
@@ -48,8 +48,7 @@ public class CentralFragment extends Fragment {
             new DownloadImageTask(paopic).execute(pao.imageUrl);
         } else {
             if (pao.image != null) {
-                byte[] bytes = pao.image.getBytes();
-                paopic.setImageBitmap(BitmapFactory.decodeByteArray(bytes, 0, bytes.length));
+                paopic.setImageBitmap(BitmapHelper.stringToBitMap(pao.image));
             }
         }
 

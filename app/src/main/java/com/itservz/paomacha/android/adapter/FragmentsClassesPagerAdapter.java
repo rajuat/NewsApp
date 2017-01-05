@@ -20,11 +20,13 @@ import java.util.List;
  */
 public class FragmentsClassesPagerAdapter extends FragmentPagerAdapter {
 	private CentralFragment centralFragment = null;
+	private Pao pao;
 
 	public FragmentsClassesPagerAdapter(FragmentManager fragmentManager, Context context, List<Class<? extends Fragment>> pages, Pao pao) {
 		super(fragmentManager);
 		mPagesClasses = pages;
 		mContext = context;
+		this.pao = pao;
 		Bundle bundle = new Bundle();
 		bundle.putSerializable("paof", pao);
 		centralFragment = new CentralFragment();
@@ -41,8 +43,12 @@ public class FragmentsClassesPagerAdapter extends FragmentPagerAdapter {
         } else if (position == 1) {
 			return centralFragment;
 		} else if (position == 2) {
-            return new RightFragment();
-        }
+			Bundle bundle = new Bundle();
+			bundle.putSerializable("originalNewsUrl", pao.originalNewsUrl);
+			RightFragment rightFragment = new RightFragment();
+			rightFragment.setArguments(bundle);
+			return rightFragment;
+		}
         return null;
         //return Fragment.instantiate(mContext, mPagesClasses.get(position).getName());
     }

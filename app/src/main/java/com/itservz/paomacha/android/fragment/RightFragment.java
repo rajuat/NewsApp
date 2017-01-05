@@ -19,6 +19,7 @@ public class RightFragment extends Fragment {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		String originalNewsUrl = this.getArguments().getString("originalNewsUrl");
 		View fragmentView = inflater.inflate(R.layout.fragment_right, container, false);
 		WebView webview = (WebView) fragmentView.findViewById(R.id.webview);
 		webview.getSettings().setJavaScriptEnabled(true);
@@ -35,7 +36,7 @@ public class RightFragment extends Fragment {
 			}
 		});
 
-		webview.loadUrl("http://www.itservz.com");
+		webview.loadUrl(originalNewsUrl);
 		return fragmentView;
 	}
 

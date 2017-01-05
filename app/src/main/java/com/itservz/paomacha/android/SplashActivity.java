@@ -29,7 +29,7 @@ public class SplashActivity extends AppCompatActivity {
         // Add items via the Button and EditText at the bottom of the window.
         final EditText text = (EditText) findViewById(R.id.todoText);
         final Button button = (Button) findViewById(R.id.addButton);
-        final DatabaseReference myRef = FirebaseDatabaseService.getInstance("").getDatabaseReference(null);
+        final DatabaseReference myRef = FirebaseDatabaseService.getInstance("").getPaoaps(null);
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // Create a new child with a auto-generated ID.

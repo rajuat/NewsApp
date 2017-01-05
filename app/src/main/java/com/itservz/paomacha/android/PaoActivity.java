@@ -46,7 +46,8 @@ public class PaoActivity extends AppCompatActivity implements FirebaseDatabaseSe
         getWindow().requestFeature(Window.FEATURE_PROGRESS);
         setContentView(R.layout.activity_pao);
 
-        FirebaseDatabaseService.getInstance(null).getDatabaseReference(this);
+        FirebaseDatabaseService.getInstance(null).getPaoaps(this);
+        FirebaseDatabaseService.getInstance(null).getUserPao(this);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbarTop);
         setSupportActionBar(toolbar);
@@ -69,7 +70,7 @@ public class PaoActivity extends AppCompatActivity implements FirebaseDatabaseSe
     @Override
     public void onNewPao(Pao pao) {
         Log.d(TAG, "onNewPao");
-        if (pao == null || pao.uuid == null || pao.title == null || pao.body == null || pao.originalNewsUrl == null)
+        if (pao == null || pao.uuid == null || pao.title == null || pao.body == null)
             return;
         addNewPao(pao);
         //paoList.add(pao);

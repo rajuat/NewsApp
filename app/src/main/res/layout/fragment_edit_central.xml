@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/fragment_center_edit"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/edit_paopic"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.4"
+        android:scaleType="centerCrop" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.6"
+        android:orientation="vertical">
+
+        <EditText
+            android:id="@+id/edit_title"
+            style="@style/title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Edit news title here" />
+
+        <EditText
+            android:id="@+id/edit_body"
+            style="@style/body"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Give description in 60 words. Startup Aura Health has launched 'Aura', an iOS app that creates up to 200 short three-to-seven-minute meditation sessions based on the user's current mood — be that stressed, anxious, happy or sad. The app collects data on demographics and age to better understand what type of meditation suits the user. It also provides users with a graph of their mood. Startup Aura Health has launched 'Aura', an iOS app that creates up to 200 short three-to-seven-minute meditation sessions based on the user's current mood." />
+
+        <EditText
+            android:id="@+id/edit_metadata"
+            style="@style/body"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Verify your location" />
+
+        <TextView
+            android:id="@+id/edit_footer"
+            style="@style/footer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="paoap by {anonymous} / 01:48 pm on 02 Jan 2017,Monday" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/button_post"
+        android:text="Post"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_gravity="bottom"
+        android:layout_weight=".10" />
+
+</LinearLayout>
