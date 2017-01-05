@@ -39,8 +39,8 @@ public class FragmentsClassesPagerAdapter extends FragmentPagerAdapter {
         if (position == 0) {
             return new LeftFragment();
         } else if (position == 1) {
-            return new CentralFragment();
-        } else if (position == 2) {
+			return centralFragment;
+		} else if (position == 2) {
             return new RightFragment();
         }
         return null;

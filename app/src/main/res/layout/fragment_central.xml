@@ -7,6 +7,7 @@
     android:orientation="vertical">
 
     <ImageView
+        android:id="@+id/paopic"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:background="@drawable/inshorts"
@@ -20,18 +21,21 @@
 
         <TextView
             style="@style/title"
+            android:id="@+id/title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Startup launches app for short-time meditation based on mood" />
 
         <TextView
             style="@style/body"
+            android:id="@+id/body"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Startup Aura Health has launched 'Aura', an iOS app that creates up to 200 short three-to-seven-minute meditation sessions based on the user's current mood — be that stressed, anxious, happy or sad. The app collects data on demographics and age to better understand what type of meditation suits the user. It also provides users with a graph of their mood. Startup Aura Health has launched 'Aura', an iOS app that creates up to 200 short three-to-seven-minute meditation sessions based on the user's current mood — be that stressed, anxious, happy or sad. The app collects data on demographics and age to better understand what type of meditation suits the user." />
 
         <TextView
             style="@style/footer"
+            android:id="@+id/footer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="paoap by Pakhangba / 01:48 pm on 02 Jan 2017,Monday"

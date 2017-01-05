@@ -53,10 +53,6 @@ package com.itservz.paomacha.android.view;
  * limitations under the License.
  */
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
-
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Rect;
@@ -71,6 +67,10 @@ import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.Scroller;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * This is a slightly modified version of the vertical pager by Grantland Chew: <br>
@@ -315,7 +315,9 @@ public class VerticalPager extends ViewGroup {
 		} else {
 			focusableScreen = mCurrentPage;
 		}
-		getChildAt(focusableScreen).requestFocus(direction, previouslyFocusedRect);
+		View childAt = getChildAt(focusableScreen);
+		if (childAt != null)
+			childAt.requestFocus(direction, previouslyFocusedRect);
 		return false;
 	}
 
@@ -456,6 +458,7 @@ public class VerticalPager extends ViewGroup {
 				// block
 				// everything
 				final View currentScreen = getChildAt(mCurrentPage);
+				if (currentScreen != null)
 				currentScreen.cancelLongPress();
 			}
 		}
@@ -578,11 +581,14 @@ public class VerticalPager extends ViewGroup {
 			focusedChild.clearFocus();
 		}
 
-		final int delta;
-		if (getChildAt(whichPage).getHeight() <= pageHeight || where == TOP) {
-			delta = getChildAt(whichPage).getTop() - getScrollY();
-		} else {
-			delta = getChildAt(whichPage).getBottom() - pageHeight - getScrollY();
+		int delta = 0;
+		View childAt = getChildAt(whichPage);
+		if (childAt != null) {
+			if (childAt.getHeight() <= pageHeight || where == TOP) {
+				delta = childAt.getTop() - getScrollY();
+			} else {
+				delta = childAt.getBottom() - pageHeight - getScrollY();
+			}
 		}
 
 		mScroller.startScroll(0, getScrollY(), 0, delta, duration);

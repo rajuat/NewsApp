@@ -1,6 +1,7 @@
 package com.itservz.paomacha.android.fragment;
 
 import android.content.pm.PackageManager;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.ActivityCompat;
@@ -11,12 +12,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.itservz.paomacha.android.PaoActivity;
 import com.itservz.paomacha.android.R;
 import com.itservz.paomacha.android.model.Pao;
 import com.itservz.paomacha.android.preference.PrefManager;
+import com.itservz.paomacha.android.utils.DownloadImageTask;
 import com.itservz.paomacha.android.utils.Share;
 import com.itservz.paomacha.android.view.ActionBarToggler;
 
@@ -33,9 +36,31 @@ public class CentralFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        //pao = (Pao) this.getArguments().getSerializable("paof");
+        pao = (Pao) this.getArguments().getSerializable("paof");
+        Log.d(TAG, pao.toString());
         final View fragmentView = inflater.inflate(R.layout.fragment_central, container, false);
         paoActivity = (PaoActivity) getActivity();
+
+        ImageView paopic = (ImageView) fragmentView.findViewById(R.id.paopic);
+        if (pao.imageUrl != null) {
+            new DownloadImageTask(paopic).execute(pao.imageUrl);
+        } else {
+            if (pao.image != null)
+                paopic.setImageBitmap(BitmapFactory.decodeByteArray(pao.image, 0, pao.image.length));
+        }
+
+        TextView title = (TextView) fragmentView.findViewById(R.id.title);
+        title.setText(pao.title);
+        TextView body = (TextView) fragmentView.findViewById(R.id.body);
+        body.setText(pao.body);
+        TextView footer = (TextView) fragmentView.findViewById(R.id.footer);
+        footer.setText("paoap by " + pao.createdBy + " / " + pao.createdOn);
+
+        addListeners(fragmentView);
+        return fragmentView;
+    }
+
+    private void addListeners(final View fragmentView) {
         fragmentView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -133,8 +158,6 @@ public class CentralFragment extends Fragment {
                 }
             }
         });
-
-        return fragmentView;
     }
 
     @Override

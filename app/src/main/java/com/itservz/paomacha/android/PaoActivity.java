@@ -9,6 +9,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -50,9 +51,11 @@ public class PaoActivity extends AppCompatActivity implements FirebaseDatabaseSe
         toolbar.setTitleTextColor(getResources().getColor(R.color.primary_dark));
 
         fragmentManager = getSupportFragmentManager();
-
-        findViews();
-
+        /*FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.add(R.id.activity_main_vertical_pager, new CentralCompositeFragment());
+        fragmentTransaction.commit();
+        snapPageWhenLayoutIsReady();*/
+        mVerticalPager = (VerticalPager) findViewById(R.id.activity_main_vertical_pager);
         ImageButton post = (ImageButton) findViewById(R.id.fab);
         post.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -65,6 +68,7 @@ public class PaoActivity extends AppCompatActivity implements FirebaseDatabaseSe
 
     @Override
     public void onNewPao(Pao pao) {
+        Log.d(TAG, "onNewPao");
         Bundle bundle = new Bundle();
         bundle.putSerializable("pao", pao);
         CentralCompositeFragment centralCompositeFragment = new CentralCompositeFragment();
@@ -72,21 +76,7 @@ public class PaoActivity extends AppCompatActivity implements FirebaseDatabaseSe
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.add(R.id.activity_main_vertical_pager, centralCompositeFragment);
         fragmentTransaction.commit();
-    }
-
-    public Bitmap getResizedBitmap(Bitmap image, int maxSize) {
-        int width = image.getWidth();
-        int height = image.getHeight();
-
-        float bitmapRatio = (float)width / (float) height;
-        if (bitmapRatio > 0) {
-            width = maxSize;
-            height = (int) (width / bitmapRatio);
-        } else {
-            height = maxSize;
-            width = (int) (height * bitmapRatio);
-        }
-        return Bitmap.createScaledBitmap(image, width, height, true);
+        snapPageWhenLayoutIsReady();
     }
 
     @Override
@@ -114,27 +104,22 @@ public class PaoActivity extends AppCompatActivity implements FirebaseDatabaseSe
         return super.onOptionsItemSelected(item);
     }
 
-    private void findViews() {
-        mVerticalPager = (VerticalPager) findViewById(R.id.activity_main_vertical_pager);
-        snapPageWhenLayoutIsReady(mVerticalPager, CENTRAL_PAGE_INDEX);
-    }
-
-    private void snapPageWhenLayoutIsReady(final View pageView, final int page) {
+    private void snapPageWhenLayoutIsReady() {
         /*
 		 * VerticalPager is not fully initialized at the moment, so we want to snap to the central page only when it
 		 * layout and measure all its pages.
 		 */
-        pageView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+        mVerticalPager.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @SuppressWarnings("deprecation")
             @Override
             public void onGlobalLayout() {
-                mVerticalPager.snapToPage(page, VerticalPager.PAGE_SNAP_DURATION_INSTANT);
+                mVerticalPager.snapToPage(CENTRAL_PAGE_INDEX, VerticalPager.PAGE_SNAP_DURATION_INSTANT);
 
                 if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN)
                     // recommended removeOnGlobalLayoutListener method is available since API 16 only
-                    pageView.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+                    mVerticalPager.getViewTreeObserver().removeGlobalOnLayoutListener(this);
                 else
-                    removeGlobalOnLayoutListenerForJellyBean(pageView);
+                    removeGlobalOnLayoutListenerForJellyBean(mVerticalPager);
             }
 
             @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
@@ -159,6 +144,21 @@ public class PaoActivity extends AppCompatActivity implements FirebaseDatabaseSe
     @Subscribe
     public void onLocationChanged(PageChangedEvent event) {
         mVerticalPager.setPagingEnabled(event.hasVerticalNeighbors());
+    }
+
+    public Bitmap getResizedBitmap(Bitmap image, int maxSize) {
+        int width = image.getWidth();
+        int height = image.getHeight();
+
+        float bitmapRatio = (float) width / (float) height;
+        if (bitmapRatio > 0) {
+            width = maxSize;
+            height = (int) (width / bitmapRatio);
+        } else {
+            height = maxSize;
+            width = (int) (height * bitmapRatio);
+        }
+        return Bitmap.createScaledBitmap(image, width, height, true);
     }
 
 
