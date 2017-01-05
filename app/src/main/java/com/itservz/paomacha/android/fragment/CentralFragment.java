@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import com.itservz.paomacha.android.PaoActivity;
 import com.itservz.paomacha.android.R;
+import com.itservz.paomacha.android.backend.FirebaseDatabaseService;
 import com.itservz.paomacha.android.model.Pao;
 import com.itservz.paomacha.android.preference.PrefManager;
 import com.itservz.paomacha.android.utils.DownloadImageTask;
@@ -38,6 +39,7 @@ public class CentralFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         pao = (Pao) this.getArguments().getSerializable("paof");
         Log.d(TAG, pao.toString());
+        pao.uuid.trim();
         final View fragmentView = inflater.inflate(R.layout.fragment_central, container, false);
         paoActivity = (PaoActivity) getActivity();
 
@@ -45,8 +47,10 @@ public class CentralFragment extends Fragment {
         if (pao.imageUrl != null) {
             new DownloadImageTask(paopic).execute(pao.imageUrl);
         } else {
-            if (pao.image != null)
-                paopic.setImageBitmap(BitmapFactory.decodeByteArray(pao.image, 0, pao.image.length));
+            if (pao.image != null) {
+                byte[] bytes = pao.image.getBytes();
+                paopic.setImageBitmap(BitmapFactory.decodeByteArray(bytes, 0, bytes.length));
+            }
         }
 
         TextView title = (TextView) fragmentView.findViewById(R.id.title);
@@ -88,12 +92,12 @@ public class CentralFragment extends Fragment {
         bookmark.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(prefManager.hasBookmark("newsid")){
+                if (prefManager.hasBookmark(pao.uuid)) {
                     bookmark.setImageDrawable(getResources().getDrawable(R.drawable.ic_bookmark_black_24dp));
-                    prefManager.removeBookmark("newsid");
+                    prefManager.removeBookmark(pao.uuid);
                 } else {
                     bookmark.setImageDrawable(getResources().getDrawable(R.drawable.ic_bookmark_border_black_24dp));
-                    prefManager.addBookmark("newsid");
+                    prefManager.addBookmark(pao.uuid);
                 }
             }
         });
@@ -101,42 +105,46 @@ public class CentralFragment extends Fragment {
         final View likeContainer = fragmentView.findViewById(R.id.like_container);
         final ImageButton like = (ImageButton) fragmentView.findViewById(R.id.like);
         final TextView likeCount = (TextView) fragmentView.findViewById(R.id.like_count);
+        likeCount.setText("" + pao.likes);
         likeContainer.setOnClickListener(new View.OnClickListener() {
-            int count = Integer.parseInt(likeCount.getText().toString());
+            int count = pao.likes;
             @Override
             public void onClick(View view) {
-                if(prefManager.hasLike("newsid")){
-                    like.setImageDrawable(getResources().getDrawable(R.drawable.ic_thumb_up_pdark_24dp));
-                    count ++;
-                    likeCount.setText(""+count);
-                    prefManager.removeLike("newsid");
-                } else {
+                if (prefManager.hasLike(pao.uuid)) {//had already liked, now undo
                     like.setImageDrawable(getResources().getDrawable(R.drawable.ic_thumb_up_p_24dp));
-                    count --;
+                    count--;
                     likeCount.setText(""+count);
-                    prefManager.addLike("newsid");
+                    prefManager.removeLike(pao.uuid);
+                } else { //liking it
+                    like.setImageDrawable(getResources().getDrawable(R.drawable.ic_thumb_up_pdark_24dp));
+                    count++;
+                    likeCount.setText(""+count);
+                    prefManager.addLike(pao.uuid);
                 }
+                FirebaseDatabaseService.updateLikes(pao.uuid, count);
             }
         });
 
         final View dislikeContainer = fragmentView.findViewById(R.id.dislike_container);
         final ImageButton dislike = (ImageButton) fragmentView.findViewById(R.id.dislike);
         final TextView dislikeCount = (TextView) fragmentView.findViewById(R.id.dislike_count);
+        likeCount.setText("" + pao.disLikes);
         dislikeContainer.setOnClickListener(new View.OnClickListener() {
-            int count = Integer.parseInt(dislikeCount.getText().toString());
+            int count = pao.disLikes;
             @Override
             public void onClick(View view) {
-                if(prefManager.hasDislike("newsid")){
-                    dislike.setImageDrawable(getResources().getDrawable(R.drawable.ic_thumb_down_pdark_24dp));
-                    count ++;
-                    dislikeCount.setText(""+count);
-                    prefManager.removeDislike("newsid");
-                } else {
+                if (prefManager.hasDislike(pao.uuid)) {
                     dislike.setImageDrawable(getResources().getDrawable(R.drawable.ic_thumb_down_p_24dp));
-                    count --;
+                    count--;
                     dislikeCount.setText(""+count);
-                    prefManager.addDislike("newsid");
+                    prefManager.removeDislike(pao.uuid);
+                } else {
+                    dislike.setImageDrawable(getResources().getDrawable(R.drawable.ic_thumb_down_pdark_24dp));
+                    count++;
+                    dislikeCount.setText(""+count);
+                    prefManager.addDislike(pao.uuid);
                 }
+                FirebaseDatabaseService.updateLikes(pao.uuid, count);
             }
         });
 

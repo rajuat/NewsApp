@@ -23,6 +23,10 @@ public class FirebaseDatabaseService {
         return new FirebaseDatabaseService(lastPosted);
     }
 
+    public static void updateLikes(String uuid, Integer likes) {
+        FirebaseService.getInstance().getDatabase().getReference("messages").child(uuid).child("likes").setValue(likes);
+    }
+
     @NonNull
     public DatabaseReference getDatabaseReference(final PaoListener listener) {
         final DatabaseReference paoref = FirebaseService.getInstance().getDatabase().getReference("messages");

@@ -12,7 +12,7 @@ public class Pao implements Serializable {
     public String createdOn; //date
     public String createdBy; //name
     public String imageUrl; // if this is absent, get from imageUrl
-    public byte[] image; // for user uploads
+    public String image; // for user uploads
     public String title;
     public String body;
     public int likes;

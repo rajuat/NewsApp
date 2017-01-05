@@ -2,7 +2,6 @@ package com.itservz.paomacha.android;
 
 import android.annotation.TargetApi;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
@@ -25,6 +24,9 @@ import com.itservz.paomacha.android.model.Pao;
 import com.itservz.paomacha.android.view.VerticalPager;
 import com.squareup.otto.Subscribe;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class PaoActivity extends AppCompatActivity implements FirebaseDatabaseService.PaoListener {
 
     static final String TAG = "PaoActivity";
@@ -36,6 +38,7 @@ public class PaoActivity extends AppCompatActivity implements FirebaseDatabaseSe
     private VerticalPager mVerticalPager;
     boolean refreshed = false;
     private FragmentManager fragmentManager;
+    private List<Pao> paoList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,12 +53,9 @@ public class PaoActivity extends AppCompatActivity implements FirebaseDatabaseSe
         toolbar.setTitle(getTitle());
         toolbar.setTitleTextColor(getResources().getColor(R.color.primary_dark));
 
-        fragmentManager = getSupportFragmentManager();
-        /*FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.add(R.id.activity_main_vertical_pager, new CentralCompositeFragment());
-        fragmentTransaction.commit();
-        snapPageWhenLayoutIsReady();*/
         mVerticalPager = (VerticalPager) findViewById(R.id.activity_main_vertical_pager);
+        fragmentManager = getSupportFragmentManager();
+
         ImageButton post = (ImageButton) findViewById(R.id.fab);
         post.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -69,6 +69,14 @@ public class PaoActivity extends AppCompatActivity implements FirebaseDatabaseSe
     @Override
     public void onNewPao(Pao pao) {
         Log.d(TAG, "onNewPao");
+        if (pao == null || pao.uuid == null || pao.title == null || pao.body == null || pao.originalNewsUrl == null)
+            return;
+        addNewPao(pao);
+        //paoList.add(pao);
+        //refreshed = false;
+    }
+
+    void addNewPao(Pao pao) {
         Bundle bundle = new Bundle();
         bundle.putSerializable("pao", pao);
         CentralCompositeFragment centralCompositeFragment = new CentralCompositeFragment();
@@ -89,18 +97,25 @@ public class PaoActivity extends AppCompatActivity implements FirebaseDatabaseSe
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.refresh) {
+        /*if (id == R.id.refresh) {
             //toggle
             if(refreshed){
-                item.setIcon(getResources().getDrawable(R.drawable.ic_refresh_black_24dp));
-                refreshed = false;
-            } else {
                 item.setIcon(getResources().getDrawable(R.drawable.ic_arrow_upward_black_24dp));
+            } else {
+                item.setIcon(getResources().getDrawable(R.drawable.ic_refresh_black_24dp));
+                item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        for(Pao pao: paoList){
+                            addNewPao(pao);
+                        }
+                        return true;
+                    }
+                });
                 refreshed = true;
             }
             return true;
-        }
-
+        }*/
         return super.onOptionsItemSelected(item);
     }
 
@@ -145,21 +160,4 @@ public class PaoActivity extends AppCompatActivity implements FirebaseDatabaseSe
     public void onLocationChanged(PageChangedEvent event) {
         mVerticalPager.setPagingEnabled(event.hasVerticalNeighbors());
     }
-
-    public Bitmap getResizedBitmap(Bitmap image, int maxSize) {
-        int width = image.getWidth();
-        int height = image.getHeight();
-
-        float bitmapRatio = (float) width / (float) height;
-        if (bitmapRatio > 0) {
-            width = maxSize;
-            height = (int) (width / bitmapRatio);
-        } else {
-            height = maxSize;
-            width = (int) (height * bitmapRatio);
-        }
-        return Bitmap.createScaledBitmap(image, width, height, true);
-    }
-
-
 }
