@@ -38,6 +38,7 @@ public class PostActivity extends BaseActivity {
     private Button noButton;
     private Button yesButton;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,14 +79,26 @@ public class PostActivity extends BaseActivity {
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mCamera.takePicture(null, null, mPicture);
+//TODO Added auto focus and auto flash success
+                        mCamera.autoFocus(new Camera.AutoFocusCallback() {
+                            public void onAutoFocus(boolean success, Camera camera) {
+                                Log.d("TAG","before success");
+                                if(success){
+                                    Log.d("TAG","after success");
+                                    camera.takePicture(null, null, mPicture);
+
+
+                                }
+                            }});
                         //now set reset taken pic
                         captureButton.setVisibility(View.GONE);
                         llDecide.setVisibility(View.VISIBLE);
 
+
                     }
                 }
         );
+
         updateValuesFromBundle(savedInstanceState);
     }
 
@@ -125,9 +138,17 @@ public class PostActivity extends BaseActivity {
         }
         synchronized (mThread) {
             mCamera = mThread.openCamera();
+            Log.d("TAG",mCamera.getParameters().getFocusMode());
+            Log.d("TAG",""+mCamera.getParameters().getPictureFormat());
+
+
             mPreview = new CameraPreview(this, mCamera);
+
+
+
             FrameLayout preview = (FrameLayout) findViewById(R.id.camera_preview);
             preview.addView(mPreview);
+
         }
     }
 
