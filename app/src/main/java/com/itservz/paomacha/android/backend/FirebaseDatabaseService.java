@@ -7,6 +7,7 @@ import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.itservz.paomacha.android.PaoActivity;
 import com.itservz.paomacha.android.model.Pao;
 
 /**
@@ -35,6 +36,26 @@ public class FirebaseDatabaseService {
         Log.d(TAG, "Pao posting: " + pao.toString());
         reference.setValue(pao);
         return uId;
+    }
+
+    public void getUserLikes(final PaoListener listener){
+
+    }
+
+    public void getUserDisLikes(final PaoListener listener){
+
+    }
+
+    public void getTrending(final PaoListener listener){
+
+    }
+
+    public void getUserBookmarks(final PaoListener listener){
+
+    }
+
+    public void getNewForCategory(final PaoListener listener, String category){
+
     }
 
     @NonNull

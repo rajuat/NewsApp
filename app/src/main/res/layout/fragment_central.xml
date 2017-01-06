@@ -1,46 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:id="@+id/fragment_center_print"
-    android:orientation="vertical">
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:id="@+id/fragment_center_print"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
 
     <ImageView
         android:id="@+id/paopic"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:scaleType="centerCrop"
-        android:layout_weight="0.4" />
+        android:layout_weight="0.4"
+        android:scaleType="centerCrop"/>
 
-    <LinearLayout
+    <FrameLayout
+        android:id="@+id/frameLayout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:orientation="vertical"
-        android:layout_weight="0.6">
+        android:layout_weight="0.6"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <TextView
-            style="@style/title"
-            android:id="@+id/title"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Startup launches app for short-time meditation based on mood" />
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-        <TextView
-            style="@style/body"
-            android:id="@+id/body"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Startup Aura Health has launched 'Aura', an iOS app that creates up to 200 short three-to-seven-minute meditation sessions based on the user's current mood — be that stressed, anxious, happy or sad. The app collects data on demographics and age to better understand what type of meditation suits the user. It also provides users with a graph of their mood. Startup Aura Health has launched 'Aura', an iOS app that creates up to 200 short three-to-seven-minute meditation sessions based on the user's current mood — be that stressed, anxious, happy or sad. The app collects data on demographics and age to better understand what type of meditation suits the user." />
+            <TextView
+                android:id="@+id/title"
+                style="@style/title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Startup launches app for short-time meditation based on mood"/>
 
-        <TextView
-            style="@style/footer"
-            android:id="@+id/footer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="paoap by Pakhangba / 01:48 pm on 02 Jan 2017,Monday"
-            />
-    </LinearLayout>
+            <TextView
+                android:id="@+id/body"
+                style="@style/body"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Startup Aura Health has launched 'Aura', an iOS app that creates up to 200 short three-to-seven-minute meditation sessions based on the user's current mood — be that stressed, anxious, happy or sad. The app collects data on demographics and age to better understand what type of meditation suits the user. It also provides users with a graph of their mood. Startup Aura Health has launched 'Aura', an iOS app that creates up to 200 short three-to-seven-minute meditation sessions based on the user's current mood — be that stressed, anxious, happy or sad. The app collects data on demographics and age to better understand what type of meditation suits the user."/>
+
+            <TextView
+                android:id="@+id/footer"
+                style="@style/footer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="paoap by Pakhangba / 01:48 pm on 02 Jan 2017,Monday"
+                />
+        </LinearLayout>
+    </FrameLayout>
+
     <LinearLayout
         android:id="@+id/toolbarBottom"
         android:layout_width="match_parent"
@@ -51,7 +60,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height=".5dp"
-            android:background="@color/divider" />
+            android:background="@color/divider"/>
 
 
         <LinearLayout
@@ -63,61 +72,61 @@
                 android:id="@+id/like_container"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:layout_weight=".20">
+                android:layout_weight=".20"
+                android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/like_count"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/like"
                     android:text="12"
                     android:textSize="@dimen/text_small"
-                    android:layout_toRightOf="@+id/like"
-                     />
+                    />
 
                 <ImageButton
                     android:id="@+id/like"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
                     android:background="@android:color/background_light"
                     android:scaleType="centerInside"
-                    android:src="@drawable/ic_thumb_up_p_24dp"
-                    android:layout_centerVertical="true"
-                    android:layout_centerHorizontal="true" />
+                    android:src="@drawable/ic_thumb_up_p_24dp"/>
             </RelativeLayout>
 
             <RelativeLayout
                 android:id="@+id/dislike_container"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:layout_weight=".20">
+                android:layout_weight=".20"
+                android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/dislike_count"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/dislike"
                     android:text="1"
                     android:textSize="@dimen/text_small"
-                    android:layout_toRightOf="@+id/dislike"
-                     />
+                    />
 
                 <ImageButton
                     android:id="@+id/dislike"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
                     android:background="@android:color/background_light"
                     android:scaleType="centerInside"
-                    android:src="@drawable/ic_thumb_down_p_24dp"
-                    android:layout_centerVertical="true"
-                    android:layout_centerHorizontal="true" />
+                    android:src="@drawable/ic_thumb_down_p_24dp"/>
             </RelativeLayout>
 
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:layout_weight=".20">
+                android:layout_weight=".20"
+                android:orientation="vertical">
 
                 <ImageButton
                     android:id="@+id/pao_post"
@@ -125,7 +134,7 @@
                     android:layout_height="match_parent"
                     android:background="@android:color/background_light"
                     android:scaleType="centerInside"
-                    android:src="@drawable/ic_add_circle_black_24dp" />
+                    android:src="@drawable/ic_add_circle_black_24dp"/>
 
                 <TextView
                     android:layout_width="match_parent"
@@ -141,7 +150,7 @@
                 android:layout_weight=".20"
                 android:background="@android:color/background_light"
                 android:scaleType="centerInside"
-                android:src="@drawable/ic_bookmark_border_black_24dp" />
+                android:src="@drawable/ic_bookmark_border_black_24dp"/>
 
 
             <ImageButton
@@ -152,7 +161,7 @@
                 android:layout_weight=".20"
                 android:background="@android:color/background_light"
                 android:scaleType="centerInside"
-                android:src="@drawable/ic_share_black_24dp" />
+                android:src="@drawable/ic_share_black_24dp"/>
 
         </LinearLayout>
     </LinearLayout>

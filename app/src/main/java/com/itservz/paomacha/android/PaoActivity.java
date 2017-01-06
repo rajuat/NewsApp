@@ -1,6 +1,7 @@
 package com.itservz.paomacha.android;
 
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -39,6 +40,8 @@ public class PaoActivity extends AppCompatActivity implements FirebaseDatabaseSe
     boolean refreshed = false;
     private FragmentManager fragmentManager;
     private List<Pao> paoList = new ArrayList<>();
+    private Toolbar toolbar;
+    private boolean showAllNews;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,10 +49,7 @@ public class PaoActivity extends AppCompatActivity implements FirebaseDatabaseSe
         getWindow().requestFeature(Window.FEATURE_PROGRESS);
         setContentView(R.layout.activity_pao);
 
-        FirebaseDatabaseService.getInstance(null).getPaoaps(this);
-        FirebaseDatabaseService.getInstance(null).getUserPao(this);
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbarTop);
+        toolbar = (Toolbar) findViewById(R.id.toolbarTop);
         setSupportActionBar(toolbar);
         toolbar.setTitle(getTitle());
         toolbar.setTitleTextColor(getResources().getColor(R.color.primary_dark));
@@ -65,6 +65,19 @@ public class PaoActivity extends AppCompatActivity implements FirebaseDatabaseSe
                 startActivity(intent);
             }
         });
+        showAllNews = true;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d(TAG, "onResume");
+        toolbar.setTitle(getTitle());
+        if(showAllNews){
+            FirebaseDatabaseService.getInstance(null).getPaoaps(this);
+            FirebaseDatabaseService.getInstance(null).getUserPao(this);
+        }
+        EventBus.getInstance().register(this);
     }
 
     @Override
@@ -96,8 +109,53 @@ public class PaoActivity extends AppCompatActivity implements FirebaseDatabaseSe
     }
 
     @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Log.d(TAG, "onActivityResult");
+        switch(requestCode) {
+            case (RETURN_FROM_SETTING) : {
+                if (resultCode == Activity.RESULT_OK) {
+                    String category = data.getStringExtra(SettingActivity.CATEGORY);
+                    if(category.equals(getResources().getString(R.string.category_allnews))){
+                        showAllNews =  true;
+                    } else if(category.equals(getResources().getString(R.string.category_bookmarks))){
+                        FirebaseDatabaseService.getInstance("").getUserBookmarks(this);
+                        showAllNews = false;
+                    } else if(category.equals(getResources().getString(R.string.category_dislikes))){
+                        FirebaseDatabaseService.getInstance("").getUserDisLikes(this);
+                        showAllNews = false;
+                    } else if(category.equals(getResources().getString(R.string.category_likes))){
+                        FirebaseDatabaseService.getInstance("").getUserLikes(this);
+                        showAllNews = false;
+                    } else if(category.equals(getResources().getString(R.string.category_trending))){
+                        FirebaseDatabaseService.getInstance("").getTrending(this);
+                        showAllNews = false;
+                    } else {
+                        FirebaseDatabaseService.getInstance("").getNewForCategory(this, category);
+                        showAllNews = false;
+                    }
+                    setTitle(category);
+                }
+                break;
+            }
+        }
+    }
+
+    private static final int RETURN_FROM_SETTING = 1;
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
+        if(id == R.id.action_settings){
+            item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+                    Intent intent = new Intent(PaoActivity.this, SettingActivity.class);
+                    startActivityForResult(intent, RETURN_FROM_SETTING);
+                    return true;
+                }
+            });
+        }
         /*if (id == R.id.refresh) {
             //toggle
             if(refreshed){
@@ -143,12 +201,6 @@ public class PaoActivity extends AppCompatActivity implements FirebaseDatabaseSe
                 pageView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
             }
         });
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        EventBus.getInstance().register(this);
     }
 
     @Override

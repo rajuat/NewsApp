@@ -9,4 +9,5 @@
     <dimen name="text_large">14sp</dimen>
     <dimen name="text_medium">12sp</dimen>
     <dimen name="text_small">10sp</dimen>
+    <dimen name="tags_margin">8dp</dimen>
 </resources>
