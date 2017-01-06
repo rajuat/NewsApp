@@ -13,6 +13,7 @@ import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.WindowManager;
+import java.util.List;
 
 import java.io.IOException;
 
@@ -88,6 +89,28 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
             //parameters.setPreviewSize(w, h);
             parameters.setRotation(180);
             mCamera.setDisplayOrientation(180);
+        }
+
+        //Additional Parameters started
+        parameters.setPreviewSize(
+                mCamera.getParameters().getPreviewSize().width, mCamera
+                        .getParameters().getPreviewSize().height);
+
+        List<String> flash=parameters.getSupportedFlashModes();
+        if (flash != null
+                && flash.contains(Camera.Parameters.FLASH_MODE_AUTO)) {
+            parameters.setFlashMode(Camera.Parameters.FLASH_MODE_AUTO);
+        }
+        List<String> focus = parameters.getSupportedFocusModes();
+        if (focus != null
+                && focus.contains(Camera.Parameters.FOCUS_MODE_AUTO)) {
+            parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
+        }
+        List<?> whiteMode = parameters.getSupportedWhiteBalance();
+        if (whiteMode != null
+                && whiteMode
+                .contains(android.hardware.Camera.Parameters.WHITE_BALANCE_AUTO)) {
+            parameters.setWhiteBalance(parameters.WHITE_BALANCE_AUTO);
         }
 
         mCamera.setParameters(parameters);
