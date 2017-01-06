@@ -25,7 +25,6 @@ public class PrefManager {
     public PrefManager(Context context) {
         this.context = context;
         pref = context.getSharedPreferences(PREF_NAME, PRIVATE_MODE);
-        editor = pref.edit();
     }
 
     private String BOOKMARK = "bookmark";
@@ -42,6 +41,7 @@ public class PrefManager {
     public void addBookmark(String bookmark) {
         Set<String> bookmarks = pref.getStringSet(BOOKMARK, new HashSet<String>());
         bookmarks.add(bookmark);
+        editor = pref.edit();
         editor.putStringSet(BOOKMARK, bookmarks);
         editor.commit();
     }
@@ -51,6 +51,7 @@ public class PrefManager {
         if(bookmarks.contains(bookmark)){
             bookmarks.remove(bookmark);
         }
+        editor = pref.edit();
         editor.putStringSet(BOOKMARK, bookmarks);
         editor.commit();
     }
@@ -69,6 +70,7 @@ public class PrefManager {
     public void addLike(String like) {
         Set<String> likes = pref.getStringSet(LIKE, new HashSet<String>());
         likes.add(like);
+        editor = pref.edit();
         editor.putStringSet(LIKE, likes);
         editor.commit();
     }
@@ -96,6 +98,7 @@ public class PrefManager {
     public void addDislike(String dislike) {
         Set<String> dislikes = pref.getStringSet(DISLIKE, new HashSet<String>());
         dislikes.add(dislike);
+        editor = pref.edit();
         editor.putStringSet(DISLIKE, dislikes);
         editor.commit();
     }
@@ -105,6 +108,7 @@ public class PrefManager {
         if(dislikes.contains(dislike)){
             dislikes.remove(dislike);
         }
+        editor = pref.edit();
         editor.putStringSet(DISLIKE, dislikes);
         editor.commit();
     }

@@ -18,6 +18,8 @@ import com.itservz.paomacha.android.view.FlowLayout;
 
 public class SettingActivity extends AppCompatActivity {
 
+    private FlowLayout flowLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,9 +34,13 @@ public class SettingActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setDisplayShowHomeEnabled(true);
         }
-        FlowLayout flowLayout = (FlowLayout) findViewById(R.id.flowLayout);
+        flowLayout = (FlowLayout) findViewById(R.id.flowLayout);
+        String[] staticCategories = getResources().getStringArray(R.array.static_categories);
+        for(int i = 0; i < staticCategories.length ; i++){
+            addCategories(staticCategories[i]);
+        }
         for(int i = 0; i < 10; i++) {
-            addCategories(flowLayout, i);
+            addCategories("Category :"+i);
         }
 
         findViewById(R.id.notification).setOnClickListener(new View.OnClickListener() {
@@ -46,7 +52,7 @@ public class SettingActivity extends AppCompatActivity {
     }
 
     public static final String CATEGORY = "category";
-    private void addCategories(FlowLayout flowLayout, int i) {
+    private void addCategories(String i) {
         LinearLayout linearLayout = new LinearLayout(this);
         LinearLayout.LayoutParams layout = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         linearLayout.setLayoutParams(layout);
@@ -59,7 +65,7 @@ public class SettingActivity extends AppCompatActivity {
         textView.setBackground(getResources().getDrawable(R.drawable.rounded_border));
         textView.setPadding(px, px, px, px);
         textView.setTextColor(getResources().getColor(R.color.primary_dark));
-        textView.setText("Category " + i);
+        textView.setText(i);
         textView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

@@ -10,6 +10,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.itservz.paomacha.android.PaoActivity;
 import com.itservz.paomacha.android.model.Pao;
 
+import java.util.Set;
+
 /**
  * Created by Raju on 12/6/2016.
  */
@@ -38,19 +40,45 @@ public class FirebaseDatabaseService {
         return uId;
     }
 
-    public void getUserLikes(final PaoListener listener){
-
-    }
-
-    public void getUserDisLikes(final PaoListener listener){
-
-    }
-
     public void getTrending(final PaoListener listener){
 
     }
+    //for bookmark, likes and dislikes
+    public void getUserTags(final PaoListener listener, final Set<String> tags){
+        Log.d(TAG, "No of tags: "+tags.size());
+        DatabaseReference fromUser = FirebaseService.getInstance().getDatabase().getReference("test").child("fromuser");
+        fromUser.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Pao pao = dataSnapshot.getValue(Pao.class);
+                if ("true".equalsIgnoreCase(pao.needsApproval)) return;
+                if(tags.contains(pao.uuid)) {
+                    listener.onNewPao(pao);
+                    Log.d(TAG, "getUserPao.onChildAdded: " + pao.toString());
+                }
+            }
+            @Override  public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
+            @Override  public void onChildRemoved(DataSnapshot dataSnapshot) { }
+            @Override  public void onChildMoved(DataSnapshot dataSnapshot, String s) { }
+            @Override  public void onCancelled(DatabaseError databaseError) { }
+        });
 
-    public void getUserBookmarks(final PaoListener listener){
+        DatabaseReference fromPaoap = FirebaseService.getInstance().getDatabase().getReference("messages");
+        fromPaoap.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Pao pao = dataSnapshot.getValue(Pao.class);
+                if ("true".equalsIgnoreCase(pao.needsApproval)) return;
+                if(tags.contains(pao.uuid)) {
+                    listener.onNewPao(pao);
+                    Log.d(TAG, "getUserPao.onChildAdded: " + pao.toString());
+                }
+            }
+            @Override  public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
+            @Override  public void onChildRemoved(DataSnapshot dataSnapshot) { }
+            @Override  public void onChildMoved(DataSnapshot dataSnapshot, String s) { }
+            @Override  public void onCancelled(DatabaseError databaseError) { }
+        });
 
     }
 
@@ -65,9 +93,9 @@ public class FirebaseDatabaseService {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 Pao value = dataSnapshot.getValue(Pao.class);
+                Log.d(TAG, "getUserPao.onChildAdded: " + value.toString());
                 if ("true".equalsIgnoreCase(value.needsApproval)) return;
                 listener.onNewPao(value);
-                Log.d(TAG, "getUserPao.onChildAdded: " + value.toString());
             }
 
             @Override

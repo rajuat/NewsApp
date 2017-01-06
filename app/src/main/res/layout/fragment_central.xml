@@ -14,41 +14,38 @@
         android:layout_weight="0.4"
         android:scaleType="centerCrop"/>
 
-    <FrameLayout
-        android:id="@+id/frameLayout"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="0.6"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        android:orientation="vertical">
 
-        <LinearLayout
+        <TextView
+            android:id="@+id/title"
+            style="@style/title"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:maxLines="2"
+            android:layout_height="wrap_content"
+            android:text="Startup launches app for short-time meditation based on mood"/>
 
-            <TextView
-                android:id="@+id/title"
-                style="@style/title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Startup launches app for short-time meditation based on mood"/>
+        <TextView
+            android:id="@+id/body"
+            style="@style/body"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxLines="12"
+            android:ellipsize="end"
+            android:text="Startup Aura Health has launched 'Aura', an iOS app that creates up to 200 short three-to-seven-minute meditation sessions based on the user's current mood — be that stressed, anxious, happy or sad. The app collects data on demographics and age to better understand what type of meditation suits the user. It also provides users with a graph of their mood. Startup Aura Health has launched 'Aura', an iOS app that creates up to 200 short three-to-seven-minute meditation sessions based on the user's current mood — be that stressed, anxious, happy or sad. The app collects data on demographics and age to better understand what type of meditation suits the user. Startup Aura Health has launched 'Aura', an iOS app that creates up to 200 short three-to-seven-minute meditation sessions based on the user's current mood — be that stressed, anxious, happy or sad. The app collects data on demographics and age to better understand what type of meditation suits the user. It also provides users with a graph of their mood. Startup Aura Health has launched 'Aura', an iOS app that creates up to 200 short three-to-seven-minute meditation sessions based on the user's current mood — be that stressed, anxious, happy or sad. The app collects data on demographics and age to better understand what type of meditation suits the user."/>
 
-            <TextView
-                android:id="@+id/body"
-                style="@style/body"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Startup Aura Health has launched 'Aura', an iOS app that creates up to 200 short three-to-seven-minute meditation sessions based on the user's current mood — be that stressed, anxious, happy or sad. The app collects data on demographics and age to better understand what type of meditation suits the user. It also provides users with a graph of their mood. Startup Aura Health has launched 'Aura', an iOS app that creates up to 200 short three-to-seven-minute meditation sessions based on the user's current mood — be that stressed, anxious, happy or sad. The app collects data on demographics and age to better understand what type of meditation suits the user."/>
+        <TextView
+            android:id="@+id/footer"
+            style="@style/footer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="paoap by Pakhangba / 01:48 pm on 02 Jan 2017,Monday"
+            />
+    </LinearLayout>
 
-            <TextView
-                android:id="@+id/footer"
-                style="@style/footer"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="paoap by Pakhangba / 01:48 pm on 02 Jan 2017,Monday"
-                />
-        </LinearLayout>
-    </FrameLayout>
 
     <LinearLayout
         android:id="@+id/toolbarBottom"
@@ -134,13 +131,7 @@
                     android:layout_height="match_parent"
                     android:background="@android:color/background_light"
                     android:scaleType="centerInside"
-                    android:src="@drawable/ic_add_circle_black_24dp"/>
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Post Pao"
-                    />
+                    android:src="@drawable/ic_camera_black_24dp"/>
             </LinearLayout>
 
             <ImageButton
