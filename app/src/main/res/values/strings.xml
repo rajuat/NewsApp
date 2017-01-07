@@ -1,10 +1,10 @@
 <resources>
-    <string name="app_name">paoap</string>
+    <string name="app_name">PAO MACHA</string>
 
     <string name="bottom">Bottom</string>
     <string name="center">Center</string>
     <string name="top">Top</string>
-    <string name="title_activity_pao">paoap</string>
+    <string name="title_activity_pao">PAO MACHA</string>
     <string name="title_activity_setting">Settings</string>
 
     <string name="section_format">Hello World from section: %1$d</string>
@@ -33,11 +33,15 @@
     <string name="category_likes">Your Likes</string>
     <string name="category_dislikes">Your Dislikes</string>
     <string name="category_trending">Trending News</string>
+    <string name="category_fromuser">News from Users</string>
     <string name="category_bookmarks">Your Bookmarks</string>
 
     <string-array name="static_categories">
         <item>@string/category_allnews</item>
         <item>@string/category_trending</item>
+        <item>@string/category_fromuser</item>
+    </string-array>
+    <string-array name="useraction_categories">
         <item>@string/category_bookmarks</item>
         <item>@string/category_likes</item>
         <item>@string/category_dislikes</item>

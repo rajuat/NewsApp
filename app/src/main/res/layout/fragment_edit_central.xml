@@ -1,58 +1,93 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/fragment_center_edit"
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="0dp"
+    android:layout_weight="2"
+    android:fillViewport="true">
 
-    <ImageView
-        android:id="@+id/edit_paopic"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.4"
-        android:scaleType="centerCrop" />
 
-    <LinearLayout
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/fragment_center_edit"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.6"
+        android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <EditText
-            android:id="@+id/edit_title"
-            style="@style/title"
+        <ImageView
+            android:id="@+id/edit_paopic"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Edit news title here" />
+            android:scaleType="centerCrop"
+            android:src="@drawable/inshorts" />
 
-        <EditText
-            android:id="@+id/edit_body"
-            style="@style/body"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Give news in 3 sentences. Startup Aura Health has launched 'Aura', an iOS app that creates up to 200 short three-to-seven-minute meditation sessions based on the user's current mood — be that stressed, anxious, happy or sad. The app collects data on demographics and age to better understand what type of meditation suits the user. It also provides users with a graph of their mood. Startup Aura Health has launched 'Aura', an iOS app that creates up to 200 short three-to-seven-minute meditation sessions based on the user's current mood." />
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-        <EditText
-            android:id="@+id/edit_metadata"
-            style="@style/body"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Verify your location" />
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Edit news title here">
 
-        <TextView
-            android:id="@+id/edit_footer"
-            style="@style/footer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="paoap by {anonymous} / 01:48 pm on 02 Jan 2017,Monday" />
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/edit_title"
+                    style="@style/title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Give news in 3 sentences.">
+
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/edit_body"
+                    style="@style/body"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Startup Aura Health has launched 'Aura', an iOS app that creates up to 200 short three-to-seven-minute meditation sessions based on the user's current mood — be that stressed, anxious, happy or sad. The app collects data on demographics and age to better understand what type of meditation suits the user. It also provides users with a graph of their mood. Startup Aura Health has launched 'Aura', an iOS app that creates up to 200 short three-to-seven-minute meditation sessions based on the user's current mood." />
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Verify your location">
+
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/edit_metadata"
+                    style="@style/body"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Name or Email id (optional)">
+
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/profile"
+                    style="@style/title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </android.support.design.widget.TextInputLayout>
+
+            <com.itservz.paomacha.android.view.FlowLayout
+                android:id="@+id/pao_categories"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:orientation="horizontal"></com.itservz.paomacha.android.view.FlowLayout>
+
+            <Button
+                android:id="@+id/button_post"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Post" />
+        </LinearLayout>
+
+
     </LinearLayout>
-
-    <Button
-        android:id="@+id/button_post"
-        android:text="Post"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_gravity="bottom"
-        android:layout_weight=".10" />
-
-</LinearLayout>
+</ScrollView>

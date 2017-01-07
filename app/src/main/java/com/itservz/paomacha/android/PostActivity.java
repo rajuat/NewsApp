@@ -10,7 +10,6 @@ import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -58,6 +57,7 @@ public class PostActivity extends BaseActivity {
             }
         });
         yesButton = (Button) findViewById(R.id.yes);
+        getIntent().getStringArrayListExtra(PaoActivity.CATEGORY_TAG);
         yesButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -66,6 +66,7 @@ public class PostActivity extends BaseActivity {
                 bundle.putString("file", mediaFile.getPath());
                 bundle.putString("mAddressOutput", mAddressOutput);
                 bundle.putParcelable("mLastLocation", mLastLocation);
+                bundle.putStringArrayList(PaoActivity.CATEGORY_TAG, getIntent().getStringArrayListExtra(PaoActivity.CATEGORY_TAG));
                 PostFragment postFragment = new PostFragment();
                 postFragment.setArguments(bundle);
                 fragmentTransaction.replace(R.id.post_root, postFragment);
@@ -126,7 +127,7 @@ public class PostActivity extends BaseActivity {
         synchronized (mThread) {
             mCamera = mThread.openCamera();
             mPreview = new CameraPreview(this, mCamera);
-            FrameLayout preview = (FrameLayout) findViewById(R.id.camera_preview);
+            LinearLayout preview = (LinearLayout) findViewById(R.id.camera_preview);
             preview.addView(mPreview);
         }
     }

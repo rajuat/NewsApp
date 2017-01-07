@@ -45,6 +45,8 @@ public class PaoActivity extends AppCompatActivity implements FirebaseDatabaseSe
     private Toolbar toolbar;
     private boolean showAllNews;
     private List<String> fragmentTags = null;
+    private ArrayList<String> categoriesFromDB = new ArrayList<>();
+    public static String CATEGORY_TAG = "category_TAG";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +54,7 @@ public class PaoActivity extends AppCompatActivity implements FirebaseDatabaseSe
         getWindow().requestFeature(Window.FEATURE_PROGRESS);
         setContentView(R.layout.activity_pao);
         Log.d(TAG, "onCreate");
+        FirebaseDatabaseService.getCategories(categoriesFromDB);
         fragmentTags = new ArrayList<>();
 
         toolbar = (Toolbar) findViewById(R.id.toolbarTop);
@@ -67,6 +70,7 @@ public class PaoActivity extends AppCompatActivity implements FirebaseDatabaseSe
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(PaoActivity.this, PostActivity.class);
+                intent.putStringArrayListExtra(CATEGORY_TAG, categoriesFromDB);
                 startActivity(intent);
             }
         });
@@ -133,6 +137,12 @@ public class PaoActivity extends AppCompatActivity implements FirebaseDatabaseSe
                     String category = data.getStringExtra(SettingActivity.CATEGORY);
                     if(category.equals(getResources().getString(R.string.category_allnews))){
                         showAllNews =  true;
+                    } else if (category.equals(getResources().getString(R.string.category_trending))) {
+                        FirebaseDatabaseService.getInstance("").getTrending(this);
+                        showAllNews = false;
+                    } else if (category.equals(getResources().getString(R.string.category_fromuser))) {
+                        FirebaseDatabaseService.getInstance("").getUserPao(this);
+                        showAllNews = false;
                     } else if(category.equals(getResources().getString(R.string.category_bookmarks))){
                         FirebaseDatabaseService.getInstance("").getUserTags(this, prefManager.getBookmark());
                         showAllNews = false;
@@ -142,11 +152,8 @@ public class PaoActivity extends AppCompatActivity implements FirebaseDatabaseSe
                     } else if(category.equals(getResources().getString(R.string.category_likes))){
                         FirebaseDatabaseService.getInstance("").getUserTags(this, prefManager.getLike());
                         showAllNews = false;
-                    } else if(category.equals(getResources().getString(R.string.category_trending))){
-                        FirebaseDatabaseService.getInstance("").getTrending(this);
-                        showAllNews = false;
                     } else {
-                        FirebaseDatabaseService.getInstance("").getNewForCategory(this, category);
+                        FirebaseDatabaseService.getInstance("").getNewsForCategory(this, category);
                         showAllNews = false;
                     }
                     setTitle(category);
@@ -166,6 +173,7 @@ public class PaoActivity extends AppCompatActivity implements FirebaseDatabaseSe
                 @Override
                 public boolean onMenuItemClick(MenuItem item) {
                     Intent intent = new Intent(PaoActivity.this, SettingActivity.class);
+                    intent.putStringArrayListExtra(CATEGORY_TAG, categoriesFromDB);
                     startActivityForResult(intent, RETURN_FROM_SETTING);
                     return true;
                 }
