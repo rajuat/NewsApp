@@ -56,6 +56,18 @@ public class PrefManager {
         editor.commit();
     }
 
+    private String NOTIFICATION = "notification";
+
+    public boolean isNotificationEnabled() {
+        return pref.getBoolean(NOTIFICATION, false);
+    }
+
+    public void setNotification(boolean notification) {
+        editor = pref.edit();
+        editor.putBoolean(NOTIFICATION, notification);
+        editor.commit();
+    }
+
     private String LIKE = "like";
 
     public boolean hasLike(String like) {

@@ -2,6 +2,9 @@ package com.itservz.paomacha.android;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -75,6 +78,13 @@ public class PaoActivity extends AppCompatActivity implements FirebaseDatabaseSe
     }
 
     @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        String uuid = intent.getStringExtra(NOTIFICATION_ID);
+        Log.d(TAG, uuid + "for pao level notification receive");
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
         Log.d(TAG, "onResume");
@@ -86,12 +96,31 @@ public class PaoActivity extends AppCompatActivity implements FirebaseDatabaseSe
         EventBus.getInstance().register(this);
     }
 
+    static final String NOTIFICATION_ID = "notified_pao";
     @Override
     public void onNewPao(Pao pao) {
         Log.d(TAG, "onNewPao");
         if (pao == null || pao.uuid == null || pao.title == null || pao.body == null)
             return;
         addNewPao(pao);
+        if (new PrefManager(this).isNotificationEnabled()) {
+            Intent notificationIntent = new Intent(this, PaoActivity.class);
+            notificationIntent.putExtra(NOTIFICATION_ID, pao.uuid);
+            notificationIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            PendingIntent pIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+            Notification noti = new Notification.Builder(this)
+                    .setContentTitle(pao.title)
+                    .setContentText(pao.body)
+                    .setSmallIcon(R.mipmap.ic_launcher)
+                    .setContentIntent(pIntent)
+                    .build();
+            NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+            // hide the notification after its selected
+            noti.flags |= Notification.FLAG_AUTO_CANCEL;
+
+            notificationManager.notify(-(int) pao.createdOn, noti);
+        }
         //paoList.add(pao);
         //refreshed = false;
     }

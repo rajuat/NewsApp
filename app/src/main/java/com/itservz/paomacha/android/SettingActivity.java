@@ -10,8 +10,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.itservz.paomacha.android.preference.PrefManager;
 import com.itservz.paomacha.android.utils.ScreenSizeScaler;
 import com.itservz.paomacha.android.view.FlowLayout;
 
@@ -43,11 +43,29 @@ public class SettingActivity extends AppCompatActivity {
             addCategories(useractionCategoriesLayout, useractionCategories[i]);
         }
 
-
-        findViewById(R.id.notification).setOnClickListener(new View.OnClickListener() {
+        final PrefManager pm = new PrefManager(SettingActivity.this);
+        final int px = new ScreenSizeScaler(getResources()).getdpAspixel(8);
+        TextView textView = (TextView) findViewById(R.id.notification);
+        if (pm.isNotificationEnabled()) {
+            textView.setBackground(getResources().getDrawable(R.drawable.rounded_border_selected));
+            textView.setPadding(px, px, px, px);
+        } else {
+            textView.setBackground(getResources().getDrawable(R.drawable.rounded_border));
+            textView.setPadding(px, px, px, px);
+        }
+        textView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(SettingActivity.this, "This feature is coming soon", Toast.LENGTH_LONG).show();
+                if (pm.isNotificationEnabled()) {
+                    view.setBackground(getResources().getDrawable(R.drawable.rounded_border));
+                    view.setPadding(px, px, px, px);
+                    new PrefManager(SettingActivity.this).setNotification(false);
+                } else {
+                    view.setBackground(getResources().getDrawable(R.drawable.rounded_border_selected));
+                    view.setPadding(px, px, px, px);
+                    new PrefManager(SettingActivity.this).setNotification(true);
+                }
+                //Toast.makeText(SettingActivity.this, "This feature is coming soon", Toast.LENGTH_LONG).show();
             }
         });
     }
