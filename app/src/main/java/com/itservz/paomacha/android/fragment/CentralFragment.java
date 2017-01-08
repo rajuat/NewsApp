@@ -40,8 +40,6 @@ public class CentralFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         pao = (Pao) this.getArguments().getSerializable("paof");
-        Log.d(TAG, pao.toString());
-        pao.uuid.trim();
         final View fragmentView = inflater.inflate(R.layout.fragment_central, container, false);
         paoActivity = (PaoActivity) getActivity();
 
@@ -131,7 +129,7 @@ public class CentralFragment extends Fragment {
                     likeCount.setText("" + -pao.likes);
                     prefManager.addLike(pao.uuid);
                 }
-                FirebaseDatabaseService.updateLikes(pao.uuid, pao.likes);
+                FirebaseDatabaseService.updateLikes(pao);
             }
         });
 
@@ -158,7 +156,7 @@ public class CentralFragment extends Fragment {
                     dislikeCount.setText("" + -pao.disLikes);
                     prefManager.addDislike(pao.uuid);
                 }
-                FirebaseDatabaseService.updateDisLikes(pao.uuid, pao.disLikes);
+                FirebaseDatabaseService.updateDisLikes(pao);
             }
         });
 

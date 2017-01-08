@@ -36,7 +36,7 @@ public class PaoActivity extends AppCompatActivity implements FirebaseDatabaseSe
     /**
      * Start page index. 0 - top page, 1 - central page, 2 - bottom page.
      */
-    private static final int CENTRAL_PAGE_INDEX = 1;
+    private static final int CENTRAL_PAGE_INDEX = 0;
     public boolean FULLSCREEN;
     private VerticalPager mVerticalPager;
     boolean refreshed = false;
@@ -83,8 +83,8 @@ public class PaoActivity extends AppCompatActivity implements FirebaseDatabaseSe
         Log.d(TAG, "onResume");
         toolbar.setTitle(getTitle());
         if(showAllNews){
-            FirebaseDatabaseService.getInstance(null).getPaoaps(this);
-            FirebaseDatabaseService.getInstance(null).getUserPao(this);
+            FirebaseDatabaseService.getInstance(null).getPaoLatest(this);
+            FirebaseDatabaseService.getInstance(null).getUserPaoLatest(this);
         }
         EventBus.getInstance().register(this);
     }
@@ -138,10 +138,10 @@ public class PaoActivity extends AppCompatActivity implements FirebaseDatabaseSe
                     if(category.equals(getResources().getString(R.string.category_allnews))){
                         showAllNews =  true;
                     } else if (category.equals(getResources().getString(R.string.category_trending))) {
-                        FirebaseDatabaseService.getInstance("").getTrending(this);
+                        FirebaseDatabaseService.getInstance("").getUserPaoLatest(this);
                         showAllNews = false;
                     } else if (category.equals(getResources().getString(R.string.category_fromuser))) {
-                        FirebaseDatabaseService.getInstance("").getUserPao(this);
+                        FirebaseDatabaseService.getInstance("").getUserPaoLatest(this);
                         showAllNews = false;
                     } else if(category.equals(getResources().getString(R.string.category_bookmarks))){
                         FirebaseDatabaseService.getInstance("").getUserTags(this, prefManager.getBookmark());
@@ -153,7 +153,7 @@ public class PaoActivity extends AppCompatActivity implements FirebaseDatabaseSe
                         FirebaseDatabaseService.getInstance("").getUserTags(this, prefManager.getLike());
                         showAllNews = false;
                     } else {
-                        FirebaseDatabaseService.getInstance("").getNewsForCategory(this, category);
+                        FirebaseDatabaseService.getInstance("").getPaoForCategory(this, category);
                         showAllNews = false;
                     }
                     setTitle(category);
