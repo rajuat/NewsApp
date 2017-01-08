@@ -24,6 +24,7 @@ import com.itservz.paomacha.android.event.PageChangedEvent;
 import com.itservz.paomacha.android.fragment.CentralCompositeFragment;
 import com.itservz.paomacha.android.model.Pao;
 import com.itservz.paomacha.android.preference.PrefManager;
+import com.itservz.paomacha.android.utils.GpsHelper;
 import com.itservz.paomacha.android.view.VerticalPager;
 import com.squareup.otto.Subscribe;
 
@@ -31,22 +32,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PaoActivity extends AppCompatActivity implements FirebaseDatabaseService.PaoListener {
-
-    static final String TAG = "PaoActivity";
-    /**
-     * Start page index. 0 - top page, 1 - central page, 2 - bottom page.
-     */
-    private static final int CENTRAL_PAGE_INDEX = 0;
     public boolean FULLSCREEN;
+    public static String CATEGORY_TAG = "category_TAG";
+    static final String TAG = "PaoActivity";
     private VerticalPager mVerticalPager;
-    boolean refreshed = false;
     private FragmentManager fragmentManager;
-    private List<Pao> paoList = new ArrayList<>();
     private Toolbar toolbar;
-    private boolean showAllNews;
     private List<String> fragmentTags = null;
     private ArrayList<String> categoriesFromDB = new ArrayList<>();
-    public static String CATEGORY_TAG = "category_TAG";
+    private static final int CENTRAL_PAGE_INDEX = 0;
+    private boolean showAllNews;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +70,8 @@ public class PaoActivity extends AppCompatActivity implements FirebaseDatabaseSe
             }
         });
         showAllNews = true;
+        //gps
+        GpsHelper.turnGPSOn(getApplicationContext());
     }
 
     @Override
@@ -82,7 +79,7 @@ public class PaoActivity extends AppCompatActivity implements FirebaseDatabaseSe
         super.onResume();
         Log.d(TAG, "onResume");
         toolbar.setTitle(getTitle());
-        if(showAllNews){
+        if (showAllNews) {
             FirebaseDatabaseService.getInstance(null).getPaoLatest(this);
             FirebaseDatabaseService.getInstance(null).getUserPaoLatest(this);
         }
@@ -100,6 +97,10 @@ public class PaoActivity extends AppCompatActivity implements FirebaseDatabaseSe
     }
 
     void addNewPao(Pao pao) {
+        if (fragmentTags.contains(pao.uuid)) {
+            Log.d(TAG, "firebase listener set more");
+            return;
+        }
         Bundle bundle = new Bundle();
         bundle.putSerializable("pao", pao);
         CentralCompositeFragment centralCompositeFragment = new CentralCompositeFragment();
@@ -122,34 +123,38 @@ public class PaoActivity extends AppCompatActivity implements FirebaseDatabaseSe
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         Log.d(TAG, "onActivityResult");
-        switch(requestCode) {
-            case (RETURN_FROM_SETTING) : {
+        switch (requestCode) {
+            case (RETURN_FROM_SETTING): {
                 if (resultCode == Activity.RESULT_OK) {
                     //clean the fragments
-                    for(String tag: fragmentTags){
+                    List<String> tempTags = new ArrayList<>();
+                    for (String tag : fragmentTags) {
                         Fragment fragment = fragmentManager.findFragmentByTag(tag);
-                        if(fragment != null)
+                        if (fragment != null) {
                             getSupportFragmentManager().beginTransaction().remove(fragment).commit();
+                            tempTags.add(tag);
+                        }
                     }
+                    fragmentTags.removeAll(tempTags);
 
                     PrefManager prefManager = new PrefManager(this);
 
                     String category = data.getStringExtra(SettingActivity.CATEGORY);
-                    if(category.equals(getResources().getString(R.string.category_allnews))){
-                        showAllNews =  true;
+                    if (category.equals(getResources().getString(R.string.category_allnews))) {
+                        showAllNews = true;
                     } else if (category.equals(getResources().getString(R.string.category_trending))) {
-                        FirebaseDatabaseService.getInstance("").getUserPaoLatest(this);
+                        FirebaseDatabaseService.getInstance("").getTrendingPao(this);
                         showAllNews = false;
                     } else if (category.equals(getResources().getString(R.string.category_fromuser))) {
                         FirebaseDatabaseService.getInstance("").getUserPaoLatest(this);
                         showAllNews = false;
-                    } else if(category.equals(getResources().getString(R.string.category_bookmarks))){
+                    } else if (category.equals(getResources().getString(R.string.category_bookmarks))) {
                         FirebaseDatabaseService.getInstance("").getUserTags(this, prefManager.getBookmark());
                         showAllNews = false;
-                    } else if(category.equals(getResources().getString(R.string.category_dislikes))){
+                    } else if (category.equals(getResources().getString(R.string.category_dislikes))) {
                         FirebaseDatabaseService.getInstance("").getUserTags(this, prefManager.getDislike());
                         showAllNews = false;
-                    } else if(category.equals(getResources().getString(R.string.category_likes))){
+                    } else if (category.equals(getResources().getString(R.string.category_likes))) {
                         FirebaseDatabaseService.getInstance("").getUserTags(this, prefManager.getLike());
                         showAllNews = false;
                     } else {
@@ -168,7 +173,7 @@ public class PaoActivity extends AppCompatActivity implements FirebaseDatabaseSe
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if(id == R.id.action_settings){
+        if (id == R.id.action_settings) {
             item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                 @Override
                 public boolean onMenuItemClick(MenuItem item) {
@@ -203,7 +208,7 @@ public class PaoActivity extends AppCompatActivity implements FirebaseDatabaseSe
 
     private void snapPageWhenLayoutIsReady() {
         /*
-		 * VerticalPager is not fully initialized at the moment, so we want to snap to the central page only when it
+         * VerticalPager is not fully initialized at the moment, so we want to snap to the central page only when it
 		 * layout and measure all its pages.
 		 */
         mVerticalPager.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {

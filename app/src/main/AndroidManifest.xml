@@ -32,10 +32,6 @@
             android:value="@string/google_maps_key"/>
 
         <activity
-            android:name=".MainActivity"
-            android:theme="@style/FullscreenTheme"/>
-        <activity android:name=".SplashActivity"/>
-        <activity
             android:name=".PaoActivity"
             android:label="@string/title_activity_pao"
             android:screenOrientation="portrait"
@@ -45,23 +41,6 @@
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
-            <!--
-            <intent-filter>
-                <action android:name="android.intent.action.SEND"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <data android:mimeType="image/*"/>
-            </intent-filter>
-            <intent-filter>
-                <action android:name="android.intent.action.SEND"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <data android:mimeType="text/plain"/>
-            </intent-filter>
-            <intent-filter>
-                <action android:name="android.intent.action.SEND_MULTIPLE"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <data android:mimeType="image/*"/>
-            </intent-filter>
-            -->
         </activity>
         <activity
             android:name=".PostActivity"
@@ -69,8 +48,14 @@
             android:theme="@style/AppTheme.NoActionBar"/>
         <activity
             android:name=".SettingActivity"
+            android:label="@string/title_activity_setting"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:parentActivityName=".PaoActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.itservz.paomacha.android.PaoActivity" />
+        </activity>
     </application>
 
 </manifest>

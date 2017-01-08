@@ -15,6 +15,7 @@ import android.view.SurfaceView;
 import android.view.WindowManager;
 
 import java.io.IOException;
+import java.util.List;
 
 import static android.content.Context.WINDOW_SERVICE;
 
@@ -68,25 +69,42 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
         // set preview size and make any resize, rotate or reformatting changes here
         Camera.Parameters parameters = mCamera.getParameters();
 
+        List<String> flash = parameters.getSupportedFlashModes();
+        if (flash != null && flash.contains(Camera.Parameters.FLASH_MODE_AUTO)) {
+            parameters.setFlashMode(Camera.Parameters.FLASH_MODE_AUTO);
+        }
+        List<String> focus = parameters.getSupportedFocusModes();
+        if (focus != null && focus.contains(Camera.Parameters.FOCUS_MODE_AUTO)) {
+            parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
+        }
+        List<?> whiteMode = parameters.getSupportedWhiteBalance();
+        if (whiteMode != null && whiteMode.contains(android.hardware.Camera.Parameters.WHITE_BALANCE_AUTO)) {
+            parameters.setWhiteBalance(parameters.WHITE_BALANCE_AUTO);
+        }
+
         Display display = ((WindowManager) context.getSystemService(WINDOW_SERVICE)).getDefaultDisplay();
 
         if (display.getRotation() == Surface.ROTATION_0) {
-            //parameters.setPreviewSize(h, w);
-            parameters.setRotation(90);
+            Log.d(TAG, "0");
+            //parameters.setPreviewSize(w, h);
+            //parameters.setRotation(90);
             mCamera.setDisplayOrientation(90);
         }
 
         if (display.getRotation() == Surface.ROTATION_90) {
-            //parameters.setPreviewSize(w, h);
+            Log.d(TAG, "90");
+            parameters.setPreviewSize(w, h);
         }
 
         if (display.getRotation() == Surface.ROTATION_180) {
-            //parameters.setPreviewSize(h, w);
+            Log.d(TAG, "180");
+            parameters.setPreviewSize(h, w);
         }
 
         if (display.getRotation() == Surface.ROTATION_270) {
+            Log.d(TAG, "270");
             //parameters.setPreviewSize(w, h);
-            parameters.setRotation(180);
+            //parameters.setRotation(180);
             mCamera.setDisplayOrientation(180);
         }
 

@@ -43,7 +43,7 @@ public class StorageHelper {
     public static File getOutputMediaFile(int type) {
         File mediaFile = null;
         // To be safe, you should check that the SDCard is mounted using Environment.getExternalStorageState() before doing this.
-        File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "paoap");
+        File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "paomacha");
         // This location works best if you want the created images to be shared between applications and persist after your app has been uninstalled.
         // Create the storage directory if it does not exist
         if (!mediaStorageDir.exists()) {

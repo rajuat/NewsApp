@@ -3,9 +3,10 @@ package com.itservz.paomacha.android;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -25,11 +26,7 @@ public class SettingActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         toolbar.setTitle(getTitle());
         toolbar.setTitleTextColor(getResources().getColor(R.color.primary_dark));
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setDisplayShowHomeEnabled(true);
-        }
+
         FlowLayout staticCategoriesLayout = (FlowLayout) findViewById(R.id.static_categories);
         String[] staticCategories = getResources().getStringArray(R.array.static_categories);
         for(int i = 0; i < staticCategories.length ; i++){
@@ -53,6 +50,28 @@ public class SettingActivity extends AppCompatActivity {
                 Toast.makeText(SettingActivity.this, "This feature is coming soon", Toast.LENGTH_LONG).show();
             }
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.menu_setting, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.action_back) {
+            item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+                    finish();
+                    return true;
+                }
+            });
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     public static final String CATEGORY = "category";

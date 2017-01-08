@@ -88,11 +88,19 @@ public class PostActivity extends BaseActivity {
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mCamera.takePicture(null, null, mPicture);
+                        mCamera.autoFocus(new Camera.AutoFocusCallback() {
+                            public void onAutoFocus(boolean success, Camera camera) {
+                                Log.d("TAG", "before success");
+                                if (success) {
+                                    Log.d("TAG", "after success");
+                                    camera.takePicture(null, null, mPicture);
+                                }
+                            }
+                        });
+                        //mCamera.takePicture(null, null, mPicture);
                         //now set reset taken pic
                         captureButton.setVisibility(View.GONE);
                         llDecide.setVisibility(View.VISIBLE);
-
                     }
                 }
         );

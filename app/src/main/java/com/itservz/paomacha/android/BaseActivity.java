@@ -193,7 +193,7 @@ public abstract class BaseActivity extends AppCompatActivity implements GoogleAp
         }
 
         /**
-         * Receives data sent from FetchAddressIntentService and updates the UI in MainActivity.
+         * Receives data sent from FetchAddressIntentService and updates the UI in PostActivity.
          */
         @Override
         protected void onReceiveResult(int resultCode, Bundle resultData) {

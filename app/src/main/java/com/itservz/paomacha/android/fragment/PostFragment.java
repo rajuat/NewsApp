@@ -1,7 +1,6 @@
 package com.itservz.paomacha.android.fragment;
 
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
@@ -51,7 +50,7 @@ public class PostFragment extends Fragment {
         Location mLastLocation = this.getArguments().getParcelable("mLastLocation");
         List<String> cats = this.getArguments().getStringArrayList(PaoActivity.CATEGORY_TAG);
         //final Bitmap bitmap = BitmapHelper.decodeSampledBitmapFromFile(postActivity, fileName);
-        final Bitmap bitmap = BitmapFactory.decodeFile(fileName);
+        final Bitmap bitmap = BitmapHelper.decode(fileName);
         pao = new Pao();
         pao.tags = new ArrayList<String>();
 
