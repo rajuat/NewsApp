@@ -23,6 +23,8 @@ public class RightFragment extends Fragment {
 		View fragmentView = inflater.inflate(R.layout.fragment_right, container, false);
 		WebView webview = (WebView) fragmentView.findViewById(R.id.webview);
 		webview.getSettings().setJavaScriptEnabled(true);
+		webview.getSettings().setLoadWithOverviewMode(true);
+		webview.getSettings().setUseWideViewPort(true);
 		webview.setWebChromeClient(new WebChromeClient() {
 			public void onProgressChanged(WebView view, int progress) {
 				// Activities and WebViews measure progress with different scales.
