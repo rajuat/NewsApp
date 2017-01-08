@@ -79,7 +79,7 @@ public class PostFragment extends Fragment {
                 pao.body = pao.body + "\n" + metadata.getText().toString().substring(23);//length of "Verify / edit location: "
                 //only when this is true it has to be approve for display
                 pao.needsApproval = "true";
-                FirebaseDatabaseService.postPao(pao);
+                FirebaseDatabaseService.createUserPao(pao);
                 Toast.makeText(postActivity, "Thanks for sharing the news.", Toast.LENGTH_LONG).show();
                 postActivity.finish();
             }
@@ -92,7 +92,7 @@ public class PostFragment extends Fragment {
         LinearLayout.LayoutParams layout = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         linearLayout.setLayoutParams(layout);
         ScreenSizeScaler screenSizeScaler = new ScreenSizeScaler(getResources());
-        int px = screenSizeScaler.getdpAspixel(8);
+        final int px = screenSizeScaler.getdpAspixel(8);
         linearLayout.setPadding(px, px, px, px);
 
         final TextView textView = new TextView(this.getActivity());
@@ -107,15 +107,19 @@ public class PostFragment extends Fragment {
                 String value = textView.getText().toString();
                 if ("added".equals(textView.getTag())) {//deselect
                     textView.setBackground(getResources().getDrawable(R.drawable.rounded_border));
+                    textView.setPadding(px, px, px, px);
                     if (tags.contains(value)) {
                         tags.remove(value);
                     }
+                    textView.setTag("");
+                } else {
+                    textView.setBackground(getResources().getDrawable(R.drawable.rounded_border_selected));
+                    textView.setPadding(px, px, px, px);
+                    if (!tags.contains(value)) {
+                        tags.add(value);
+                    }
+                    textView.setTag("added");
                 }
-                textView.setBackground(getResources().getDrawable(R.drawable.rounded_border_selected));
-                if (!tags.contains(value)) {
-                    tags.add(value);
-                }
-                textView.setTag("added");
             }
         });
 

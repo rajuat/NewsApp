@@ -6,43 +6,48 @@
     android:orientation="vertical">
 
     <LinearLayout
-        android:id="@+id/camera_preview"
+        android:id="@+id/camera_frame"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight=".84"
-        android:orientation="horizontal" />
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-    <Button
-        android:id="@+id/button_capture"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_gravity="bottom"
-        android:layout_weight=".16"
-        android:text="Capture" />
-
-    <LinearLayout
-        android:id="@+id/ll_decide"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight=".16"
-        android:visibility="gone">
+        <LinearLayout
+            android:id="@+id/camera_preview"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight=".90"
+            android:orientation="horizontal" />
 
         <Button
-            android:id="@+id/no"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
+            android:id="@+id/button_capture"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
             android:layout_gravity="bottom"
-            android:layout_weight=".5"
-            android:text="No" />
+            android:layout_weight=".10"
+            android:text="Capture" />
 
-        <Button
-            android:id="@+id/yes"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_gravity="bottom"
-            android:layout_weight=".5"
-            android:text="Yes" />
+        <LinearLayout
+            android:id="@+id/ll_decide"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight=".10"
+            android:visibility="gone">
 
+            <Button
+                android:id="@+id/no"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="bottom"
+                android:layout_weight=".5"
+                android:text="No" />
 
+            <Button
+                android:id="@+id/yes"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="bottom"
+                android:layout_weight=".5"
+                android:text="Yes" />
+        </LinearLayout>
     </LinearLayout>
 </LinearLayout>

@@ -62,6 +62,7 @@ public class PostActivity extends BaseActivity {
         yesButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
                 Bundle bundle = new Bundle();
                 bundle.putString("file", mediaFile.getPath());
@@ -71,7 +72,11 @@ public class PostActivity extends BaseActivity {
                 PostFragment postFragment = new PostFragment();
                 postFragment.setArguments(bundle);
                 fragmentTransaction.replace(R.id.post_root, postFragment);
-                fragmentTransaction.addToBackStack(null);
+                findViewById(R.id.camera_frame).setVisibility(View.GONE);
+                if (mCamera != null) {
+                    mCamera.release();
+                    mCamera = null;
+                }
                 fragmentTransaction.commit();
 
             }
@@ -101,6 +106,12 @@ public class PostActivity extends BaseActivity {
         );
 
         updateValuesFromBundle(savedInstanceState);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        findViewById(R.id.camera_frame).setVisibility(View.VISIBLE);
     }
 
     @Override
