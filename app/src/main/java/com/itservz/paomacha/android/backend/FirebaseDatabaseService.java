@@ -38,7 +38,7 @@ public class FirebaseDatabaseService {
     }
 
     private static void updateTags(Pao pao, int likes) {
-        pao.uuid.trim();
+        pao.uuid = pao.uuid != null ? pao.uuid.trim() : null;
         if (pao.originalNewsUrl == null || pao.originalNewsUrl.isEmpty()) { //user news
             FirebaseService.getInstance().getDatabase().getReference(DatabaseFolders.test.name()).child(DatabaseFolders.fromuser.name()).child(pao.uuid).child("likes").setValue(likes);
         } else {
@@ -64,7 +64,7 @@ public class FirebaseDatabaseService {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 Pao pao = dataSnapshot.getValue(Pao.class);
-                pao.uuid.trim();
+                pao.uuid = pao.uuid != null ? pao.uuid.trim() : null;
                 if ("true".equalsIgnoreCase(pao.needsApproval)) return;
                 if(tags.contains(pao.uuid)) {
                     listener.onNewPao(pao);
@@ -83,7 +83,7 @@ public class FirebaseDatabaseService {
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 Pao pao = dataSnapshot.getValue(Pao.class);
                 if ("true".equalsIgnoreCase(pao.needsApproval)) return;
-                pao.uuid.trim();
+                pao.uuid = pao.uuid != null ? pao.uuid.trim() : null;
                 if(tags.contains(pao.uuid)) {
                     listener.onNewPao(pao);
                     Log.d(TAG, "getUserPaoLatest.onChildAdded: " + pao.toString());
@@ -126,7 +126,7 @@ public class FirebaseDatabaseService {
                 //when user post - needsApproval is true, we can "hide" news violation
                 if ("true".equalsIgnoreCase(pao.needsApproval) || "hide".equalsIgnoreCase(pao.needsApproval))
                     return;
-                pao.uuid.trim();
+                pao.uuid = pao.uuid != null ? pao.uuid.trim() : null;
                 //if category is null - showall, else look for categories in the pao
                 if (category == null) {
                     listener.onNewPao(pao);

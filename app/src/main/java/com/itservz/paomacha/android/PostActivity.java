@@ -77,7 +77,11 @@ public class PostActivity extends BaseActivity {
                     mCamera = null;
                 }
                 fragmentTransaction.commit();
-
+                if (mGoogleApiClient.isConnected() && mLastLocation != null) {
+                    Log.d(TAG, "mGoogleApiClient");
+                    startIntentService();
+                    mAddressRequested = true;
+                }
             }
         });
         captureButton.setOnClickListener(
@@ -93,6 +97,21 @@ public class PostActivity extends BaseActivity {
                 }
         );
         updateValuesFromBundle(savedInstanceState);
+    }
+
+    private void updateValuesFromBundle(Bundle savedInstanceState) {
+        if (savedInstanceState != null) {
+            // Check savedInstanceState to see if the address was previously requested.
+            if (savedInstanceState.keySet().contains(ADDRESS_REQUESTED_KEY)) {
+                mAddressRequested = savedInstanceState.getBoolean(ADDRESS_REQUESTED_KEY);
+            }
+            // Check savedInstanceState to see if the location address string was previously found
+            // and stored in the Bundle. If it was found, display the address string in the UI.
+            if (savedInstanceState.keySet().contains(LOCATION_ADDRESS_KEY)) {
+                mAddressOutput = savedInstanceState.getString(LOCATION_ADDRESS_KEY);
+                displayAddressOutput();
+            }
+        }
     }
 
     @Override
@@ -166,21 +185,6 @@ public class PostActivity extends BaseActivity {
                 return;
             }
             // other 'case' lines to check for other permissions this app might request
-        }
-    }
-
-    private void updateValuesFromBundle(Bundle savedInstanceState) {
-        if (savedInstanceState != null) {
-            // Check savedInstanceState to see if the address was previously requested.
-            if (savedInstanceState.keySet().contains(ADDRESS_REQUESTED_KEY)) {
-                mAddressRequested = savedInstanceState.getBoolean(ADDRESS_REQUESTED_KEY);
-            }
-            // Check savedInstanceState to see if the location address string was previously found
-            // and stored in the Bundle. If it was found, display the address string in the UI.
-            if (savedInstanceState.keySet().contains(LOCATION_ADDRESS_KEY)) {
-                mAddressOutput = savedInstanceState.getString(LOCATION_ADDRESS_KEY);
-                displayAddressOutput();
-            }
         }
     }
 
