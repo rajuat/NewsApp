@@ -7,8 +7,13 @@ import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.itservz.paomacha.android.PaoActivity;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+import com.itservz.paomacha.android.model.Categories;
 import com.itservz.paomacha.android.model.Pao;
+
+import java.util.List;
+import java.util.Set;
 
 /**
  * Created by Raju on 12/6/2016.
@@ -26,6 +31,12 @@ public class FirebaseDatabaseService {
 
     public static void updateLikes(String uuid, Integer likes) {
         FirebaseService.getInstance().getDatabase().getReference("messages").child(uuid).child("likes").setValue(likes);
+        FirebaseService.getInstance().getDatabase().getReference("test").child("fromuser").child("likes").setValue(likes);
+    }
+
+    public static void updateDisLikes(String uuid, Integer disLikes) {
+        FirebaseService.getInstance().getDatabase().getReference("messages").child(uuid).child("disLikes").setValue(disLikes);
+        FirebaseService.getInstance().getDatabase().getReference("test").child("fromuser").child("disLikes").setValue(disLikes);
     }
 
     public static String postPao(Pao pao) {
@@ -38,36 +49,82 @@ public class FirebaseDatabaseService {
         return uId;
     }
 
-    public void getUserLikes(final PaoListener listener){
-
-    }
-
-    public void getUserDisLikes(final PaoListener listener){
-
-    }
-
     public void getTrending(final PaoListener listener){
 
     }
+    //for bookmark, likes and dislikes
+    public void getUserTags(final PaoListener listener, final Set<String> tags){
+        Log.d(TAG, "No of tags: "+tags.size());
+        DatabaseReference fromUser = FirebaseService.getInstance().getDatabase().getReference("test").child("fromuser");
+        fromUser.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Pao pao = dataSnapshot.getValue(Pao.class);
+                if ("true".equalsIgnoreCase(pao.needsApproval)) return;
+                if(tags.contains(pao.uuid)) {
+                    listener.onNewPao(pao);
+                    Log.d(TAG, "getUserPao.onChildAdded: " + pao.toString());
+                }
+            }
+            @Override  public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
+            @Override  public void onChildRemoved(DataSnapshot dataSnapshot) { }
+            @Override  public void onChildMoved(DataSnapshot dataSnapshot, String s) { }
+            @Override  public void onCancelled(DatabaseError databaseError) { }
+        });
 
-    public void getUserBookmarks(final PaoListener listener){
+        DatabaseReference fromPaoap = FirebaseService.getInstance().getDatabase().getReference("messages");
+        fromPaoap.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Pao pao = dataSnapshot.getValue(Pao.class);
+                if ("true".equalsIgnoreCase(pao.needsApproval)) return;
+                if(tags.contains(pao.uuid)) {
+                    listener.onNewPao(pao);
+                    Log.d(TAG, "getUserPao.onChildAdded: " + pao.toString());
+                }
+            }
+            @Override  public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
+            @Override  public void onChildRemoved(DataSnapshot dataSnapshot) { }
+            @Override  public void onChildMoved(DataSnapshot dataSnapshot, String s) { }
+            @Override  public void onCancelled(DatabaseError databaseError) { }
+        });
 
     }
 
-    public void getNewForCategory(final PaoListener listener, String category){
+    public void getNewsForCategory(final PaoListener listener, String category) {
 
+    }
+
+    public static void getCategories(final List<String> categories) {
+        DatabaseReference reference = FirebaseService.getInstance().getDatabase().getReference("prod").child("categories");
+        reference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Categories cats = dataSnapshot.getValue(Categories.class);
+                Log.d("TAG", "onDataChange " + cats.categories);
+                String[] split = cats.categories.split(",");
+                for (String cat : split) {
+                    categories.add(cat);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
     }
 
     @NonNull
     public void getUserPao(final PaoListener listener) {
-        final DatabaseReference paoref = FirebaseService.getInstance().getDatabase().getReference("test").child("fromuser");
+        final DatabaseReference df = FirebaseService.getInstance().getDatabase().getReference("test").child("fromuser");
+        Query paoref = df.orderByChild("createdOn").limitToFirst(10);//latest
         paoref.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 Pao value = dataSnapshot.getValue(Pao.class);
+                Log.d(TAG, "getUserPao.onChildAdded: " + value.toString());
                 if ("true".equalsIgnoreCase(value.needsApproval)) return;
                 listener.onNewPao(value);
-                Log.d(TAG, "getUserPao.onChildAdded: " + value.toString());
             }
 
             @Override
@@ -89,8 +146,9 @@ public class FirebaseDatabaseService {
     }
 
     @NonNull
-    public DatabaseReference getPaoaps(final PaoListener listener) {
-        final DatabaseReference paoref = FirebaseService.getInstance().getDatabase().getReference("messages");
+    public void getPaoaps(final PaoListener listener) {
+        final DatabaseReference df = FirebaseService.getInstance().getDatabase().getReference("messages");
+        Query paoref = df.orderByChild("createdOn").limitToFirst(10);//latest
         paoref.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String previousChildName) {
@@ -117,7 +175,6 @@ public class FirebaseDatabaseService {
                 Log.w("TAG:", "Failed to read value.", error.toException());
             }
         });
-        return paoref;
     }
 
     public interface PaoListener {

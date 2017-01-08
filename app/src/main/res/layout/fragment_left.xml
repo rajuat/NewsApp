@@ -4,4 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/primary_light"
-    android:text="Coming Soon" />
+    android:gravity="center"
+    android:text="Coming Soon"
+    android:textColor="@color/primary_dark"
+    android:textSize="@dimen/text_big"
+    android:textStyle="bold" />

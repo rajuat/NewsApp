@@ -2,17 +2,15 @@ package com.itservz.paomacha.android;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.vision.text.Line;
-import com.itservz.paomacha.android.backend.FirebaseDatabaseService;
 import com.itservz.paomacha.android.utils.ScreenSizeScaler;
 import com.itservz.paomacha.android.view.FlowLayout;
 
@@ -32,10 +30,22 @@ public class SettingActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setDisplayShowHomeEnabled(true);
         }
-        FlowLayout flowLayout = (FlowLayout) findViewById(R.id.flowLayout);
-        for(int i = 0; i < 10; i++) {
-            addCategories(flowLayout, i);
+        FlowLayout staticCategoriesLayout = (FlowLayout) findViewById(R.id.static_categories);
+        String[] staticCategories = getResources().getStringArray(R.array.static_categories);
+        for(int i = 0; i < staticCategories.length ; i++){
+            addCategories(staticCategoriesLayout, staticCategories[i]);
         }
+
+        FlowLayout paoCategoriesLayout = (FlowLayout) findViewById(R.id.pao_categories);
+        for (String cat : getIntent().getStringArrayListExtra(PaoActivity.CATEGORY_TAG)) {
+            addCategories(paoCategoriesLayout, cat);
+        }
+        FlowLayout useractionCategoriesLayout = (FlowLayout) findViewById(R.id.useraction_categories);
+        String[] useractionCategories = getResources().getStringArray(R.array.useraction_categories);
+        for (int i = 0; i < useractionCategories.length; i++) {
+            addCategories(useractionCategoriesLayout, useractionCategories[i]);
+        }
+
 
         findViewById(R.id.notification).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -46,7 +56,8 @@ public class SettingActivity extends AppCompatActivity {
     }
 
     public static final String CATEGORY = "category";
-    private void addCategories(FlowLayout flowLayout, int i) {
+
+    private void addCategories(FlowLayout flowLayout, String i) {
         LinearLayout linearLayout = new LinearLayout(this);
         LinearLayout.LayoutParams layout = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         linearLayout.setLayoutParams(layout);
@@ -59,7 +70,7 @@ public class SettingActivity extends AppCompatActivity {
         textView.setBackground(getResources().getDrawable(R.drawable.rounded_border));
         textView.setPadding(px, px, px, px);
         textView.setTextColor(getResources().getColor(R.color.primary_dark));
-        textView.setText("Category " + i);
+        textView.setText(i);
         textView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

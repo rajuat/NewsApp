@@ -9,7 +9,7 @@ import java.util.List;
 
 public class Pao implements Serializable {
     public String uuid; // for bookmark and others
-    public String createdOn; //date
+    public long createdOn; //date
     public String createdBy; //name
     public String imageUrl; // if this is absent, get from imageUrl
     public String image; // for user uploads

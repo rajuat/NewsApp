@@ -24,6 +24,8 @@ import com.itservz.paomacha.android.utils.DownloadImageTask;
 import com.itservz.paomacha.android.utils.Share;
 import com.itservz.paomacha.android.view.ActionBarToggler;
 
+import java.util.Date;
+
 
 /**
  * Fragment to manage the central page of the 5 pages application navigation (top, center, bottom, left, right).
@@ -57,7 +59,7 @@ public class CentralFragment extends Fragment {
         TextView body = (TextView) fragmentView.findViewById(R.id.body);
         body.setText(pao.body);
         TextView footer = (TextView) fragmentView.findViewById(R.id.footer);
-        footer.setText("paoap by " + pao.createdBy + " / " + pao.createdOn);
+        footer.setText("PAO MACHA by " + pao.createdBy + " / " + new Date(-pao.createdOn).toString());
 
         addListeners(fragmentView);
         return fragmentView;
@@ -79,7 +81,7 @@ public class CentralFragment extends Fragment {
                 } else {
                     Log.d(TAG, "fragmentView.setOnClickListener hide");
                     ActionBarToggler.hideAppBar(appBarLayout);
-                    ActionBarToggler.hideBottomBar(toolbarBottom, fab);
+                    ActionBarToggler.hideBottomBar(toolbarBottom, null);
                     paoActivity.FULLSCREEN = true;
                 }
 
@@ -88,14 +90,19 @@ public class CentralFragment extends Fragment {
 
         prefManager = new PrefManager(paoActivity);
         final ImageButton bookmark = (ImageButton) fragmentView.findViewById(R.id.bookmark);
+        if (prefManager.hasBookmark(pao.uuid)) {
+            bookmark.setImageDrawable(getResources().getDrawable(R.drawable.ic_bookmark_black_24dp));
+        } else {
+            bookmark.setImageDrawable(getResources().getDrawable(R.drawable.ic_bookmark_border_black_24dp));
+        }
         bookmark.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (prefManager.hasBookmark(pao.uuid)) {
-                    bookmark.setImageDrawable(getResources().getDrawable(R.drawable.ic_bookmark_black_24dp));
+                    bookmark.setImageDrawable(getResources().getDrawable(R.drawable.ic_bookmark_border_black_24dp));
                     prefManager.removeBookmark(pao.uuid);
                 } else {
-                    bookmark.setImageDrawable(getResources().getDrawable(R.drawable.ic_bookmark_border_black_24dp));
+                    bookmark.setImageDrawable(getResources().getDrawable(R.drawable.ic_bookmark_black_24dp));
                     prefManager.addBookmark(pao.uuid);
                 }
             }
@@ -103,47 +110,55 @@ public class CentralFragment extends Fragment {
 
         final View likeContainer = fragmentView.findViewById(R.id.like_container);
         final ImageButton like = (ImageButton) fragmentView.findViewById(R.id.like);
+        if (prefManager.hasLike(pao.uuid)) {
+            like.setImageDrawable(getResources().getDrawable(R.drawable.ic_thumb_up_pdark_24dp));
+        } else {
+            like.setImageDrawable(getResources().getDrawable(R.drawable.ic_thumb_up_p_24dp));
+        }
         final TextView likeCount = (TextView) fragmentView.findViewById(R.id.like_count);
-        likeCount.setText("" + pao.likes);
+        likeCount.setText("" + -pao.likes);
         likeContainer.setOnClickListener(new View.OnClickListener() {
-            int count = pao.likes;
             @Override
             public void onClick(View view) {
                 if (prefManager.hasLike(pao.uuid)) {//had already liked, now undo
                     like.setImageDrawable(getResources().getDrawable(R.drawable.ic_thumb_up_p_24dp));
-                    count--;
-                    likeCount.setText(""+count);
+                    pao.likes++;
+                    likeCount.setText("" + -pao.likes);
                     prefManager.removeLike(pao.uuid);
                 } else { //liking it
                     like.setImageDrawable(getResources().getDrawable(R.drawable.ic_thumb_up_pdark_24dp));
-                    count++;
-                    likeCount.setText(""+count);
+                    pao.likes--;
+                    likeCount.setText("" + -pao.likes);
                     prefManager.addLike(pao.uuid);
                 }
-                FirebaseDatabaseService.updateLikes(pao.uuid, count);
+                FirebaseDatabaseService.updateLikes(pao.uuid, pao.likes);
             }
         });
 
         final View dislikeContainer = fragmentView.findViewById(R.id.dislike_container);
         final ImageButton dislike = (ImageButton) fragmentView.findViewById(R.id.dislike);
+        if (prefManager.hasDislike(pao.uuid)) {
+            dislike.setImageDrawable(getResources().getDrawable(R.drawable.ic_thumb_down_pdark_24dp));
+        } else {
+            dislike.setImageDrawable(getResources().getDrawable(R.drawable.ic_thumb_down_p_24dp));
+        }
         final TextView dislikeCount = (TextView) fragmentView.findViewById(R.id.dislike_count);
-        likeCount.setText("" + pao.disLikes);
+        dislikeCount.setText("" + -pao.disLikes);
         dislikeContainer.setOnClickListener(new View.OnClickListener() {
-            int count = pao.disLikes;
             @Override
             public void onClick(View view) {
                 if (prefManager.hasDislike(pao.uuid)) {
                     dislike.setImageDrawable(getResources().getDrawable(R.drawable.ic_thumb_down_p_24dp));
-                    count--;
-                    dislikeCount.setText(""+count);
+                    pao.disLikes++;
+                    dislikeCount.setText("" + -pao.disLikes);
                     prefManager.removeDislike(pao.uuid);
                 } else {
                     dislike.setImageDrawable(getResources().getDrawable(R.drawable.ic_thumb_down_pdark_24dp));
-                    count++;
-                    dislikeCount.setText(""+count);
+                    pao.disLikes--;
+                    dislikeCount.setText("" + -pao.disLikes);
                     prefManager.addDislike(pao.uuid);
                 }
-                FirebaseDatabaseService.updateLikes(pao.uuid, count);
+                FirebaseDatabaseService.updateDisLikes(pao.uuid, pao.disLikes);
             }
         });
 

@@ -2,19 +2,10 @@ package com.itservz.paomacha.android;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
-
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
-import com.itservz.paomacha.android.backend.FirebaseDatabaseService;
 
 public class SplashActivity extends AppCompatActivity {
 
@@ -29,7 +20,7 @@ public class SplashActivity extends AppCompatActivity {
         // Add items via the Button and EditText at the bottom of the window.
         final EditText text = (EditText) findViewById(R.id.todoText);
         final Button button = (Button) findViewById(R.id.addButton);
-        final DatabaseReference myRef = FirebaseDatabaseService.getInstance("").getPaoaps(null);
+        /*final DatabaseReference myRef = FirebaseDatabaseService.getInstance("").getPaoaps(null);
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // Create a new child with a auto-generated ID.
@@ -58,7 +49,7 @@ public class SplashActivity extends AppCompatActivity {
                     }
                 });
             }
-        });
+        });*/
         //new ServletPostAsyncTask().execute(new Pair<Context, String>(getApplicationContext(), "bookex"));
     }
 
