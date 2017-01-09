@@ -28,8 +28,7 @@ public class PostActivity extends BaseActivity {
     private CameraPreview mPreview;
     private CameraHelper.CameraHandlerThread mThread = null;
 
-    private static final int MY_PERMISSIONS_REQUEST_CAMERA = 1;
-    private static final int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 2;
+
     public static final int MEDIA_TYPE_IMAGE = 1;
     public static final int MEDIA_TYPE_VIDEO = 2;
     private Button captureButton;
