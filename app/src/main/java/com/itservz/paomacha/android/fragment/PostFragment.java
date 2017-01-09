@@ -1,7 +1,6 @@
 package com.itservz.paomacha.android.fragment;
 
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
@@ -22,6 +21,7 @@ import com.itservz.paomacha.android.R;
 import com.itservz.paomacha.android.backend.FirebaseDatabaseService;
 import com.itservz.paomacha.android.model.Pao;
 import com.itservz.paomacha.android.preference.PrefManager;
+import com.itservz.paomacha.android.utils.AddressHelper;
 import com.itservz.paomacha.android.utils.BitmapHelper;
 import com.itservz.paomacha.android.utils.ScreenSizeScaler;
 import com.itservz.paomacha.android.view.FlowLayout;
@@ -46,11 +46,11 @@ public class PostFragment extends Fragment {
         final View fragmentView = inflater.inflate(R.layout.fragment_edit_central, container, false);
         postActivity = (PostActivity) getActivity();
         String fileName = this.getArguments().getString("file");
-        String mAddressOutput = this.getArguments().getString("mAddressOutput");
+        //String mAddressOutput = this.getArguments().getString("mAddressOutput");
         Location mLastLocation = this.getArguments().getParcelable("mLastLocation");
         List<String> cats = this.getArguments().getStringArrayList(PaoActivity.CATEGORY_TAG);
         //final Bitmap bitmap = BitmapHelper.decodeSampledBitmapFromFile(postActivity, fileName);
-        final Bitmap bitmap = BitmapFactory.decodeFile(fileName);
+        final Bitmap bitmap = BitmapHelper.decode(fileName);
         pao = new Pao();
         pao.tags = new ArrayList<String>();
 
@@ -59,7 +59,11 @@ public class PostFragment extends Fragment {
         final TextInputEditText title = (TextInputEditText) fragmentView.findViewById(R.id.edit_title);
         final TextInputEditText body = (TextInputEditText) fragmentView.findViewById(R.id.edit_body);
         final TextInputEditText metadata = (TextInputEditText) fragmentView.findViewById(R.id.edit_metadata);
-        metadata.setText(mAddressOutput + " " + mLastLocation.toString());
+        if (postActivity.mAddressOutput == null || postActivity.mAddressOutput.isEmpty()) {
+            metadata.setText(AddressHelper.getAddress(postActivity, mLastLocation));
+        } else {
+            metadata.setText(mLastLocation.toString());
+        }
         final EditText profile = (EditText) fragmentView.findViewById(R.id.profile);
         FlowLayout paoCategoriesLayout = (FlowLayout) fragmentView.findViewById(R.id.pao_categories);
         for (String cat : cats) {
@@ -76,7 +80,7 @@ public class PostFragment extends Fragment {
                 pao.image = BitmapHelper.bitmapToString(bitmap);
                 pao.title = "(User post) " + title.getText().toString();
                 pao.body = body.getText().toString();
-                pao.body = pao.body + "\n" + metadata.getText().toString().substring(23);//length of "Verify / edit location: "
+                pao.body = pao.body + "\n" + metadata.getText().toString();
                 //only when this is true it has to be approve for display
                 pao.needsApproval = "true";
                 FirebaseDatabaseService.createUserPao(pao);

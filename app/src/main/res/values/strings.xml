@@ -1,21 +1,7 @@
 <resources>
     <string name="app_name">PAO MACHA</string>
-
-    <string name="bottom">Bottom</string>
-    <string name="center">Center</string>
-    <string name="top">Top</string>
     <string name="title_activity_pao">PAO MACHA</string>
     <string name="title_activity_setting">Settings</string>
-
-    <string name="section_format">Hello World from section: %1$d</string>
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
-
-    <string name="title_activity_fullscreen">FullscreenActivity</string>
-    <string name="dummy_button">Dummy Button</string>
-    <string name="dummy_content">DUMMY\nCONTENT</string>
-
-    <string name="title_activity_fullscreen2">Fullscreen2Activity</string>
 
     <string name="no_geocoder_available">No geocoder available</string>
 

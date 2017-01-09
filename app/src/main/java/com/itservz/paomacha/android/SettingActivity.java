@@ -3,14 +3,15 @@ package com.itservz.paomacha.android;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.itservz.paomacha.android.preference.PrefManager;
 import com.itservz.paomacha.android.utils.ScreenSizeScaler;
 import com.itservz.paomacha.android.view.FlowLayout;
 
@@ -25,11 +26,7 @@ public class SettingActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         toolbar.setTitle(getTitle());
         toolbar.setTitleTextColor(getResources().getColor(R.color.primary_dark));
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setDisplayShowHomeEnabled(true);
-        }
+
         FlowLayout staticCategoriesLayout = (FlowLayout) findViewById(R.id.static_categories);
         String[] staticCategories = getResources().getStringArray(R.array.static_categories);
         for(int i = 0; i < staticCategories.length ; i++){
@@ -46,13 +43,53 @@ public class SettingActivity extends AppCompatActivity {
             addCategories(useractionCategoriesLayout, useractionCategories[i]);
         }
 
-
-        findViewById(R.id.notification).setOnClickListener(new View.OnClickListener() {
+        final PrefManager pm = new PrefManager(SettingActivity.this);
+        final int px = new ScreenSizeScaler(getResources()).getdpAspixel(8);
+        TextView textView = (TextView) findViewById(R.id.notification);
+        if (pm.isNotificationEnabled()) {
+            textView.setBackground(getResources().getDrawable(R.drawable.rounded_border_selected));
+            textView.setPadding(px, px, px, px);
+        } else {
+            textView.setBackground(getResources().getDrawable(R.drawable.rounded_border));
+            textView.setPadding(px, px, px, px);
+        }
+        textView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(SettingActivity.this, "This feature is coming soon", Toast.LENGTH_LONG).show();
+                if (pm.isNotificationEnabled()) {
+                    view.setBackground(getResources().getDrawable(R.drawable.rounded_border));
+                    view.setPadding(px, px, px, px);
+                    new PrefManager(SettingActivity.this).setNotification(false);
+                } else {
+                    view.setBackground(getResources().getDrawable(R.drawable.rounded_border_selected));
+                    view.setPadding(px, px, px, px);
+                    new PrefManager(SettingActivity.this).setNotification(true);
+                }
+                //Toast.makeText(SettingActivity.this, "This feature is coming soon", Toast.LENGTH_LONG).show();
             }
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.menu_setting, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.action_back) {
+            item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+                    finish();
+                    return true;
+                }
+            });
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     public static final String CATEGORY = "category";

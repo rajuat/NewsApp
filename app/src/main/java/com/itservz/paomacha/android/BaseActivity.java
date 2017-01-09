@@ -42,7 +42,7 @@ public abstract class BaseActivity extends AppCompatActivity implements GoogleAp
     /**
      * The formatted location address.
      */
-    protected String mAddressOutput;
+    public String mAddressOutput;
 
     /**
      * Receiver registered with this activity to get the response from FetchAddressIntentService.
@@ -193,12 +193,13 @@ public abstract class BaseActivity extends AppCompatActivity implements GoogleAp
         }
 
         /**
-         * Receives data sent from FetchAddressIntentService and updates the UI in MainActivity.
+         * Receives data sent from FetchAddressIntentService and updates the UI in PostActivity.
          */
         @Override
         protected void onReceiveResult(int resultCode, Bundle resultData) {
             // Display the address string or an error message sent from the intent service.
             mAddressOutput = resultData.getString(FetchAddressIntentService.Constants.RESULT_DATA_KEY);
+            Log.d(TAG, "address: " + mAddressOutput);
             displayAddressOutput();
 
             // Show a toast message if an address was found.

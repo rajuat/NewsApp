@@ -37,7 +37,6 @@ public class PostActivity extends BaseActivity {
     private Button noButton;
     private Button yesButton;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,34 +77,49 @@ public class PostActivity extends BaseActivity {
                     mCamera = null;
                 }
                 fragmentTransaction.commit();
-
+                if (mGoogleApiClient.isConnected() && mLastLocation != null) {
+                    Log.d(TAG, "mGoogleApiClient");
+                    startIntentService();
+                    mAddressRequested = true;
+                }
             }
         });
         captureButton.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-//TODO Added auto focus and auto flash success
                         mCamera.autoFocus(new Camera.AutoFocusCallback() {
                             public void onAutoFocus(boolean success, Camera camera) {
-                                Log.d("TAG","before success");
-                                if(success){
-                                    Log.d("TAG","after success");
+                                Log.d("TAG", "before success");
+                                if (success) {
+                                    Log.d("TAG", "after success");
                                     camera.takePicture(null, null, mPicture);
-
-
                                 }
-                            }});
+                            }
+                        });
+                        //mCamera.takePicture(null, null, mPicture);
                         //now set reset taken pic
                         captureButton.setVisibility(View.GONE);
                         llDecide.setVisibility(View.VISIBLE);
-
-
                     }
                 }
         );
-
         updateValuesFromBundle(savedInstanceState);
+    }
+
+    private void updateValuesFromBundle(Bundle savedInstanceState) {
+        if (savedInstanceState != null) {
+            // Check savedInstanceState to see if the address was previously requested.
+            if (savedInstanceState.keySet().contains(ADDRESS_REQUESTED_KEY)) {
+                mAddressRequested = savedInstanceState.getBoolean(ADDRESS_REQUESTED_KEY);
+            }
+            // Check savedInstanceState to see if the location address string was previously found
+            // and stored in the Bundle. If it was found, display the address string in the UI.
+            if (savedInstanceState.keySet().contains(LOCATION_ADDRESS_KEY)) {
+                mAddressOutput = savedInstanceState.getString(LOCATION_ADDRESS_KEY);
+                displayAddressOutput();
+            }
+        }
     }
 
     @Override
@@ -179,21 +193,6 @@ public class PostActivity extends BaseActivity {
                 return;
             }
             // other 'case' lines to check for other permissions this app might request
-        }
-    }
-
-    private void updateValuesFromBundle(Bundle savedInstanceState) {
-        if (savedInstanceState != null) {
-            // Check savedInstanceState to see if the address was previously requested.
-            if (savedInstanceState.keySet().contains(ADDRESS_REQUESTED_KEY)) {
-                mAddressRequested = savedInstanceState.getBoolean(ADDRESS_REQUESTED_KEY);
-            }
-            // Check savedInstanceState to see if the location address string was previously found
-            // and stored in the Bundle. If it was found, display the address string in the UI.
-            if (savedInstanceState.keySet().contains(LOCATION_ADDRESS_KEY)) {
-                mAddressOutput = savedInstanceState.getString(LOCATION_ADDRESS_KEY);
-                displayAddressOutput();
-            }
         }
     }
 

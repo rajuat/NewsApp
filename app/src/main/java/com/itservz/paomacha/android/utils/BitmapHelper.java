@@ -3,10 +3,14 @@ package com.itservz.paomacha.android.utils;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.media.ExifInterface;
 import android.util.Base64;
 import android.util.DisplayMetrics;
+import android.util.Log;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 
 /**
  * Created by Raju on 12/28/2016.
@@ -14,6 +18,35 @@ import java.io.ByteArrayOutputStream;
 
 public class BitmapHelper {
     static final String TAG = "BitmapHelper";
+
+    public static Bitmap decode(String file) {
+        ExifInterface exif = null;
+        try {
+            exif = new ExifInterface(file);
+        } catch (IOException e) {
+            Log.d(TAG, "no exif info");
+            return BitmapFactory.decodeFile(file);
+        }
+
+        BitmapFactory.Options bounds = new BitmapFactory.Options();
+        bounds.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(file, bounds);
+
+        BitmapFactory.Options opts = new BitmapFactory.Options();
+        Bitmap bm = BitmapFactory.decodeFile(file, opts);
+        String orientString = exif.getAttribute(ExifInterface.TAG_ORIENTATION);
+        int orientation = orientString != null ? Integer.parseInt(orientString) : ExifInterface.ORIENTATION_NORMAL;
+
+        int rotationAngle = 0;
+        if (orientation == ExifInterface.ORIENTATION_ROTATE_90) rotationAngle = 90;
+        if (orientation == ExifInterface.ORIENTATION_ROTATE_180) rotationAngle = 180;
+        if (orientation == ExifInterface.ORIENTATION_ROTATE_270) rotationAngle = 270;
+
+        Matrix matrix = new Matrix();
+        matrix.setRotate(rotationAngle, (float) bm.getWidth() / 2, (float) bm.getHeight() / 2);
+        Bitmap rotatedBitmap = Bitmap.createBitmap(bm, 0, 0, bounds.outWidth, bounds.outHeight, matrix, true);
+        return rotatedBitmap;
+    }
 
     public static Bitmap decodeSampledBitmapFromFile(Activity activity, String is) {
         DisplayMetrics dm = new DisplayMetrics();
