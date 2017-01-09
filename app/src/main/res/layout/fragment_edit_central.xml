@@ -38,8 +38,7 @@
                 android:id="@+id/edit_body"
                 style="@style/body"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Startup Aura Health has launched 'Aura', an iOS app that creates up to 200 short three-to-seven-minute meditation sessions based on the user's current mood — be that stressed, anxious, happy or sad. The app collects data on demographics and age to better understand what type of meditation suits the user. It also provides users with a graph of their mood. Startup Aura Health has launched 'Aura', an iOS app that creates up to 200 short three-to-seven-minute meditation sessions based on the user's current mood." />
+                android:layout_height="wrap_content" />
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
