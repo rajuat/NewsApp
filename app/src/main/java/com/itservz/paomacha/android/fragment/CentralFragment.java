@@ -1,7 +1,9 @@
 package com.itservz.paomacha.android.fragment;
 
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -10,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -37,6 +40,9 @@ public class CentralFragment extends Fragment {
     private static final int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 1;
     private PaoActivity paoActivity = null;
     private Pao pao = null;
+    private View toolbarBottom;
+    private View fab;
+    private AppBarLayout appBarLayout;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -61,27 +67,68 @@ public class CentralFragment extends Fragment {
         SimpleDateFormat dt = new SimpleDateFormat("EEE, MMM d, ''yy");
         footer.setText("PAO MACHA by " + pao.createdBy + " / " + dt.format(new Date(-pao.createdOn)));
 
+        appBarLayout = (AppBarLayout) paoActivity.findViewById(R.id.appbar);
+        toolbarBottom = fragmentView.findViewById(R.id.toolbarBottom);
+        fab = paoActivity.findViewById(R.id.fab);
+
         addListeners(fragmentView);
+        autoHideSideSwap();
         return fragmentView;
+    }
+
+    public void autoHideSideSwap() {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (paoActivity != null && !paoActivity.FULLSCREEN) {
+                    // Making notification bar transparent
+                    if (Build.VERSION.SDK_INT >= 21) {
+                        Log.d(TAG, "fragmentView.autoHideSideSwap");
+                        paoActivity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+                        //paoActivity.getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+                        ActionBarToggler.hideAppBar(appBarLayout);
+                        //ActionBarToggler.hideBottomBar(toolbarBottom, null);
+                        paoActivity.FULLSCREEN = true;
+                    }
+                }
+            }
+        }, 2000);
+    }
+
+    public void autoHideVerticalSwap() {
+        if (appBarLayout == null) return;
+        ActionBarToggler.showAppBar(appBarLayout);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                // Making notification bar transparent
+                if (Build.VERSION.SDK_INT >= 21) {
+                    Log.d(TAG, "fragmentView.autoHideSideSwap");
+                    //paoActivity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+                    //paoActivity.getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+                    ActionBarToggler.hideAppBar(appBarLayout);
+                    //ActionBarToggler.hideBottomBar(toolbarBottom, null);
+                    paoActivity.FULLSCREEN = true;
+                }
+            }
+        }, 2000);
     }
 
     private void addListeners(final View fragmentView) {
         fragmentView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AppBarLayout appBarLayout = (AppBarLayout) paoActivity.findViewById(R.id.appbar);
-                View toolbarBottom = fragmentView.findViewById(R.id.toolbarBottom);
-                View fab = paoActivity.findViewById(R.id.fab);
+
                 if (paoActivity.FULLSCREEN) {
                     Log.d(TAG, "fragmentView.setOnClickListener show");
                     ActionBarToggler.showAppBar(appBarLayout);
-                    ActionBarToggler.showAppBar(toolbarBottom);
-                    ActionBarToggler.showAppBar(fab);
+                    //ActionBarToggler.autoHideVerticalSwap(toolbarBottom);
+                    //ActionBarToggler.autoHideVerticalSwap(fab);
                     paoActivity.FULLSCREEN = false;
                 } else {
                     Log.d(TAG, "fragmentView.setOnClickListener hide");
                     ActionBarToggler.hideAppBar(appBarLayout);
-                    ActionBarToggler.hideBottomBar(toolbarBottom, null);
+                    //ActionBarToggler.hideBottomBar(toolbarBottom, null);
                     paoActivity.FULLSCREEN = true;
                 }
 
