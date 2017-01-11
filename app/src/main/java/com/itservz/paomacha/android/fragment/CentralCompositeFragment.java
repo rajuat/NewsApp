@@ -43,12 +43,10 @@ public class CentralCompositeFragment extends Fragment {
             View toolbarBottom = fragmentView.findViewById(R.id.toolbarBottom);
             View fab = paoActivity.findViewById(R.id.fab);
             if (position == rightFrag || position == leftFrag) {
-                Log.d(TAG, "hide bars");
                 ActionBarToggler.hideAppBar(appBarLayout);
                 ActionBarToggler.hideBottomBar(toolbarBottom, fab);
                 paoActivity.FULLSCREEN = true;
             } else if (position == middleFrg) {
-                Log.d(TAG, "show bars");
                 ActionBarToggler.showAppBar(appBarLayout);
                 ActionBarToggler.showAppBar(toolbarBottom);
                 ActionBarToggler.showAppBar(fab);
