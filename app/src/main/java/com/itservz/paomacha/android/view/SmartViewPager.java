@@ -65,7 +65,7 @@ public class SmartViewPager extends ViewPager {
 
     public void autoHideSideSwap() {
         FragmentsClassesPagerAdapter adapter = (FragmentsClassesPagerAdapter) getAdapter();
-        CentralFragment cf = (CentralFragment) adapter.getItem(getCurrentItem());
-        cf.autoHideSideSwap();
-    }
+		CentralFragment cfrag = (CentralFragment) adapter.getItem(getCurrentItem());
+		cfrag.autoHideSideSwap();
+	}
 }

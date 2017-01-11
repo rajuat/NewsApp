@@ -539,8 +539,8 @@ public class VerticalPager extends ViewGroup {
 			} else {
 				delta = childAt.getBottom() - pageHeight - getScrollY();
 			}
-            //autohide
-            Log.d("VerticalPager", childAt.toString());
+			//autohide functionality
+			Log.d("VerticalPager", childAt.toString());
             SmartViewPager svp = (SmartViewPager) childAt;
             svp.autoHideVerticalSwap();
         }
