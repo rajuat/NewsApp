@@ -26,6 +26,8 @@ public abstract class BaseActivity extends AppCompatActivity implements GoogleAp
     protected Location mLastLocation;
     protected static final int premissionCodeAccessFineLocation = 2;
     protected static final int premissionCodeAccessCoarseLocation = 3;
+    protected static final int MY_PERMISSIONS_REQUEST_CAMERA = 4;
+    protected static final int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 5;
     protected static final String ADDRESS_REQUESTED_KEY = "address-request-pending";
     protected static final String LOCATION_ADDRESS_KEY = "location-address";
 

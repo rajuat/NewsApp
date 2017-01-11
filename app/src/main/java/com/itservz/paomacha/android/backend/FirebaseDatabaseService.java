@@ -21,10 +21,11 @@ import java.util.Set;
 
 public class FirebaseDatabaseService {
     private static final String TAG = "FirebaseDatabaseService";
-    private FirebaseDatabaseService(String lastPosted){
+
+    private FirebaseDatabaseService(String lastPosted) {
     }
 
-    public static FirebaseDatabaseService getInstance(String lastPosted){
+    public static FirebaseDatabaseService getInstance(String lastPosted) {
         Log.d(TAG, "Last posted " + lastPosted);
         return new FirebaseDatabaseService(lastPosted);
     }
@@ -40,14 +41,14 @@ public class FirebaseDatabaseService {
     private static void updateTags(Pao pao, int likes) {
         pao.uuid = pao.uuid != null ? pao.uuid.trim() : null;
         if (pao.originalNewsUrl == null || pao.originalNewsUrl.isEmpty()) { //user news
-            FirebaseService.getInstance().getDatabase().getReference(DatabaseFolders.test.name()).child(DatabaseFolders.fromuser.name()).child(pao.uuid).child("likes").setValue(likes);
+            FirebaseService.getInstance().getDatabase().getReference(DatabaseFolders.prod.name()).child(DatabaseFolders.fromuser.name()).child(pao.uuid).child("likes").setValue(likes);
         } else {
-            FirebaseService.getInstance().getDatabase().getReference(DatabaseFolders.test.name()).child(DatabaseFolders.frompao.name()).child(pao.uuid).child("likes").setValue(likes);
+            FirebaseService.getInstance().getDatabase().getReference(DatabaseFolders.prod.name()).child(DatabaseFolders.frompao.name()).child(pao.uuid).child("likes").setValue(likes);
         }
     }
 
     public static String createUserPao(Pao pao) {
-        DatabaseReference childRef = FirebaseService.getInstance().getDatabase().getReference(DatabaseFolders.test.name()).child(DatabaseFolders.fromuser.name());
+        DatabaseReference childRef = FirebaseService.getInstance().getDatabase().getReference(DatabaseFolders.prod.name()).child(DatabaseFolders.fromuser.name());
         DatabaseReference reference = childRef.push();
         String uId = reference.getKey();
         pao.uuid = uId;
@@ -57,42 +58,66 @@ public class FirebaseDatabaseService {
     }
 
     //for bookmark, likes and dislikes
-    public void getUserTags(final PaoListener listener, final Set<String> tags){
-        Log.d(TAG, "No of tags: "+tags.size());
-        DatabaseReference fromUser = FirebaseService.getInstance().getDatabase().getReference(DatabaseFolders.test.name()).child(DatabaseFolders.frompao.name());
+    public void getUserTags(final PaoListener listener, final Set<String> tags) {
+        Log.d(TAG, "No of tags: " + tags.size());
+        DatabaseReference fromUser = FirebaseService.getInstance().getDatabase().getReference(DatabaseFolders.prod.name()).child(DatabaseFolders.frompao.name());
         fromUser.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 Pao pao = dataSnapshot.getValue(Pao.class);
                 pao.uuid = pao.uuid != null ? pao.uuid.trim() : null;
                 if ("true".equalsIgnoreCase(pao.needsApproval)) return;
-                if(tags.contains(pao.uuid)) {
+                if (tags.contains(pao.uuid)) {
                     listener.onNewPao(pao);
                     Log.d(TAG, "getUserPaoLatest.onChildAdded: " + pao.toString());
                 }
             }
-            @Override  public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
-            @Override  public void onChildRemoved(DataSnapshot dataSnapshot) { }
-            @Override  public void onChildMoved(DataSnapshot dataSnapshot, String s) { }
-            @Override  public void onCancelled(DatabaseError databaseError) { }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
         });
 
-        DatabaseReference fromPaoap = FirebaseService.getInstance().getDatabase().getReference(DatabaseFolders.test.name()).child(DatabaseFolders.fromuser.name());
+        DatabaseReference fromPaoap = FirebaseService.getInstance().getDatabase().getReference(DatabaseFolders.prod.name()).child(DatabaseFolders.fromuser.name());
         fromPaoap.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 Pao pao = dataSnapshot.getValue(Pao.class);
                 if ("true".equalsIgnoreCase(pao.needsApproval)) return;
                 pao.uuid = pao.uuid != null ? pao.uuid.trim() : null;
-                if(tags.contains(pao.uuid)) {
+                if (tags.contains(pao.uuid)) {
                     listener.onNewPao(pao);
                     Log.d(TAG, "getUserPaoLatest.onChildAdded: " + pao.toString());
                 }
             }
-            @Override  public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
-            @Override  public void onChildRemoved(DataSnapshot dataSnapshot) { }
-            @Override  public void onChildMoved(DataSnapshot dataSnapshot, String s) { }
-            @Override  public void onCancelled(DatabaseError databaseError) { }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
         });
 
     }
@@ -116,7 +141,7 @@ public class FirebaseDatabaseService {
     }
 
     private void getPao(final PaoListener listener, final String fromuserORfrompao, String filterby, final String category) {
-        final DatabaseReference df = FirebaseService.getInstance().getDatabase().getReference(DatabaseFolders.test.name()).child(fromuserORfrompao);
+        final DatabaseReference df = FirebaseService.getInstance().getDatabase().getReference(DatabaseFolders.prod.name()).child(fromuserORfrompao);
         Query paoref = df.orderByChild(filterby).limitToFirst(10);//latest
         paoref.addChildEventListener(new ChildEventListener() {
             @Override
@@ -161,9 +186,11 @@ public class FirebaseDatabaseService {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Categories cats = dataSnapshot.getValue(Categories.class);
                 Log.d("TAG", "onDataChange " + cats.categories);
-                String[] split = cats.categories.split(",");
-                for (String cat : split) {
-                    categories.add(cat.trim());
+                if (cats.categories != null) {
+                    String[] split = cats.categories.split(",");
+                    for (String cat : split) {
+                        categories.add(cat.trim());
+                    }
                 }
             }
 
@@ -172,6 +199,7 @@ public class FirebaseDatabaseService {
             }
         });
     }
+
     public interface PaoListener {
         public void onNewPao(Pao pao);
     }

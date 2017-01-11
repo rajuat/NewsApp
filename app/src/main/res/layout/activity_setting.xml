@@ -33,6 +33,7 @@
         android:orientation="vertical"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
+
         <com.itservz.paomacha.android.view.FlowLayout
             android:id="@+id/static_categories"
             android:layout_width="match_parent"
@@ -40,12 +41,24 @@
             android:layout_margin="16dp"
             android:orientation="horizontal"></com.itservz.paomacha.android.view.FlowLayout>
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:text="Suggested topics"/>
+
         <com.itservz.paomacha.android.view.FlowLayout
             android:id="@+id/pao_categories"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
             android:orientation="horizontal"></com.itservz.paomacha.android.view.FlowLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:text="Track your actions"/>
 
         <com.itservz.paomacha.android.view.FlowLayout
             android:id="@+id/useraction_categories"

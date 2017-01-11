@@ -24,6 +24,7 @@ import com.itservz.paomacha.android.utils.DownloadImageTask;
 import com.itservz.paomacha.android.utils.Share;
 import com.itservz.paomacha.android.view.ActionBarToggler;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 
@@ -57,7 +58,8 @@ public class CentralFragment extends Fragment {
         TextView body = (TextView) fragmentView.findViewById(R.id.body);
         body.setText(pao.body);
         TextView footer = (TextView) fragmentView.findViewById(R.id.footer);
-        footer.setText("PAO MACHA by " + pao.createdBy + " / " + new Date(-pao.createdOn).toString());
+        SimpleDateFormat dt = new SimpleDateFormat("EEE, MMM d, ''yy");
+        footer.setText("PAO MACHA by " + pao.createdBy + " / " + dt.format(new Date(-pao.createdOn)));
 
         addListeners(fragmentView);
         return fragmentView;
