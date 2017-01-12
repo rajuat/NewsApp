@@ -84,7 +84,7 @@ public class CentralFragment extends Fragment {
                     // Making notification bar transparent
                     if (Build.VERSION.SDK_INT >= 21) {
                         Log.d(TAG, "fragmentView.autoHideSideSwap");
-                        paoActivity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+                        //paoActivity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
                         //paoActivity.getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
                         ActionBarToggler.hideAppBar(appBarLayout);
                         //ActionBarToggler.hideBottomBar(toolbarBottom, null);

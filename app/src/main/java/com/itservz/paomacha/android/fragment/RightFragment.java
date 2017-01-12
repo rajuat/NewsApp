@@ -2,6 +2,7 @@ package com.itservz.paomacha.android.fragment;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,11 +17,15 @@ import com.itservz.paomacha.android.R;
  */
 public class RightFragment extends Fragment {
 
+	private WebView webview;
+	private String originalNewsUrl;
+	private static final String TAG = "RightFragment";
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		String originalNewsUrl = this.getArguments().getString("originalNewsUrl");
+		Log.d(TAG, "onCreateView");
+		originalNewsUrl = this.getArguments().getString("originalNewsUrl");
 		View fragmentView = inflater.inflate(R.layout.fragment_right, container, false);
-		WebView webview = (WebView) fragmentView.findViewById(R.id.webview);
+		webview = (WebView) fragmentView.findViewById(R.id.webview);
 		webview.getSettings().setJavaScriptEnabled(true);
 		webview.getSettings().setLoadWithOverviewMode(true);
 		webview.getSettings().setUseWideViewPort(true);
@@ -30,8 +35,13 @@ public class RightFragment extends Fragment {
 			}
 		});
 
-		webview.loadUrl(originalNewsUrl);
 		return fragmentView;
 	}
 
+	@Override
+	public void onResume() {
+		super.onResume();
+		Log.d(TAG, "onResume");
+		webview.loadUrl(originalNewsUrl);
+	}
 }
