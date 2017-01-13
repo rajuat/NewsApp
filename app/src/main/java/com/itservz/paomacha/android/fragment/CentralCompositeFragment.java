@@ -3,7 +3,6 @@ package com.itservz.paomacha.android.fragment;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,6 +16,7 @@ import com.itservz.paomacha.android.event.EventBus;
 import com.itservz.paomacha.android.event.PageChangedEvent;
 import com.itservz.paomacha.android.model.Pao;
 import com.itservz.paomacha.android.view.ActionBarToggler;
+import com.itservz.paomacha.android.view.SmartViewPager;
 
 import java.util.ArrayList;
 
@@ -29,23 +29,33 @@ public class CentralCompositeFragment extends Fragment {
     static final String TAG = "CentralCompositeFrag";
 	private PaoActivity paoActivity;
 	private View fragmentView;
-    private ViewPager mHorizontalPager;
-	private int mCentralPageIndex = 0;
-    private int leftFrag = 0;
-    private int rightFrag = 2;
+    private SmartViewPager mHorizontalPager;
+    private int mCentralPageIndex = 0;
+
+    public static final int leftFrag = 0;
+	public static final int middleFrag = 1;
+	public static final int rightFrag = 2;
 
 	private OnPageChangeListener mPagerChangeListener = new OnPageChangeListener() {
 		@Override
 		public void onPageSelected(int position) {
 			EventBus.getInstance().post(new PageChangedEvent(mCentralPageIndex == position));
+            AppBarLayout appBarLayout = (AppBarLayout) paoActivity.findViewById(R.id.appbar);
+            View toolbarBottom = fragmentView.findViewById(R.id.toolbarBottom);
+            View fab = paoActivity.findViewById(R.id.fab);
+			if(position == rightFrag){
+				mHorizontalPager.loadUrl();
+			}
             if (position == rightFrag || position == leftFrag) {
-                Log.d(TAG, "hide bars");
-                AppBarLayout appBarLayout = (AppBarLayout) paoActivity.findViewById(R.id.appbar);
-                View toolbarBottom = fragmentView.findViewById(R.id.toolbarBottom);
-				View fab = paoActivity.findViewById(R.id.fab);
                 ActionBarToggler.hideAppBar(appBarLayout);
                 ActionBarToggler.hideBottomBar(toolbarBottom, fab);
                 paoActivity.FULLSCREEN = true;
+            } else if (position == middleFrag) {
+                ActionBarToggler.showAppBar(appBarLayout);
+                ActionBarToggler.showAppBar(toolbarBottom);
+                ActionBarToggler.showAppBar(fab);
+                paoActivity.FULLSCREEN = false;
+                mHorizontalPager.autoHideSideSwap();
             }
         }
 
@@ -55,7 +65,9 @@ public class CentralCompositeFragment extends Fragment {
 		@Override
 		public void onPageScrollStateChanged(int state) {}
 	};
-	private Pao pao;
+
+
+    private Pao pao;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -68,8 +80,8 @@ public class CentralCompositeFragment extends Fragment {
 	}
 
 	private void findViews() {
-		mHorizontalPager = (ViewPager) fragmentView.findViewById(R.id.fragment_composite_central_pager);
-		initViews();
+        mHorizontalPager = (SmartViewPager) fragmentView.findViewById(R.id.fragment_composite_central_pager);
+        initViews();
 	}
 
 	private void initViews() {

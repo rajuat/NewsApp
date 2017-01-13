@@ -24,8 +24,8 @@
             android:id="@+id/title"
             style="@style/title"
             android:layout_width="match_parent"
-            android:maxLines="2"
             android:layout_height="wrap_content"
+            android:maxLines="2"
             android:text="Startup launches app for short-time meditation based on mood"/>
 
         <TextView
@@ -33,8 +33,8 @@
             style="@style/body"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:maxLines="12"
             android:ellipsize="end"
+            android:maxLines="9"
             android:text="Startup Aura Health has launched 'Aura', an iOS app that creates up to 200 short three-to-seven-minute meditation sessions based on the user's current mood — be that stressed, anxious, happy or sad. The app collects data on demographics and age to better understand what type of meditation suits the user. It also provides users with a graph of their mood. Startup Aura Health has launched 'Aura', an iOS app that creates up to 200 short three-to-seven-minute meditation sessions based on the user's current mood — be that stressed, anxious, happy or sad. The app collects data on demographics and age to better understand what type of meditation suits the user. Startup Aura Health has launched 'Aura', an iOS app that creates up to 200 short three-to-seven-minute meditation sessions based on the user's current mood — be that stressed, anxious, happy or sad. The app collects data on demographics and age to better understand what type of meditation suits the user. It also provides users with a graph of their mood. Startup Aura Health has launched 'Aura', an iOS app that creates up to 200 short three-to-seven-minute meditation sessions based on the user's current mood — be that stressed, anxious, happy or sad. The app collects data on demographics and age to better understand what type of meditation suits the user."/>
 
         <TextView
@@ -42,10 +42,9 @@
             style="@style/footer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="paoap by Pakhangba / 01:48 pm on 02 Jan 2017,Monday"
-            />
-    </LinearLayout>
+            android:text="paoap by Pakhangba / 01:48 pm on 02 Jan 2017,Monday"/>
 
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/toolbarBottom"
@@ -58,7 +57,6 @@
             android:layout_width="match_parent"
             android:layout_height=".5dp"
             android:background="@color/divider"/>
-
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -78,8 +76,7 @@
                     android:layout_height="wrap_content"
                     android:layout_toRightOf="@+id/like"
                     android:text="12"
-                    android:textSize="@dimen/text_small"
-                    />
+                    android:textSize="@dimen/text_small"/>
 
                 <ImageButton
                     android:id="@+id/like"
@@ -89,7 +86,7 @@
                     android:layout_centerVertical="true"
                     android:background="@android:color/background_light"
                     android:scaleType="centerInside"
-                    android:src="@drawable/ic_thumb_up_p_24dp"/>
+                    app:srcCompat="@drawable/ic_thumb_up_p_24dp"/>
             </RelativeLayout>
 
             <RelativeLayout
@@ -105,8 +102,7 @@
                     android:layout_height="wrap_content"
                     android:layout_toRightOf="@+id/dislike"
                     android:text="1"
-                    android:textSize="@dimen/text_small"
-                    />
+                    android:textSize="@dimen/text_small"/>
 
                 <ImageButton
                     android:id="@+id/dislike"
@@ -116,7 +112,7 @@
                     android:layout_centerVertical="true"
                     android:background="@android:color/background_light"
                     android:scaleType="centerInside"
-                    android:src="@drawable/ic_thumb_down_p_24dp"/>
+                    app:srcCompat="@drawable/ic_thumb_down_p_24dp"/>
             </RelativeLayout>
 
             <LinearLayout
@@ -131,7 +127,7 @@
                     android:layout_height="match_parent"
                     android:background="@android:color/background_light"
                     android:scaleType="centerInside"
-                    android:src="@drawable/ic_camera_black_24dp"/>
+                    app:srcCompat="@drawable/ic_camera_black_24dp"/>
             </LinearLayout>
 
             <ImageButton
@@ -141,7 +137,7 @@
                 android:layout_weight=".20"
                 android:background="@android:color/background_light"
                 android:scaleType="centerInside"
-                android:src="@drawable/ic_bookmark_border_black_24dp"/>
+                app:srcCompat="@drawable/ic_bookmark_border_black_24dp"/>
 
 
             <ImageButton
@@ -152,7 +148,7 @@
                 android:layout_weight=".20"
                 android:background="@android:color/background_light"
                 android:scaleType="centerInside"
-                android:src="@drawable/ic_share_black_24dp"/>
+                app:srcCompat="@drawable/ic_share_black_24dp"/>
 
         </LinearLayout>
     </LinearLayout>

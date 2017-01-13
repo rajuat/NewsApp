@@ -5,5 +5,5 @@ package com.itservz.paomacha.android.utils;
  */
 
 public enum DatabaseFolders {
-     prod, fromuser, frompao
+     test, prod, fromuser, frompao
 }

@@ -142,7 +142,7 @@ public class FirebaseDatabaseService {
 
     private void getPao(final PaoListener listener, final String fromuserORfrompao, String filterby, final String category) {
         final DatabaseReference df = FirebaseService.getInstance().getDatabase().getReference(DatabaseFolders.prod.name()).child(fromuserORfrompao);
-        Query paoref = df.orderByChild(filterby).limitToFirst(10);//latest
+        Query paoref = df.orderByChild(filterby).limitToFirst(23);//latest
         paoref.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {

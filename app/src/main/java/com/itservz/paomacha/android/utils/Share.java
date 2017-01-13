@@ -59,8 +59,8 @@ public class Share {
         intent.setAction(Intent.ACTION_SEND);
         intent.setType("image/jpeg");
 
-        intent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Subject as extra text");
-        intent.putExtra(android.content.Intent.EXTRA_TEXT, "Text as extra text");
+        intent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Read facts. Read short.");
+        intent.putExtra(android.content.Intent.EXTRA_TEXT, "Read facts. Read short. Download PAO MACHA.\nhttps://goo.gl/nEnrM0");
         intent.putExtra(Intent.EXTRA_STREAM, uri);
         try {
             activity.startActivity(Intent.createChooser(intent, "Send to"));

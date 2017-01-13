@@ -8,6 +8,7 @@ import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -20,6 +21,7 @@ import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import com.itservz.paomacha.android.backend.FirebaseDatabaseService;
 import com.itservz.paomacha.android.event.EventBus;
@@ -27,6 +29,7 @@ import com.itservz.paomacha.android.event.PageChangedEvent;
 import com.itservz.paomacha.android.fragment.CentralCompositeFragment;
 import com.itservz.paomacha.android.model.Pao;
 import com.itservz.paomacha.android.preference.PrefManager;
+import com.itservz.paomacha.android.service.NotificationService;
 import com.itservz.paomacha.android.utils.GpsHelper;
 import com.itservz.paomacha.android.view.VerticalPager;
 import com.squareup.otto.Subscribe;
@@ -75,6 +78,10 @@ public class PaoActivity extends AppCompatActivity implements FirebaseDatabaseSe
         showAllNews = true;
         //gps
         GpsHelper.turnGPSOn(getApplicationContext());
+
+        if (new PrefManager(this).isNotificationEnabled()) {
+            startService(new Intent(getApplicationContext(), NotificationService.class));
+        }
     }
 
     @Override
@@ -89,9 +96,9 @@ public class PaoActivity extends AppCompatActivity implements FirebaseDatabaseSe
         super.onResume();
         Log.d(TAG, "onResume");
         toolbar.setTitle(getTitle());
-        if (showAllNews) {
-            FirebaseDatabaseService.getInstance(null).getPaoLatest(this);
+        if (showAllNews) {FirebaseDatabaseService.getInstance(null).getPaoLatest(this);
             FirebaseDatabaseService.getInstance(null).getUserPaoLatest(this);
+
         }
         EventBus.getInstance().register(this);
     }
@@ -103,7 +110,7 @@ public class PaoActivity extends AppCompatActivity implements FirebaseDatabaseSe
         if (pao == null || pao.uuid == null || pao.title == null || pao.body == null)
             return;
         addNewPao(pao);
-        if (new PrefManager(this).isNotificationEnabled()) {
+        /*if (new PrefManager(this).isNotificationEnabled()) {
             Intent notificationIntent = new Intent(this, PaoActivity.class);
             notificationIntent.putExtra(NOTIFICATION_ID, pao.uuid);
             notificationIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -118,11 +125,8 @@ public class PaoActivity extends AppCompatActivity implements FirebaseDatabaseSe
             NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
             // hide the notification after its selected
             noti.flags |= Notification.FLAG_AUTO_CANCEL;
-
             notificationManager.notify(-(int) pao.createdOn, noti);
-        }
-        //paoList.add(pao);
-        //refreshed = false;
+        }*/
     }
 
     void addNewPao(Pao pao) {
@@ -206,6 +210,7 @@ public class PaoActivity extends AppCompatActivity implements FirebaseDatabaseSe
             item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                 @Override
                 public boolean onMenuItemClick(MenuItem item) {
+                    Log.d(TAG, "to settings");
                     Intent intent = new Intent(PaoActivity.this, SettingActivity.class);
                     intent.putStringArrayListExtra(CATEGORY_TAG, categoriesFromDB);
                     startActivityForResult(intent, RETURN_FROM_SETTING);
@@ -213,25 +218,6 @@ public class PaoActivity extends AppCompatActivity implements FirebaseDatabaseSe
                 }
             });
         }
-        /*if (id == R.id.refresh) {
-            //toggle
-            if(refreshed){
-                item.setIcon(getResources().getDrawable(R.drawable.ic_arrow_upward_black_24dp));
-            } else {
-                item.setIcon(getResources().getDrawable(R.drawable.ic_refresh_black_24dp));
-                item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem item) {
-                        for(Pao pao: paoList){
-                            addNewPao(pao);
-                        }
-                        return true;
-                    }
-                });
-                refreshed = true;
-            }
-            return true;
-        }*/
         return super.onOptionsItemSelected(item);
     }
 
@@ -269,5 +255,25 @@ public class PaoActivity extends AppCompatActivity implements FirebaseDatabaseSe
     @Subscribe
     public void onLocationChanged(PageChangedEvent event) {
         mVerticalPager.setPagingEnabled(event.hasVerticalNeighbors());
+    }
+
+    private boolean doubleBackToExitPressedOnce;
+
+    @Override
+    public void onBackPressed() {
+        if (doubleBackToExitPressedOnce) {
+            super.onBackPressed();
+            return;
+        }
+
+        this.doubleBackToExitPressedOnce = true;
+        Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                doubleBackToExitPressedOnce = false;
+            }
+        }, 2000);
     }
 }
