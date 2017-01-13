@@ -44,7 +44,7 @@ public class VerticalPager extends ViewGroup {
 
     private boolean mIsPagingEnabled = true;
 
-    public static final String TAG = "VerticalPager";
+    private static final String TAG = "VerticalPager";
 
     private static final int INVALID_SCREEN = -1;
     public static final int SPEC_UNDEFINED = -1;
@@ -165,9 +165,11 @@ public class VerticalPager extends ViewGroup {
     @Override
     public void computeScroll() {
         if (mScroller.computeScrollOffset()) {
+            Log.d(TAG, "computeScroll.computeScrollOffset");
             scrollTo(mScroller.getCurrX(), mScroller.getCurrY());
             postInvalidate();
         } else if (mNextPage != INVALID_SCREEN) {
+            Log.d(TAG, "computeScroll.computeScrollOffsetNO");
             mCurrentPage = mNextPage;
             mNextPage = INVALID_SCREEN;
             clearChildrenCache();
@@ -245,8 +247,10 @@ public class VerticalPager extends ViewGroup {
     public boolean requestChildRectangleOnScreen(View child, Rect rectangle, boolean immediate) {
         int screen = indexOfChild(child);
         if (screen != mCurrentPage || !mScroller.isFinished()) {
+            Log.d(TAG, "requestChildRectangleOnScreen there");
             return true;
         }
+        Log.d(TAG, "requestChildRectangleOnScreen not there");
         return false;
     }
 
@@ -254,8 +258,10 @@ public class VerticalPager extends ViewGroup {
     protected boolean onRequestFocusInDescendants(int direction, Rect previouslyFocusedRect) {
         int focusableScreen;
         if (mNextPage != INVALID_SCREEN) {
+            Log.d(TAG, "onRequestFocusInDescendants INVALID_SCREEN");
             focusableScreen = mNextPage;
         } else {
+            Log.d(TAG, "onRequestFocusInDescendants VALID_SCREEN");
             focusableScreen = mCurrentPage;
         }
         View childAt = getChildAt(focusableScreen);
@@ -290,10 +296,14 @@ public class VerticalPager extends ViewGroup {
         if (direction == View.FOCUS_LEFT) {
             if (mCurrentPage > 0) {
                 getChildAt(mCurrentPage - 1).addFocusables(views, direction);
+            } else {
+                Log.d(TAG, "reached top1");
             }
         } else if (direction == View.FOCUS_RIGHT) {
             if (mCurrentPage < getChildCount() - 1) {
                 getChildAt(mCurrentPage + 1).addFocusables(views, direction);
+            }else {
+                Log.d(TAG, "reached top1");
             }
         }
     }
@@ -540,9 +550,11 @@ public class VerticalPager extends ViewGroup {
                 delta = childAt.getBottom() - pageHeight - getScrollY();
             }
             //autohide functionality
-            Log.d("VerticalPager", childAt.toString());
+            Log.d(TAG, childAt.toString());
             SmartViewPager svp = (SmartViewPager) childAt;
             svp.autoHideVerticalSwap();
+        } else {
+            Log.d(TAG, "mey be ends here");
         }
 
         mScroller.startScroll(0, getScrollY(), 0, delta, duration);

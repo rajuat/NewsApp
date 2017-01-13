@@ -7,6 +7,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 
+import com.itservz.paomacha.android.fragment.CentralCompositeFragment;
 import com.itservz.paomacha.android.fragment.CentralFragment;
 import com.itservz.paomacha.android.fragment.LeftFragment;
 import com.itservz.paomacha.android.fragment.RightFragment;
@@ -19,6 +20,7 @@ import java.util.List;
  * will be instantiated on demand and used as a pages views.
  */
 public class FragmentsClassesPagerAdapter extends FragmentPagerAdapter {
+	private RightFragment rightFragment;
 	private CentralFragment centralFragment = null;
 	private Pao pao;
 
@@ -27,10 +29,15 @@ public class FragmentsClassesPagerAdapter extends FragmentPagerAdapter {
 		mPagesClasses = pages;
 		mContext = context;
 		this.pao = pao;
-		Bundle bundle = new Bundle();
-		bundle.putSerializable("paof", pao);
+		Bundle centralBundle = new Bundle();
+		centralBundle.putSerializable("paof", pao);
 		centralFragment = new CentralFragment();
-		centralFragment.setArguments(bundle);
+		centralFragment.setArguments(centralBundle);
+
+		Bundle rightBundle = new Bundle();
+		rightBundle.putSerializable("originalNewsUrl", pao.originalNewsUrl);
+		rightFragment = new RightFragment();
+		rightFragment.setArguments(rightBundle);
 	}
 
 	private List<Class<? extends Fragment>> mPagesClasses;
@@ -38,15 +45,11 @@ public class FragmentsClassesPagerAdapter extends FragmentPagerAdapter {
 
 	@Override
 	public Fragment getItem(int position) {
-        if (position == 0) {
+        if (position == CentralCompositeFragment.leftFrag) {
             return new LeftFragment();
-        } else if (position == 1) {
+        } else if (position == CentralCompositeFragment.middleFrag) {
 			return centralFragment;
-		} else if (position == 2) {
-			Bundle bundle = new Bundle();
-			bundle.putSerializable("originalNewsUrl", pao.originalNewsUrl);
-			RightFragment rightFragment = new RightFragment();
-			rightFragment.setArguments(bundle);
+		} else if (position == CentralCompositeFragment.rightFrag) {
 			return rightFragment;
 		}
         return null;

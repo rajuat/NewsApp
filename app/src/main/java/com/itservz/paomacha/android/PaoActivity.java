@@ -210,6 +210,7 @@ public class PaoActivity extends AppCompatActivity implements FirebaseDatabaseSe
             item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                 @Override
                 public boolean onMenuItemClick(MenuItem item) {
+                    Log.d(TAG, "to settings");
                     Intent intent = new Intent(PaoActivity.this, SettingActivity.class);
                     intent.putStringArrayListExtra(CATEGORY_TAG, categoriesFromDB);
                     startActivityForResult(intent, RETURN_FROM_SETTING);

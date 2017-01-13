@@ -11,6 +11,7 @@ import android.widget.ScrollView;
 
 import com.itservz.paomacha.android.adapter.FragmentsClassesPagerAdapter;
 import com.itservz.paomacha.android.fragment.CentralFragment;
+import com.itservz.paomacha.android.fragment.RightFragment;
 
 /**
  * Custom {@link ViewPager} implementation to resolve scroll gesture directions more accurate than a regular
@@ -67,5 +68,11 @@ public class SmartViewPager extends ViewPager {
         FragmentsClassesPagerAdapter adapter = (FragmentsClassesPagerAdapter) getAdapter();
 		CentralFragment cfrag = (CentralFragment) adapter.getItem(getCurrentItem());
 		cfrag.autoHideSideSwap();
+	}
+
+	public void loadUrl(){
+		FragmentsClassesPagerAdapter adapter = (FragmentsClassesPagerAdapter) getAdapter();
+		RightFragment rfrag = (RightFragment) adapter.getItem(getCurrentItem());
+		rfrag.load();
 	}
 }

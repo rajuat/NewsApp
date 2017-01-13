@@ -31,9 +31,10 @@ public class CentralCompositeFragment extends Fragment {
 	private View fragmentView;
     private SmartViewPager mHorizontalPager;
     private int mCentralPageIndex = 0;
-    private int leftFrag = 0;
-    private int middleFrg = 1;
-    private int rightFrag = 2;
+
+    public static final int leftFrag = 0;
+	public static final int middleFrag = 1;
+	public static final int rightFrag = 2;
 
 	private OnPageChangeListener mPagerChangeListener = new OnPageChangeListener() {
 		@Override
@@ -42,11 +43,14 @@ public class CentralCompositeFragment extends Fragment {
             AppBarLayout appBarLayout = (AppBarLayout) paoActivity.findViewById(R.id.appbar);
             View toolbarBottom = fragmentView.findViewById(R.id.toolbarBottom);
             View fab = paoActivity.findViewById(R.id.fab);
+			if(position == rightFrag){
+				mHorizontalPager.loadUrl();
+			}
             if (position == rightFrag || position == leftFrag) {
                 ActionBarToggler.hideAppBar(appBarLayout);
                 ActionBarToggler.hideBottomBar(toolbarBottom, fab);
                 paoActivity.FULLSCREEN = true;
-            } else if (position == middleFrg) {
+            } else if (position == middleFrag) {
                 ActionBarToggler.showAppBar(appBarLayout);
                 ActionBarToggler.showAppBar(toolbarBottom);
                 ActionBarToggler.showAppBar(fab);
