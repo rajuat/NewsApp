@@ -40,6 +40,7 @@ public class PostActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post);
+        // insert all permission        else finish
         if (mGoogleApiClient.isConnected() && mLastLocation != null) {
             startIntentService();
         }

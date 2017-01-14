@@ -3,6 +3,7 @@ package com.itservz.paomacha.android.fragment;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,13 +54,18 @@ public class RightFragment extends Fragment /*implements RightFragment.UrlLoader
 		return fragmentView;
 	}
 
-    //@Override
     public void load() {
         Log.d(TAG, "load");
         webview.loadUrl(originalNewsUrl);
     }
 
-    /*public interface UrlLoader {
-        public void load();
-    }*/
+
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		switch (keyCode) {
+			case KeyEvent.KEYCODE_BACK:
+				return true;
+		}
+		return false;
+	}
+
 }

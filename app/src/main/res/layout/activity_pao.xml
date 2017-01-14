@@ -41,7 +41,7 @@
         android:layout_marginLeft="@dimen/fab_margin"
         android:layout_marginRight="@dimen/fab_margin"
         android:layout_marginTop="@dimen/fab_margin"
-        android:src="@drawable/ic_camera_black_24dp"
+        app:srcCompat="@drawable/ic_camera_black_24dp"
         android:scaleType="centerInside"
         app:fabSize="mini" />
 
