@@ -186,7 +186,7 @@ public class FirebaseDatabaseService {
         if (createdOn == -1) {
             paoref = df.orderByChild("createdOn").limitToFirst(1);//latest
         } else {
-            paoref = df.orderByChild("createdOn").startAt(createdOn);//latest
+            paoref = df.orderByChild("createdOn").endAt(createdOn);//latest
         }
         paoref.addChildEventListener(new ChildEventListener() {
             @Override
