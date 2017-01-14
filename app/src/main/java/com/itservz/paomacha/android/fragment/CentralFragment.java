@@ -12,7 +12,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -241,7 +240,7 @@ public class CentralFragment extends Fragment {
                 }
                 return;
             }
-            // other 'case' lines to check for other permissions this app might request
+            // other 'case' lines to check for other permissionArray this app might request
         }
     }
 

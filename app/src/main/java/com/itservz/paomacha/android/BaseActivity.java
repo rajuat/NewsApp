@@ -21,7 +21,7 @@ import com.itservz.paomacha.android.service.FetchAddressIntentService;
  */
 
 public abstract class BaseActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
-    protected static final String TAG = "BaseActivity";
+    private static final String TAG = "BaseActivity";
     protected GoogleApiClient mGoogleApiClient;
     protected Location mLastLocation;
     protected static final int premissionCodeAccessFineLocation = 2;

@@ -59,11 +59,11 @@ public class PostFragment extends Fragment {
         final TextInputEditText title = (TextInputEditText) fragmentView.findViewById(R.id.edit_title);
         final TextInputEditText body = (TextInputEditText) fragmentView.findViewById(R.id.edit_body);
         final TextInputEditText metadata = (TextInputEditText) fragmentView.findViewById(R.id.edit_metadata);
-        if (postActivity.mAddressOutput == null || postActivity.mAddressOutput.isEmpty()) {
+        //if (postActivity.mAddressOutput == null || postActivity.mAddressOutput.isEmpty()) {
             metadata.setText(AddressHelper.getAddress(postActivity, mLastLocation));
-        } else {
+        /*} else {
             metadata.setText(mLastLocation.toString());
-        }
+        }*/
         final EditText profile = (EditText) fragmentView.findViewById(R.id.profile);
         FlowLayout paoCategoriesLayout = (FlowLayout) fragmentView.findViewById(R.id.pao_categories);
         for (String cat : cats) {

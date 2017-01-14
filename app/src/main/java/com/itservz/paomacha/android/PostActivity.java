@@ -1,33 +1,40 @@
 package com.itservz.paomacha.android;
 
-import android.Manifest;
+import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.hardware.Camera;
+import android.location.Location;
+import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
+import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
 import com.itservz.paomacha.android.fragment.PostFragment;
 import com.itservz.paomacha.android.utils.CameraHelper;
+import com.itservz.paomacha.android.utils.Permissions;
 import com.itservz.paomacha.android.utils.StorageHelper;
 import com.itservz.paomacha.android.view.CameraPreview;
 
 import java.io.File;
 
+import static android.Manifest.permission.ACCESS_FINE_LOCATION;
+
 //https://developer.android.com/guide/topics/media/camera.html#custom-camera
-public class PostActivity extends BaseActivity {
+public class PostActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
     static final String TAG = "PostActivity";
     private static Camera mCamera;
     private static File mediaFile;
     private CameraPreview mPreview;
     private CameraHelper.CameraHandlerThread mThread = null;
-
 
     public static final int MEDIA_TYPE_IMAGE = 1;
     public static final int MEDIA_TYPE_VIDEO = 2;
@@ -35,15 +42,24 @@ public class PostActivity extends BaseActivity {
     private LinearLayout llDecide;
     private Button noButton;
     private Button yesButton;
+    private Permissions permissionsHelper;
+    protected GoogleApiClient mGoogleApiClient;
+    protected Location mLastLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post);
-        // insert all permission        else finish
-        if (mGoogleApiClient.isConnected() && mLastLocation != null) {
-            startIntentService();
+        permissionsHelper = new Permissions(this);
+        if (permissionsHelper.checkPermissions()) {
+            onCreatePrivate();
+        } else {
+            permissionsHelper.requestPermissions();
         }
+    }
+
+    private void onCreatePrivate() {
+        buildGoogleApiClient();
         getCameraInstance();
         captureButton = (Button) findViewById(R.id.button_capture);
         llDecide = (LinearLayout) findViewById(R.id.ll_decide);
@@ -65,7 +81,7 @@ public class PostActivity extends BaseActivity {
                 FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
                 Bundle bundle = new Bundle();
                 bundle.putString("file", mediaFile.getPath());
-                bundle.putString("mAddressOutput", mAddressOutput);
+                bundle.putString("mAddressOutput", "mAddressOutput");
                 bundle.putParcelable("mLastLocation", mLastLocation);
                 bundle.putStringArrayList(PaoActivity.CATEGORY_TAG, getIntent().getStringArrayListExtra(PaoActivity.CATEGORY_TAG));
                 PostFragment postFragment = new PostFragment();
@@ -79,8 +95,8 @@ public class PostActivity extends BaseActivity {
                 fragmentTransaction.commit();
                 if (mGoogleApiClient.isConnected() && mLastLocation != null) {
                     Log.d(TAG, "mGoogleApiClient");
-                    startIntentService();
-                    mAddressRequested = true;
+                    /*startIntentService();
+                    mAddressRequested = true;*/
                 }
             }
         });
@@ -88,7 +104,7 @@ public class PostActivity extends BaseActivity {
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if(mCamera.getParameters().getSupportedFocusModes().contains(Camera.Parameters.FOCUS_MODE_AUTO)) {
+                        if (mCamera.getParameters().getSupportedFocusModes().contains(Camera.Parameters.FOCUS_MODE_AUTO)) {
                             mCamera.autoFocus(new Camera.AutoFocusCallback() {
                                 public void onAutoFocus(boolean success, Camera camera) {
                                     Log.d("TAG", "before success");
@@ -107,22 +123,43 @@ public class PostActivity extends BaseActivity {
                     }
                 }
         );
-        updateValuesFromBundle(savedInstanceState);
+        //updateValuesFromBundle(savedInstanceState);
     }
 
-    private void updateValuesFromBundle(Bundle savedInstanceState) {
-        if (savedInstanceState != null) {
-            // Check savedInstanceState to see if the address was previously requested.
-            if (savedInstanceState.keySet().contains(ADDRESS_REQUESTED_KEY)) {
-                mAddressRequested = savedInstanceState.getBoolean(ADDRESS_REQUESTED_KEY);
-            }
-            // Check savedInstanceState to see if the location address string was previously found
-            // and stored in the Bundle. If it was found, display the address string in the UI.
-            if (savedInstanceState.keySet().contains(LOCATION_ADDRESS_KEY)) {
-                mAddressOutput = savedInstanceState.getString(LOCATION_ADDRESS_KEY);
-                displayAddressOutput();
-            }
+    protected synchronized void buildGoogleApiClient() {
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
+                .build();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (mGoogleApiClient != null)
+            mGoogleApiClient.connect();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
+            mGoogleApiClient.disconnect();
         }
+    }
+
+    @Override
+    public void onConnected(Bundle connectionHint) {
+        mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+        Log.d(TAG, "Last location: " + mLastLocation);
+    }
+
+    @Override
+    public void onConnectionSuspended(int cause) {
+        Log.i(TAG, "Connection suspended");
+        if (mGoogleApiClient != null)
+            mGoogleApiClient.connect();
     }
 
     @Override
@@ -145,23 +182,6 @@ public class PostActivity extends BaseActivity {
             Toast.makeText(this, "Camera is not present", Toast.LENGTH_SHORT).show();
             finish();
         }
-        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-            // Should we show an explanation?
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this, android.Manifest.permission.CAMERA)) {
-                // Show an explanation to the user *asynchronously* -- don't block this thread waiting for the user's response! After the user sees the explanation, try again to request the permission.
-            } else {
-                // No explanation needed, we can request the permission.
-                ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.CAMERA}, MY_PERMISSIONS_REQUEST_CAMERA);
-                // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an app-defined int constant. The callback method gets the result of the request.
-            }
-        } else {
-            getCamera();
-        }
-    }
-
-
-
-    private void getCamera() {
         if (mThread == null) {
             mThread = new CameraHelper.CameraHandlerThread();
         }
@@ -174,58 +194,56 @@ public class PostActivity extends BaseActivity {
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, final String permissions[], int[] grantResults) {
         switch (requestCode) {
-            case MY_PERMISSIONS_REQUEST_CAMERA: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    getCamera();
-                } else {
-                    // permission denied, boo! Disable the functionality that depends on this permission.
-                }
-                return;
-            }
+            case 200:
+                if (grantResults.length > 0) {
+                    boolean fine = grantResults[0] == PackageManager.PERMISSION_GRANTED;
+                    boolean coarse = grantResults[1] == PackageManager.PERMISSION_GRANTED;
+                    boolean storage = grantResults[2] == PackageManager.PERMISSION_GRANTED;
+                    boolean camera = grantResults[3] == PackageManager.PERMISSION_GRANTED;
 
-            case MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    mediaFile = StorageHelper.getOutputMediaFile(MEDIA_TYPE_IMAGE);
-                } else {
-                    // permission denied, boo! Disable the functionality that depends on this permission.
+                    if (coarse && fine && storage && camera) {
+                        Toast.makeText(this, "Permission Granted, Now you can access location data, camera and galary.", Toast.LENGTH_LONG).show();
+                        onCreatePrivate();
+                    } else {
+                        Toast.makeText(this, "Permission Denied, You cannot access location data, camera and galary.", Toast.LENGTH_LONG).show();
+
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                            if (shouldShowRequestPermissionRationale(ACCESS_FINE_LOCATION)) {
+                                permissionsHelper.showMessageOKCancel("You need to allow access to all the permissionArray",
+                                        new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                                    requestPermissions(permissionsHelper.permissionArray, 200);
+                                                }
+                                            }
+                                        });
+                                return;
+                            }
+                        }
+
+                    }
                 }
-                return;
-            }
-            // other 'case' lines to check for other permissions this app might request
+                break;
         }
     }
 
-    @Override
-    void displayAddressOutput() {
-        Log.d(TAG, "displayAddressOutput: " + mAddressOutput);
-    }
-
-    //media
     private Camera.PictureCallback mPicture = new Camera.PictureCallback() {
-        //private File pictureFile = null;
         @Override
         public void onPictureTaken(byte[] data, Camera camera) {
-            if (ContextCompat.checkSelfPermission(PostActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                // Should we show an explanation?
-                if (ActivityCompat.shouldShowRequestPermissionRationale(PostActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                    // Show an explanation to the user *asynchronously* -- don't block this thread waiting for the user's response! After the user sees the explanation, try again to request the permission.
-                } else {
-                    // No explanation needed, we can request the permission.
-                    ActivityCompat.requestPermissions(PostActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
-                    // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an app-defined int constant. The callback method gets the result of the request.
-                }
-            } else {
-                mediaFile = StorageHelper.getOutputMediaFile(MEDIA_TYPE_IMAGE);
-            }
+            mediaFile = StorageHelper.getOutputMediaFile(MEDIA_TYPE_IMAGE);
             if (mediaFile == null) {
-                Log.d(TAG, "Error creating media file, check storage permissions: ");
+                Log.d(TAG, "Error creating media file, check storage permissionArray: ");
                 return;
             }
             StorageHelper.writeToFile(data, mediaFile);
         }
     };
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+        mLastLocation = new Location("");
+    }
 }

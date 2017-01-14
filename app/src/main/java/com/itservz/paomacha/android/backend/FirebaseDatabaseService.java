@@ -182,7 +182,12 @@ public class FirebaseDatabaseService {
     public static void getPaoNotification(final PaoListener listener, long createdOn) {
 
         final DatabaseReference df = FirebaseService.getInstance().getDatabase().getReference(DatabaseFolders.prod.name()).child(DatabaseFolders.frompao.name());
-        Query paoref = df.orderByChild("createdOn").startAt(createdOn);//latest
+        Query paoref;
+        if (createdOn == -1) {
+            paoref = df.orderByChild("createdOn").limitToFirst(1);//latest
+        } else {
+            paoref = df.orderByChild("createdOn").startAt(createdOn);//latest
+        }
         paoref.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
