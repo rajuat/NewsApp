@@ -27,6 +27,7 @@ import com.itservz.paomacha.android.fragment.CentralCompositeFragment;
 import com.itservz.paomacha.android.model.Pao;
 import com.itservz.paomacha.android.preference.PrefManager;
 import com.itservz.paomacha.android.service.NotificationEventReceiver;
+import com.itservz.paomacha.android.utils.AppRater;
 import com.itservz.paomacha.android.utils.GpsHelper;
 import com.itservz.paomacha.android.view.VerticalPager;
 import com.squareup.otto.Subscribe;
@@ -51,7 +52,6 @@ public class PaoActivity extends AppCompatActivity implements FirebaseDatabaseSe
         super.onCreate(savedInstanceState);
         getWindow().requestFeature(Window.FEATURE_PROGRESS);
         setContentView(R.layout.activity_pao);
-        Log.d(TAG, "onCreate");
         FirebaseDatabaseService.getCategories(categoriesFromDB);
         fragmentTags = new ArrayList<>();
 
@@ -78,13 +78,7 @@ public class PaoActivity extends AppCompatActivity implements FirebaseDatabaseSe
         if (new PrefManager(this).isNotificationEnabled()) {
             NotificationEventReceiver.setupAlarm(getApplicationContext());
         }
-    }
-
-    @Override
-    protected void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
-        String uuid = intent.getStringExtra(NOTIFICATION_ID);
-        Log.d(TAG, uuid + "for pao level notification receive");
+        AppRater.appLaunched(this);
     }
 
     @Override
@@ -106,28 +100,11 @@ public class PaoActivity extends AppCompatActivity implements FirebaseDatabaseSe
         if (pao == null || pao.uuid == null || pao.title == null || pao.body == null)
             return;
         addNewPao(pao);
-        /*if (new PrefManager(this).isNotificationEnabled()) {
-            Intent notificationIntent = new Intent(this, PaoActivity.class);
-            notificationIntent.putExtra(NOTIFICATION_ID, pao.uuid);
-            notificationIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            PendingIntent pIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-            Notification noti = new Notification.Builder(this)
-                    .setContentTitle(pao.title)
-                    .setContentText(pao.body)
-                    .setSmallIcon(R.mipmap.ic_launcher)
-                    .setContentIntent(pIntent)
-                    .build();
-            NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-            // hide the notification after its selected
-            noti.flags |= Notification.FLAG_AUTO_CANCEL;
-            notificationManager.notify(-(int) pao.createdOn, noti);
-        }*/
     }
 
     void addNewPao(Pao pao) {
         if (fragmentTags.contains(pao.uuid)) {
-            Log.d(TAG, "firebase listener set more");
+            Log.d(TAG, "duplicates");
             return;
         }
         Bundle bundle = new Bundle();
@@ -261,10 +238,8 @@ public class PaoActivity extends AppCompatActivity implements FirebaseDatabaseSe
             super.onBackPressed();
             return;
         }
-
         this.doubleBackToExitPressedOnce = true;
         Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
-
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
