@@ -45,15 +45,15 @@ public class SettingActivity extends AppCompatActivity {
 
         final PrefManager pm = new PrefManager(SettingActivity.this);
         final int px = new ScreenSizeScaler(getResources()).getdpAspixel(8);
-        TextView textView = (TextView) findViewById(R.id.notification);
+        TextView notificationView = (TextView) findViewById(R.id.notification);
         if (pm.isNotificationEnabled()) {
-            textView.setBackground(getResources().getDrawable(R.drawable.rounded_border_selected));
-            textView.setPadding(px, px, px, px);
+            notificationView.setBackground(getResources().getDrawable(R.drawable.rounded_border_selected));
+            notificationView.setPadding(px, px, px, px);
         } else {
-            textView.setBackground(getResources().getDrawable(R.drawable.rounded_border));
-            textView.setPadding(px, px, px, px);
+            notificationView.setBackground(getResources().getDrawable(R.drawable.rounded_border));
+            notificationView.setPadding(px, px, px, px);
         }
-        textView.setOnClickListener(new View.OnClickListener() {
+        notificationView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (pm.isNotificationEnabled()) {

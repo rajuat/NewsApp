@@ -179,6 +179,41 @@ public class FirebaseDatabaseService {
         });
     }
 
+    public static void getPaoNotification(final PaoListener listener, long createdOn) {
+
+        final DatabaseReference df = FirebaseService.getInstance().getDatabase().getReference(DatabaseFolders.prod.name()).child(DatabaseFolders.frompao.name());
+        Query paoref = df.orderByChild("createdOn").startAt(createdOn);//latest
+        paoref.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Pao pao = dataSnapshot.getValue(Pao.class);
+                //when user post - needsApproval is true, we can "hide" news violation
+                if ("true".equalsIgnoreCase(pao.needsApproval) || "hide".equalsIgnoreCase(pao.needsApproval))
+                    return;
+                pao.uuid = pao.uuid != null ? pao.uuid.trim() : null;
+                if (pao.tags != null && !pao.tags.isEmpty()) {
+                    listener.onNewPao(pao);
+                }
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+    }
+
     //get pao category
     public static void getCategories(final List<String> categories) {
         DatabaseReference reference = FirebaseService.getInstance().getDatabase().getReference(DatabaseFolders.prod.name()).child("categories");

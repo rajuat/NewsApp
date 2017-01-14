@@ -59,12 +59,24 @@ public class PrefManager {
     private String NOTIFICATION = "notification";
 
     public boolean isNotificationEnabled() {
-        return pref.getBoolean(NOTIFICATION, false);
+        return pref.getBoolean(NOTIFICATION, true); //default true
     }
 
     public void setNotification(boolean notification) {
         editor = pref.edit();
         editor.putBoolean(NOTIFICATION, notification);
+        editor.commit();
+    }
+
+    private String LAST_UUID = "last_uuid";
+
+    public long getLastNews() {
+        return pref.getLong(LAST_UUID, -1);
+    }
+
+    public void setLastNews(long lastUUID) {
+        editor = pref.edit();
+        editor.putLong(LAST_UUID, lastUUID);
         editor.commit();
     }
 

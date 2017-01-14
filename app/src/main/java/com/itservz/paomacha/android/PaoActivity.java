@@ -2,9 +2,6 @@ package com.itservz.paomacha.android;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -29,7 +26,7 @@ import com.itservz.paomacha.android.event.PageChangedEvent;
 import com.itservz.paomacha.android.fragment.CentralCompositeFragment;
 import com.itservz.paomacha.android.model.Pao;
 import com.itservz.paomacha.android.preference.PrefManager;
-import com.itservz.paomacha.android.service.NotificationService;
+import com.itservz.paomacha.android.service.NotificationEventReceiver;
 import com.itservz.paomacha.android.utils.GpsHelper;
 import com.itservz.paomacha.android.view.VerticalPager;
 import com.squareup.otto.Subscribe;
@@ -78,9 +75,8 @@ public class PaoActivity extends AppCompatActivity implements FirebaseDatabaseSe
         showAllNews = true;
         //gps
         GpsHelper.turnGPSOn(getApplicationContext());
-
         if (new PrefManager(this).isNotificationEnabled()) {
-            startService(new Intent(getApplicationContext(), NotificationService.class));
+            NotificationEventReceiver.setupAlarm(getApplicationContext());
         }
     }
 
@@ -96,9 +92,9 @@ public class PaoActivity extends AppCompatActivity implements FirebaseDatabaseSe
         super.onResume();
         Log.d(TAG, "onResume");
         toolbar.setTitle(getTitle());
-        if (showAllNews) {FirebaseDatabaseService.getInstance(null).getPaoLatest(this);
+        if (showAllNews) {
+            FirebaseDatabaseService.getInstance(null).getPaoLatest(this);
             FirebaseDatabaseService.getInstance(null).getUserPaoLatest(this);
-
         }
         EventBus.getInstance().register(this);
     }
