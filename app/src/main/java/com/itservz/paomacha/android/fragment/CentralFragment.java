@@ -96,7 +96,9 @@ public class CentralFragment extends Fragment {
 
     public void autoHideVerticalSwap() {
         if (appBarLayout == null) return;
-        ActionBarToggler.showAppBar(appBarLayout);
+        if (paoActivity != null && !paoActivity.FULLSCREEN) {
+            ActionBarToggler.showAppBar(appBarLayout);
+        }
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {

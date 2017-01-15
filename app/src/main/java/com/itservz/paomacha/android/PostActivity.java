@@ -44,7 +44,7 @@ public class PostActivity extends AppCompatActivity implements GoogleApiClient.C
     private Button yesButton;
     private Permissions permissionsHelper;
     protected GoogleApiClient mGoogleApiClient;
-    protected Location mLastLocation;
+    protected Location mLastLocation = new Location("");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,7 +81,6 @@ public class PostActivity extends AppCompatActivity implements GoogleApiClient.C
                 FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
                 Bundle bundle = new Bundle();
                 bundle.putString("file", mediaFile.getPath());
-                bundle.putString("mAddressOutput", "mAddressOutput");
                 bundle.putParcelable("mLastLocation", mLastLocation);
                 bundle.putStringArrayList(PaoActivity.CATEGORY_TAG, getIntent().getStringArrayListExtra(PaoActivity.CATEGORY_TAG));
                 PostFragment postFragment = new PostFragment();
@@ -93,11 +92,7 @@ public class PostActivity extends AppCompatActivity implements GoogleApiClient.C
                     mCamera = null;
                 }
                 fragmentTransaction.commit();
-                if (mGoogleApiClient.isConnected() && mLastLocation != null) {
-                    Log.d(TAG, "mGoogleApiClient");
-                    /*startIntentService();
-                    mAddressRequested = true;*/
-                }
+
             }
         });
         captureButton.setOnClickListener(
@@ -107,9 +102,7 @@ public class PostActivity extends AppCompatActivity implements GoogleApiClient.C
                         if (mCamera.getParameters().getSupportedFocusModes().contains(Camera.Parameters.FOCUS_MODE_AUTO)) {
                             mCamera.autoFocus(new Camera.AutoFocusCallback() {
                                 public void onAutoFocus(boolean success, Camera camera) {
-                                    Log.d("TAG", "before success");
                                     if (success) {
-                                        Log.d("TAG", "after success");
                                         camera.takePicture(null, null, mPicture);
                                     }
                                 }
@@ -209,7 +202,7 @@ public class PostActivity extends AppCompatActivity implements GoogleApiClient.C
                         Toast.makeText(this, "Permission Denied, You cannot access location data, camera and galary.", Toast.LENGTH_LONG).show();
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                             if (shouldShowRequestPermissionRationale(ACCESS_FINE_LOCATION)) {
-                                permissionsHelper.showMessageOKCancel("You need to allow access to all the permissionArray",
+                                permissionsHelper.showMessageOKCancel("You need to allow access to all the permissions.",
                                         new DialogInterface.OnClickListener() {
                                             @Override
                                             public void onClick(DialogInterface dialog, int which) {

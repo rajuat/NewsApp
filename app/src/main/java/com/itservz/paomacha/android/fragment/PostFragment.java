@@ -46,7 +46,6 @@ public class PostFragment extends Fragment {
         final View fragmentView = inflater.inflate(R.layout.fragment_edit_central, container, false);
         postActivity = (PostActivity) getActivity();
         String fileName = this.getArguments().getString("file");
-        //String mAddressOutput = this.getArguments().getString("mAddressOutput");
         Location mLastLocation = this.getArguments().getParcelable("mLastLocation");
         List<String> cats = this.getArguments().getStringArrayList(PaoActivity.CATEGORY_TAG);
         //final Bitmap bitmap = BitmapHelper.decodeSampledBitmapFromFile(postActivity, fileName);
