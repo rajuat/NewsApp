@@ -7,26 +7,17 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.WakefulBroadcastReceiver;
 import android.util.Log;
-import android.widget.ImageView;
 
 import com.itservz.paomacha.android.PaoActivity;
 import com.itservz.paomacha.android.R;
 import com.itservz.paomacha.android.backend.FirebaseDatabaseService;
 import com.itservz.paomacha.android.model.Pao;
 import com.itservz.paomacha.android.preference.PrefManager;
-import com.itservz.paomacha.android.utils.BitmapHelper;
-import com.itservz.paomacha.android.utils.DownloadImageNotify;
-import com.itservz.paomacha.android.utils.DownloadImageTask;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
 
 /**
  * Created by Raju on 1/14/2017.
@@ -92,62 +83,19 @@ public class NotificationIntentService extends IntentService implements Firebase
             pf.setLastNews(pao.createdOn);
             firstOneIsLatestNews = false;
         }
-    /*    final NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
-        builder.setContentTitle(pao.title)
-                .setAutoCancel(true)
-                //.setColor(getResources().getColor(R.color.accent))
-                .setContentText(pao.body)
-                .setSmallIcon(R.mipmap.ic_launcher);*/
-
-
-
-       /* Bitmap bitmap = null;
-        try {
-            InputStream in = new java.net.URL(pao.imageUrl).openStream();
-            bitmap = BitmapFactory.decodeStream(in);
-        } catch (Exception e) {
-            Log.e("Error", e.getMessage());
-            e.printStackTrace();
-        }*/
         Drawable d = getResources().getDrawable(R.mipmap.ic_launcher);
         Bitmap bitmap = ((BitmapDrawable)d).getBitmap();
         final NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
-        builder.setContentTitle(pao.title)
+        builder.setContentTitle("PAO MACHA")
                 .setAutoCancel(true)
                 .setLargeIcon(bitmap)
-                //.setColor(getResources().getColor(R.color.accent))
-                .setContentText(pao.body)
+                .setContentText(pao.title)
                 .setSmallIcon(R.drawable.ic_paomacha);
-
-                //.setStyle(new NotificationCompat.BigPictureStyle()
-                       // .bigPicture(bitmap));;
 
         //Set big text
         NotificationCompat.BigTextStyle style = new NotificationCompat.BigTextStyle(builder);
-        style.bigText(pao.body)
-                .setBigContentTitle(pao.title)
-                .setSummaryText(pao.tags.get(0));
-
-        //get the bitmap to show in notification bar
-
-        //get the bitmap to show in big notification bar
-        //Bitmap bitmap_image = BitmapFactory.decodeResource(this.getResources(), R.mipmap.ic_launcher);
-
-
-       // NotificationCompat.BigPictureStyle bigPic = new NotificationCompat.BigPictureStyle();
-
-    /*    if (pao.imageUrl != null) {
-            new DownloadImageNotify(builder).execute(pao.imageUrl);
-        } else {
-            if (pao.image != null) {
-                builder.setStyle(new NotificationCompat.BigPictureStyle()
-                        .bigPicture(BitmapHelper.stringToBitMap(pao.image)).setSummaryText(pao.title));
-
-            }
-        }
-*/
-
-
+        style.setBigContentTitle(pao.title);
+        style.bigText(pao.body.split("\n")[0]);
 
         Intent intent = new Intent(this, PaoActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);

@@ -204,11 +204,9 @@ public class PostActivity extends AppCompatActivity implements GoogleApiClient.C
                     boolean camera = grantResults[3] == PackageManager.PERMISSION_GRANTED;
 
                     if (coarse && fine && storage && camera) {
-                        Toast.makeText(this, "Permission Granted, Now you can access location data, camera and galary.", Toast.LENGTH_LONG).show();
                         onCreatePrivate();
                     } else {
                         Toast.makeText(this, "Permission Denied, You cannot access location data, camera and galary.", Toast.LENGTH_LONG).show();
-
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                             if (shouldShowRequestPermissionRationale(ACCESS_FINE_LOCATION)) {
                                 permissionsHelper.showMessageOKCancel("You need to allow access to all the permissionArray",
