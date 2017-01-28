@@ -1,11 +1,14 @@
+/*
 package com.itservz.paomacha.android.event;
 
 import com.squareup.otto.Bus;
 
+*/
 /**
  * Provides a singleton instance for the application event bus. For the sake of simplicity it's done via the singleton,
  * however, some dependency injection directly into interested classes.
- */
+ *//*
+
 
 public class EventBus {
 
@@ -21,3 +24,4 @@ public class EventBus {
 
 }
 
+*/

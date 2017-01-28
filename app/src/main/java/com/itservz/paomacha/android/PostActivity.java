@@ -77,7 +77,6 @@ public class PostActivity extends AppCompatActivity implements GoogleApiClient.C
         yesButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
                 Bundle bundle = new Bundle();
                 bundle.putString("file", mediaFile.getPath());
@@ -104,16 +103,16 @@ public class PostActivity extends AppCompatActivity implements GoogleApiClient.C
                                 public void onAutoFocus(boolean success, Camera camera) {
                                     if (success) {
                                         camera.takePicture(null, null, mPicture);
-                                    }
+                                }
                                 }
                             });
                         } else {
                             mCamera.takePicture(null, null, mPicture);
-                        }
+                    }
                         //now set reset taken pic
                         captureButton.setVisibility(View.GONE);
                         llDecide.setVisibility(View.VISIBLE);
-                    }
+                }
                 }
         );
         //updateValuesFromBundle(savedInstanceState);

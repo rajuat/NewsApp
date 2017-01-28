@@ -12,8 +12,6 @@ import android.view.ViewGroup;
 import com.itservz.paomacha.android.PaoActivity;
 import com.itservz.paomacha.android.R;
 import com.itservz.paomacha.android.adapter.FragmentsClassesPagerAdapter;
-import com.itservz.paomacha.android.event.EventBus;
-import com.itservz.paomacha.android.event.PageChangedEvent;
 import com.itservz.paomacha.android.model.Pao;
 import com.itservz.paomacha.android.view.ActionBarToggler;
 import com.itservz.paomacha.android.view.SmartViewPager;
@@ -39,7 +37,6 @@ public class CentralCompositeFragment extends Fragment {
 	private OnPageChangeListener mPagerChangeListener = new OnPageChangeListener() {
 		@Override
 		public void onPageSelected(int position) {
-			EventBus.getInstance().post(new PageChangedEvent(mCentralPageIndex == position));
             AppBarLayout appBarLayout = (AppBarLayout) paoActivity.findViewById(R.id.appbar);
             View toolbarBottom = fragmentView.findViewById(R.id.toolbarBottom);
             View fab = paoActivity.findViewById(R.id.fab);

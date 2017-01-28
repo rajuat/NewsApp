@@ -21,8 +21,6 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.itservz.paomacha.android.backend.FirebaseDatabaseService;
-import com.itservz.paomacha.android.event.EventBus;
-import com.itservz.paomacha.android.event.PageChangedEvent;
 import com.itservz.paomacha.android.fragment.CentralCompositeFragment;
 import com.itservz.paomacha.android.model.Pao;
 import com.itservz.paomacha.android.preference.PrefManager;
@@ -30,25 +28,26 @@ import com.itservz.paomacha.android.service.NotificationEventReceiver;
 import com.itservz.paomacha.android.utils.AppRater;
 import com.itservz.paomacha.android.utils.GpsHelper;
 import com.itservz.paomacha.android.view.VerticalPager;
-import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class PaoActivity extends AppCompatActivity implements FirebaseDatabaseService.PaoListener {
-    public boolean FULLSCREEN;
     public static String CATEGORY_TAG = "category_TAG";
+    public boolean FULLSCREEN;
     static final String TAG = "PaoActivity";
+    private static final int CENTRAL_PAGE_INDEX = 0;
     private VerticalPager mVerticalPager;
     private FragmentManager fragmentManager;
     private Toolbar toolbar;
     private List<String> fragmentTags = null;
     private ArrayList<String> categoriesFromDB = new ArrayList<>();
-    private static final int CENTRAL_PAGE_INDEX = 0;
-    private boolean showAllNews;
+    private boolean showAllNews = true;
+    private boolean doubleBackToExitPressedOnce;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d(TAG, ":onCreate");
         super.onCreate(savedInstanceState);
         getWindow().requestFeature(Window.FEATURE_PROGRESS);
         setContentView(R.layout.activity_pao);
@@ -89,11 +88,11 @@ public class PaoActivity extends AppCompatActivity implements FirebaseDatabaseSe
         if (showAllNews) {
             FirebaseDatabaseService.getInstance(null).getPaoLatest(this);
             FirebaseDatabaseService.getInstance(null).getUserPaoLatest(this);
+        } else {
+            showAllNews = true;
         }
-        EventBus.getInstance().register(this);
     }
 
-    static final String NOTIFICATION_ID = "notified_pao";
     @Override
     public void onNewPao(Pao pao) {
         Log.d(TAG, "onNewPao");
@@ -219,18 +218,7 @@ public class PaoActivity extends AppCompatActivity implements FirebaseDatabaseSe
         });
     }
 
-    @Override
-    protected void onPause() {
-        EventBus.getInstance().unregister(this);
-        super.onPause();
-    }
 
-    @Subscribe
-    public void onLocationChanged(PageChangedEvent event) {
-        mVerticalPager.setPagingEnabled(event.hasVerticalNeighbors());
-    }
-
-    private boolean doubleBackToExitPressedOnce;
 
     @Override
     public void onBackPressed() {
