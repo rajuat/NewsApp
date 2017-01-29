@@ -19,7 +19,7 @@ import java.util.List;
  * A basic Camera preview class
  */
 public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback {
-    static final String TAG = "CameraPreview";
+    static final String TAG = " ";
     private SurfaceHolder mHolder;
     private Camera mCamera;
     private Context context;
@@ -92,6 +92,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
             int size = oneMegaByte - s.height * s.width;
             Log.d(TAG, size + " " + almostOneMB);
             if (almostOneMB > size && size > 0) {
+                Log.d(TAG, size + " " + i);
                 almostOneMB = size;
                 index = i;
             }
