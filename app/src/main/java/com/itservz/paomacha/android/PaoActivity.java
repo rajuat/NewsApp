@@ -83,7 +83,7 @@ public class PaoActivity extends AppCompatActivity implements FirebaseDatabaseSe
     @Override
     protected void onResume() {
         super.onResume();
-        Log.d(TAG, "onResume");
+        Log.d(TAG, "onResume" + showAllNews);
         toolbar.setTitle(getTitle());
         if (showAllNews) {
             FirebaseDatabaseService.getInstance(null).getPaoLatest(this);

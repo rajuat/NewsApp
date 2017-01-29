@@ -19,6 +19,7 @@ public class AddressHelper {
     static final String TAG = "AddressHelper";
 
     public static String getAddress(Context context, Location location) {
+        Log.d(TAG, "" + location);
         String add = null;
         Geocoder geocoder = new Geocoder(context, Locale.getDefault());
         List<Address> addresses = null;
@@ -30,9 +31,11 @@ public class AddressHelper {
                     1);
         } catch (IOException ioException) {
             ioException.printStackTrace();
+            return " ";
         } catch (IllegalArgumentException illegalArgumentException) {
             // Catch invalid latitude or longitude values.
             illegalArgumentException.printStackTrace();
+            return " ";
         }
 
         if (addresses == null || addresses.size() == 0) {

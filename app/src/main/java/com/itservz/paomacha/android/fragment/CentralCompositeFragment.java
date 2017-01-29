@@ -49,8 +49,8 @@ public class CentralCompositeFragment extends Fragment {
                 paoActivity.FULLSCREEN = true;
             } else if (position == middleFrag) {
                 ActionBarToggler.showAppBar(appBarLayout);
-                ActionBarToggler.showAppBar(toolbarBottom);
-                ActionBarToggler.showAppBar(fab);
+				//ActionBarToggler.showAppBar(toolbarBottom);
+				ActionBarToggler.showAppBar(fab);
                 paoActivity.FULLSCREEN = false;
                 mHorizontalPager.autoHideSideSwap();
             }

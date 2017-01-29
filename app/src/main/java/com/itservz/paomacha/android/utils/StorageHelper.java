@@ -1,9 +1,12 @@
 package com.itservz.paomacha.android.utils;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Environment;
 import android.util.Log;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -29,10 +32,12 @@ public class StorageHelper {
     }
 
     public static void writeToFile(byte[] data, File pictureFile){
+        if (data == null) return;
         try {
-            FileOutputStream fos = new FileOutputStream(pictureFile);
-            fos.write(data);
-            fos.close();
+            Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
+            BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(pictureFile));
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 80, bos);
+            bitmap.recycle();
         } catch (FileNotFoundException e) {
             Log.d(TAG, "File not found: " + e.getMessage());
         } catch (IOException e) {

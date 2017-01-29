@@ -5,19 +5,15 @@ package com.itservz.paomacha.android.view;
  */
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.hardware.Camera;
 import android.location.Location;
 import android.util.Log;
-import android.view.Display;
-import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import android.view.WindowManager;
 
 import java.io.IOException;
 import java.util.List;
-
-import static android.content.Context.WINDOW_SERVICE;
 
 /**
  * A basic Camera preview class
@@ -55,18 +51,13 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
     }
 
     public void surfaceChanged(SurfaceHolder holder, int format, int w, int h) {
-        // If your preview can change or rotate, take care of those events here. Make sure to stop the preview before resizing or reformatting it.
         if (mHolder.getSurface() == null) {
-            // preview surface does not exist
             return;
         }
-        // stop preview before making changes
         try {
             mCamera.stopPreview();
         } catch (Exception e) {
-            // ignore: tried to stop a non-existent preview
         }
-        // set preview size and make any resize, rotate or reformatting changes here
         Camera.Parameters parameters = mCamera.getParameters();
 
         List<String> flash = parameters.getSupportedFlashModes();
@@ -81,36 +72,33 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
         if (whiteMode != null && whiteMode.contains(android.hardware.Camera.Parameters.WHITE_BALANCE_AUTO)) {
             parameters.setWhiteBalance(parameters.WHITE_BALANCE_AUTO);
         }
-
-        Display display = ((WindowManager) context.getSystemService(WINDOW_SERVICE)).getDefaultDisplay();
-
-        if (display.getRotation() == Surface.ROTATION_0) {
-            Log.d(TAG, "0");
-            //parameters.setPreviewSize(w, h);
-            //parameters.setRotation(90);
+        if (context.getResources().getConfiguration().orientation != Configuration.ORIENTATION_LANDSCAPE) {
+            //parameters.set("orientation", "portrait");
             mCamera.setDisplayOrientation(90);
+            parameters.setRotation(0);
+        } else {
+            parameters.set("orientation", "landscape");
+            mCamera.setDisplayOrientation(0);
+            parameters.setRotation(0);
         }
 
-        if (display.getRotation() == Surface.ROTATION_90) {
-            Log.d(TAG, "90");
-            parameters.setPreviewSize(w, h);
-        }
 
-        if (display.getRotation() == Surface.ROTATION_180) {
-            Log.d(TAG, "180");
-            parameters.setPreviewSize(h, w);
+        int index = 0;
+        int oneMegaByte = 1024000;
+        int almostOneMB = Integer.MAX_VALUE;
+        List<Camera.Size> pictureSizes = parameters.getSupportedPictureSizes();
+        for (int i = 0; i < pictureSizes.size(); i++) {
+            Camera.Size s = pictureSizes.get(i);
+            int size = oneMegaByte - s.height * s.width;
+            Log.d(TAG, size + " " + almostOneMB);
+            if (almostOneMB > size && size > 0) {
+                almostOneMB = size;
+                index = i;
+            }
         }
-
-        if (display.getRotation() == Surface.ROTATION_270) {
-            Log.d(TAG, "270");
-            //parameters.setPreviewSize(w, h);
-            //parameters.setRotation(180);
-            mCamera.setDisplayOrientation(180);
-        }
-
+        parameters.setPictureSize(pictureSizes.get(index).width, pictureSizes.get(index).height);
         mCamera.setParameters(parameters);
 
-        // start preview with new settings
         try {
             mCamera.setPreviewDisplay(mHolder);
             mCamera.startPreview();
@@ -123,10 +111,8 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
     public static void setGpsParameters(Camera.Parameters parameters, Location loc) {
         // Clear previous GPS location from the parameters.
         parameters.removeGpsData();
-
         // We always encode GpsTimeStamp
         parameters.setGpsTimestamp(System.currentTimeMillis() / 1000);
-
         // Set GPS location.
         if (loc != null) {
             double lat = loc.getLatitude();
