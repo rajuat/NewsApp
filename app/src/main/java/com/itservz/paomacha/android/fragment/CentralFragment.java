@@ -91,7 +91,7 @@ public class CentralFragment extends Fragment {
                     }
                 }
             }
-        }, 2000);
+        }, 4000);
     }
 
     public void autoHideVerticalSwap() {
@@ -112,7 +112,7 @@ public class CentralFragment extends Fragment {
                     paoActivity.FULLSCREEN = true;
                 }
             }
-        }, 2000);
+        }, 4000);
     }
 
     private void addListeners(final View fragmentView) {
