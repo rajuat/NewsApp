@@ -21,6 +21,8 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.itservz.paomacha.android.backend.FirebaseDatabaseService;
+import com.itservz.paomacha.android.event.EventBus;
+import com.itservz.paomacha.android.event.PageChangedEvent;
 import com.itservz.paomacha.android.fragment.CentralCompositeFragment;
 import com.itservz.paomacha.android.model.Pao;
 import com.itservz.paomacha.android.preference.PrefManager;
@@ -28,6 +30,7 @@ import com.itservz.paomacha.android.service.NotificationEventReceiver;
 import com.itservz.paomacha.android.utils.AppRater;
 import com.itservz.paomacha.android.utils.GpsHelper;
 import com.itservz.paomacha.android.view.VerticalPager;
+import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -91,6 +94,7 @@ public class PaoActivity extends AppCompatActivity implements FirebaseDatabaseSe
         } else {
             showAllNews = true;
         }
+        EventBus.getInstance().register(this);
     }
 
     @Override
@@ -218,8 +222,17 @@ public class PaoActivity extends AppCompatActivity implements FirebaseDatabaseSe
         });
     }
 
+    @Override
+    protected void onPause() {
+        EventBus.getInstance().unregister(this);
+        super.onPause();
+    }
 
-
+    @Subscribe
+    public void onLocationChanged(PageChangedEvent event) {
+        Log.d(TAG, "Subscribe onLocationChanged");
+        mVerticalPager.setPagingEnabled(event.hasVerticalNeighbors());
+    }
     @Override
     public void onBackPressed() {
         if (doubleBackToExitPressedOnce) {

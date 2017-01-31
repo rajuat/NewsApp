@@ -1,6 +1,7 @@
 package com.itservz.paomacha.android.view;
 
 import android.content.Context;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.view.GestureDetector;
@@ -60,8 +61,11 @@ public class SmartViewPager extends ViewPager {
 
     public void autoHideVerticalSwap() {
         FragmentsClassesPagerAdapter adapter = (FragmentsClassesPagerAdapter) getAdapter();
-        CentralFragment cf = (CentralFragment) adapter.getItem(getCurrentItem());
-        cf.autoHideVerticalSwap();
+        Fragment item = adapter.getItem(getCurrentItem());
+        if (item instanceof CentralFragment) {
+            CentralFragment cf = (CentralFragment) item;
+            cf.autoHideVerticalSwap();
+        }
     }
 
     public void autoHideSideSwap() {

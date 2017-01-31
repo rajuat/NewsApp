@@ -20,6 +20,9 @@ public class AddressHelper {
 
     public static String getAddress(Context context, Location location) {
         Log.d(TAG, "" + location);
+        if (location == null) {
+            return " ";
+        }
         String add = null;
         Geocoder geocoder = new Geocoder(context, Locale.getDefault());
         List<Address> addresses = null;
