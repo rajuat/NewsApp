@@ -42,6 +42,8 @@ public class CentralFragment extends Fragment {
     private View toolbarBottom;
     private View fab;
     private AppBarLayout appBarLayout;
+    private Runnable runnable;
+    private Handler handler;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -70,49 +72,35 @@ public class CentralFragment extends Fragment {
         toolbarBottom = fragmentView.findViewById(R.id.toolbarBottom);
         fab = paoActivity.findViewById(R.id.fab);
 
-        addListeners(fragmentView);
-        autoHideSideSwap();
-        return fragmentView;
-    }
-
-    public void autoHideSideSwap() {
-        new Handler().postDelayed(new Runnable() {
+        runnable = new Runnable() {
             @Override
             public void run() {
                 if (paoActivity != null && !paoActivity.FULLSCREEN) {
-                    // Making notification bar transparent
                     if (Build.VERSION.SDK_INT >= 21) {
-                        Log.d(TAG, "fragmentView.autoHideSideSwap");
-                        //paoActivity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-                        //paoActivity.getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
                         ActionBarToggler.hideAppBar(appBarLayout);
                         //ActionBarToggler.hideBottomBar(toolbarBottom, null);
                         paoActivity.FULLSCREEN = true;
                     }
                 }
             }
-        }, 4000);
+        };
+        handler = new Handler();
+
+        addListeners(fragmentView);
+        autoHideSideSwap();
+        return fragmentView;
+    }
+
+    public void autoHideSideSwap() {
+        handler.postDelayed(runnable, 2000);
     }
 
     public void autoHideVerticalSwap() {
         if (appBarLayout == null) return;
         if (paoActivity != null && !paoActivity.FULLSCREEN) {
             ActionBarToggler.showAppBar(appBarLayout);
+            handler.postDelayed(runnable, 2000);
         }
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                // Making notification bar transparent
-                if (Build.VERSION.SDK_INT >= 21) {
-                    Log.d(TAG, "fragmentView.autoHideSideSwap");
-                    //paoActivity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-                    //paoActivity.getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
-                    ActionBarToggler.hideAppBar(appBarLayout);
-                    //ActionBarToggler.hideBottomBar(toolbarBottom, null);
-                    paoActivity.FULLSCREEN = true;
-                }
-            }
-        }, 4000);
     }
 
     private void addListeners(final View fragmentView) {
@@ -126,6 +114,8 @@ public class CentralFragment extends Fragment {
                     //ActionBarToggler.autoHideVerticalSwap(toolbarBottom);
                     //ActionBarToggler.autoHideVerticalSwap(fab);
                     paoActivity.FULLSCREEN = false;
+                    handler.removeCallbacks(runnable);
+                    handler.postDelayed(runnable, 2000);
                 } else {
                     Log.d(TAG, "fragmentView.setOnClickListener hide");
                     ActionBarToggler.hideAppBar(appBarLayout);
