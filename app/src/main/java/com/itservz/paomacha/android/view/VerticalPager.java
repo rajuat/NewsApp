@@ -165,11 +165,9 @@ public class VerticalPager extends ViewGroup {
     @Override
     public void computeScroll() {
         if (mScroller.computeScrollOffset()) {
-            Log.d(TAG, "computeScroll.computeScrollOffset");
             scrollTo(mScroller.getCurrX(), mScroller.getCurrY());
             postInvalidate();
         } else if (mNextPage != INVALID_SCREEN) {
-            Log.d(TAG, "computeScroll.computeScrollOffsetNO");
             mCurrentPage = mNextPage;
             mNextPage = INVALID_SCREEN;
             clearChildrenCache();
@@ -247,10 +245,8 @@ public class VerticalPager extends ViewGroup {
     public boolean requestChildRectangleOnScreen(View child, Rect rectangle, boolean immediate) {
         int screen = indexOfChild(child);
         if (screen != mCurrentPage || !mScroller.isFinished()) {
-            Log.d(TAG, "requestChildRectangleOnScreen there");
             return true;
         }
-        Log.d(TAG, "requestChildRectangleOnScreen not there");
         return false;
     }
 
@@ -258,10 +254,8 @@ public class VerticalPager extends ViewGroup {
     protected boolean onRequestFocusInDescendants(int direction, Rect previouslyFocusedRect) {
         int focusableScreen;
         if (mNextPage != INVALID_SCREEN) {
-            Log.d(TAG, "onRequestFocusInDescendants INVALID_SCREEN");
             focusableScreen = mNextPage;
         } else {
-            Log.d(TAG, "onRequestFocusInDescendants VALID_SCREEN");
             focusableScreen = mCurrentPage;
         }
         View childAt = getChildAt(focusableScreen);
@@ -276,15 +270,11 @@ public class VerticalPager extends ViewGroup {
             if (getCurrentPage() > 0) {
                 snapToPage(getCurrentPage() - 1);
                 return true;
-            } else {
-                Log.d(TAG, "reached top");
             }
         } else if (direction == View.FOCUS_RIGHT) {
             if (getCurrentPage() < getChildCount() - 1) {
                 snapToPage(getCurrentPage() + 1);
                 return true;
-            } else{
-                Log.d(TAG, "reached bottom");
             }
         }
         return super.dispatchUnhandledMove(focused, direction);
@@ -296,14 +286,10 @@ public class VerticalPager extends ViewGroup {
         if (direction == View.FOCUS_LEFT) {
             if (mCurrentPage > 0) {
                 getChildAt(mCurrentPage - 1).addFocusables(views, direction);
-            } else {
-                Log.d(TAG, "reached top1");
             }
         } else if (direction == View.FOCUS_RIGHT) {
             if (mCurrentPage < getChildCount() - 1) {
                 getChildAt(mCurrentPage + 1).addFocusables(views, direction);
-            }else {
-                Log.d(TAG, "reached top1");
             }
         }
     }
@@ -321,12 +307,11 @@ public class VerticalPager extends ViewGroup {
 		 */
 
 		/*
-		 * Shortcut the most recurring case: the user is in the dragging state and he is moving his finger. We want to
+         * Shortcut the most recurring case: the user is in the dragging state and he is moving his finger. We want to
 		 * intercept this motion.
 		 */
         final int action = ev.getAction();
         if ((action == MotionEvent.ACTION_MOVE) && (mTouchState != TOUCH_STATE_REST)) {
-            // Log.d(TAG, "onInterceptTouchEvent::shortcut=true");
             return true;
         }
 
@@ -470,8 +455,6 @@ public class VerticalPager extends ViewGroup {
                         if (getScrollY() < 0 || getScrollY() + pageHeight > childAt.getBottom()) {
                             deltaY /= 2;
                         }
-                    } else{
-                        Log.d(TAG, "end of view");
                     }
                     scrollBy(0, deltaY);
                 }
@@ -486,8 +469,10 @@ public class VerticalPager extends ViewGroup {
 
                     // check scrolling past first or last page?
                     if (getScrollY() < 0) {
+                        Log.d(TAG, "onTouchEvent: reach top");
                         snapToPage(0);
                     } else if (getScrollY() > measuredHeight - pageHeight) {
+                        Log.d(TAG, "onTouchEvent: reach bottom");
                         snapToPage(count - 1, BOTTOM, PAGE_SNAP_DURATION_DEFAULT);
                     } else {
                         for (int i = 0; i < count; i++) {
@@ -553,8 +538,6 @@ public class VerticalPager extends ViewGroup {
             Log.d(TAG, childAt.toString());
             SmartViewPager svp = (SmartViewPager) childAt;
             svp.autoHideVerticalSwap();
-        } else {
-            Log.d(TAG, "mey be ends here");
         }
 
         mScroller.startScroll(0, getScrollY(), 0, delta, duration);

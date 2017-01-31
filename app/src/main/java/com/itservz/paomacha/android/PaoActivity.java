@@ -50,7 +50,7 @@ public class PaoActivity extends AppCompatActivity implements FirebaseDatabaseSe
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.d(TAG, ":onCreate");
+        Log.d(TAG, "onCreate");
         super.onCreate(savedInstanceState);
         getWindow().requestFeature(Window.FEATURE_PROGRESS);
         setContentView(R.layout.activity_pao);

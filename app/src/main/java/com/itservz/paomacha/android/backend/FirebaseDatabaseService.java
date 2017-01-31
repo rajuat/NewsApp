@@ -60,7 +60,6 @@ public class FirebaseDatabaseService {
     //for bookmark, likes and dislikes
     public void getUserTags(final PaoListener listener, final Set<String> tags) {
         Log.d(TAG, "No of tags: " + tags.size());
-        Log.d(TAG,"test");
         DatabaseReference fromUser = FirebaseService.getInstance().getDatabase().getReference(DatabaseFolders.prod.name()).child(DatabaseFolders.frompao.name());
         fromUser.addChildEventListener(new ChildEventListener() {
             @Override
@@ -148,7 +147,7 @@ public class FirebaseDatabaseService {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 Pao pao = dataSnapshot.getValue(Pao.class);
-                Log.d(TAG, fromuserORfrompao + " :category: " + category + " :onChildAdded: " + pao.toString());
+                Log.d(TAG, fromuserORfrompao + " :category: " + category + " :onChildAdded: " + pao.title);
                 //when user post - needsApproval is true, we can "hide" news violation
                 if ("true".equalsIgnoreCase(pao.needsApproval) || "hide".equalsIgnoreCase(pao.needsApproval))
                     return;

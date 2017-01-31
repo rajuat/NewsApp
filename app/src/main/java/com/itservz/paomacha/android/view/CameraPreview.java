@@ -84,7 +84,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 
 
         int index = 0;
-        int oneMegaByte = 1024000;
+        int oneMegaByte = 1024 * 1024;
         int almostOneMB = Integer.MAX_VALUE;
         List<Camera.Size> pictureSizes = parameters.getSupportedPictureSizes();
         for (int i = 0; i < pictureSizes.size(); i++) {
