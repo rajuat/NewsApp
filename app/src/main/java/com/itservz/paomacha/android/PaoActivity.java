@@ -80,7 +80,7 @@ public class PaoActivity extends AppCompatActivity implements FirebaseDatabaseSe
         if (new PrefManager(this).isNotificationEnabled()) {
             NotificationEventReceiver.setupAlarm(getApplicationContext());
         }
-        AppRater.appLaunched(this);
+        //AppRater.appLaunched(this);
     }
 
     @Override
@@ -235,6 +235,7 @@ public class PaoActivity extends AppCompatActivity implements FirebaseDatabaseSe
     }
     @Override
     public void onBackPressed() {
+        AppRater.appLaunched(this);
         if (doubleBackToExitPressedOnce) {
             super.onBackPressed();
             return;
@@ -246,6 +247,6 @@ public class PaoActivity extends AppCompatActivity implements FirebaseDatabaseSe
             public void run() {
                 doubleBackToExitPressedOnce = false;
             }
-        }, 2000);
+        }, 10000);
     }
 }
