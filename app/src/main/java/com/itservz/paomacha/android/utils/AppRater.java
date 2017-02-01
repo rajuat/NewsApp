@@ -21,7 +21,8 @@ public class AppRater {
     private final static String APP_TITLE = "PAO MACHA";
     private final static String APP_PNAME = "com.itservz.paomacha.android";
 
-    private final static int DAYS_UNTIL_PROMPT = 4;
+
+    private final static int DAYS_UNTIL_PROMPT = 5;
     private final static int LAUNCHES_UNTIL_PROMPT = 12;
     private static SharedPreferences prefs;
 
