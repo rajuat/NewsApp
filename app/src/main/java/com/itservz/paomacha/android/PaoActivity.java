@@ -33,6 +33,7 @@ import com.itservz.paomacha.android.view.VerticalPager;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class PaoActivity extends AppCompatActivity implements FirebaseDatabaseService.PaoListener {
@@ -80,7 +81,8 @@ public class PaoActivity extends AppCompatActivity implements FirebaseDatabaseSe
         if (new PrefManager(this).isNotificationEnabled()) {
             NotificationEventReceiver.setupAlarm(getApplicationContext());
         }
-        //AppRater.appLaunched(this);
+        //rating dailog
+        new AppRater(this).appLaunched();
     }
 
     @Override
@@ -126,6 +128,11 @@ public class PaoActivity extends AppCompatActivity implements FirebaseDatabaseSe
         super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.menu_pao, menu);
         return true;
+    }
+
+    public void refreshForNewPao(long topPaoId) {
+        Log.d(TAG, "refreshForNewPao: " + new Date(-topPaoId));
+        FirebaseDatabaseService.getPaoNotification(this, topPaoId);
     }
 
     @Override
@@ -207,12 +214,11 @@ public class PaoActivity extends AppCompatActivity implements FirebaseDatabaseSe
             @Override
             public void onGlobalLayout() {
                 mVerticalPager.snapToPage(CENTRAL_PAGE_INDEX, VerticalPager.PAGE_SNAP_DURATION_INSTANT);
-
-                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN)
-                    // recommended removeOnGlobalLayoutListener method is available since API 16 only
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
                     mVerticalPager.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-                else
+                } else {
                     removeGlobalOnLayoutListenerForJellyBean(mVerticalPager);
+                }
             }
 
             @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
@@ -233,9 +239,9 @@ public class PaoActivity extends AppCompatActivity implements FirebaseDatabaseSe
         Log.d(TAG, "Subscribe onLocationChanged");
         mVerticalPager.setPagingEnabled(event.hasVerticalNeighbors());
     }
+
     @Override
     public void onBackPressed() {
-        AppRater.appLaunched(this);
         if (doubleBackToExitPressedOnce) {
             super.onBackPressed();
             return;
@@ -247,6 +253,6 @@ public class PaoActivity extends AppCompatActivity implements FirebaseDatabaseSe
             public void run() {
                 doubleBackToExitPressedOnce = false;
             }
-        }, 10000);
+        }, 2000);
     }
 }

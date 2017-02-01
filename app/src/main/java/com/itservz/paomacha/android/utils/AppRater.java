@@ -2,9 +2,7 @@ package com.itservz.paomacha.android.utils;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.view.View;
 import android.widget.Button;
@@ -12,6 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.itservz.paomacha.android.R;
+import com.itservz.paomacha.android.preference.PrefManager;
 
 /**
  * Created by Raju on 1/14/2017.
@@ -22,43 +21,39 @@ public class AppRater {
     private final static String APP_PNAME = "com.itservz.paomacha.android";
 
 
-    private final static int DAYS_UNTIL_PROMPT = 5;
+    private final static int DAYS_UNTIL_PROMPT = 4;
     private final static int LAUNCHES_UNTIL_PROMPT = 12;
-    private static SharedPreferences prefs;
+    private PrefManager pf;
+    private Activity mContext;
 
-    public static void appLaunched(Activity activity) {
-        //activity.getApplicationContext();
-        prefs = activity.getSharedPreferences("apprater", 0);
-        if (prefs.getBoolean("dontshowagain", false)) {
+    public AppRater(Activity activity) {
+        this.mContext = activity;
+        pf = new PrefManager(activity);
+    }
+
+    public void appLaunched() {
+        if (pf.isDontShowAgain()) {
             return;
         }
 
-        SharedPreferences.Editor editor = prefs.edit();
+        long launch_count = pf.getLaunchCount() + 1;
+        pf.setLaunchCount(launch_count);
 
-        // Increment launch counter
-        long launch_count = prefs.getLong("launch_count", 0) + 1;
-        editor.putLong("launch_count", launch_count);
-
-        // Get date of first launch
-        Long date_firstLaunch = prefs.getLong("date_firstlaunch", 0);
+        Long date_firstLaunch = pf.getDateFirstLaunch();
         if (date_firstLaunch == 0) {
             date_firstLaunch = System.currentTimeMillis();
-            editor.putLong("date_firstlaunch", date_firstLaunch);
+            pf.setDateFirstLaunch(date_firstLaunch);
         }
-        editor.commit();
-        //showRateDialog(activity);
-        // Wait at least n days before opening dialog
         if (launch_count >= LAUNCHES_UNTIL_PROMPT) {
             if (System.currentTimeMillis() >= date_firstLaunch +
                     (DAYS_UNTIL_PROMPT * 24 * 60 * 60 * 1000)) {
-                showRateDialog(activity);
+                showRateDialog();
             }
         }
 
     }
 
-    public static void showRateDialog(final Context mContext) {
-        final SharedPreferences.Editor editor = prefs.edit();
+    private void showRateDialog() {
         final Dialog dialog = new Dialog(mContext);
         dialog.setTitle("Rate " + APP_TITLE);
 
@@ -79,9 +74,7 @@ public class AppRater {
         b1.setBackgroundColor(mContext.getResources().getColor(R.color.primary_dark));
         b1.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                if (editor != null) {
-                    editor.putBoolean("dontshowagain", true);
-                }
+                pf.setDontShowAgain(true);
                 mContext.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + APP_PNAME)));
                 dialog.dismiss();
             }
@@ -94,9 +87,7 @@ public class AppRater {
         b2.setBackgroundColor(mContext.getResources().getColor(R.color.primary));
         b2.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                if (editor != null) {
-                    editor.clear();
-                }
+                reset();
                 dialog.dismiss();
             }
         });
@@ -108,10 +99,7 @@ public class AppRater {
         b3.setBackgroundColor(mContext.getResources().getColor(R.color.accent));
         b3.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                if (editor != null) {
-                    editor.putBoolean("dontshowagain", true);
-
-                }
+                pf.setDontShowAgain(true);
                 dialog.dismiss();
             }
         });
@@ -119,6 +107,12 @@ public class AppRater {
 
         dialog.setContentView(ll);
         dialog.show();
-        editor.commit();
+
+    }
+
+    private void reset() {
+        pf.setDateFirstLaunch(0);
+        pf.setDontShowAgain(false);
+        pf.setLaunchCount(0);
     }
 }

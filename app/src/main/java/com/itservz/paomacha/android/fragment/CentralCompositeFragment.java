@@ -71,8 +71,8 @@ public class CentralCompositeFragment extends Fragment {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		Log.d(TAG, "onCreateView");
 		pao = (Pao) this.getArguments().getSerializable("pao");
+		Log.d(TAG, "onCreateView: " + pao.title);
 		paoActivity = (PaoActivity) getActivity();
 		fragmentView = inflater.inflate(R.layout.fragment_composite_central, container, false);
 		findViews();

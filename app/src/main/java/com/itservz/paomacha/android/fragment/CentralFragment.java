@@ -37,8 +37,8 @@ public class CentralFragment extends Fragment {
     static final String TAG = "CentralFragment";
     private PrefManager prefManager;
     private static final int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 1;
-    private PaoActivity paoActivity = null;
-    private Pao pao = null;
+    public PaoActivity paoActivity = null;
+    public Pao pao = null;
     private View toolbarBottom;
     private View fab;
     private AppBarLayout appBarLayout;

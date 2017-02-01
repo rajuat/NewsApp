@@ -16,6 +16,9 @@ import android.view.ViewParent;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.Scroller;
 
+import com.itservz.paomacha.android.adapter.FragmentsClassesPagerAdapter;
+import com.itservz.paomacha.android.fragment.CentralFragment;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
@@ -470,6 +473,16 @@ public class VerticalPager extends ViewGroup {
                     // check scrolling past first or last page?
                     if (getScrollY() < 0) {
                         Log.d(TAG, "onTouchEvent: reach top");
+                        View view = getChildAt(0);
+                        if (view != null && view instanceof SmartViewPager) {
+                            SmartViewPager smartViewPager = (SmartViewPager) view;
+                            FragmentsClassesPagerAdapter fragmentsClassesPagerAdapter = (FragmentsClassesPagerAdapter) smartViewPager.getAdapter();
+                            CentralFragment centralFragment = (CentralFragment) fragmentsClassesPagerAdapter.getItem(1);
+                            if (centralFragment != null && centralFragment.pao != null) {
+                                long topPaoId = centralFragment.pao.createdOn;
+                                centralFragment.paoActivity.refreshForNewPao(topPaoId);
+                            }
+                        }
                         snapToPage(0);
                     } else if (getScrollY() > measuredHeight - pageHeight) {
                         Log.d(TAG, "onTouchEvent: reach bottom");

@@ -68,6 +68,43 @@ public class PrefManager {
         editor.commit();
     }
 
+    private String DONT_SHOW_AGAIN = "dontshowagain";
+
+    public boolean isDontShowAgain() {
+        return pref.getBoolean(DONT_SHOW_AGAIN, false);
+    }
+
+    public void setDontShowAgain(boolean dontShowAgain) {
+        editor = pref.edit();
+        editor.putBoolean(DONT_SHOW_AGAIN, dontShowAgain);
+        editor.commit();
+    }
+
+    private String LAUNCH_COUNT = "launch_count";
+
+    public long getLaunchCount() {
+        return pref.getLong(LAUNCH_COUNT, 0);
+    }
+
+    public void setLaunchCount(long launchCount) {
+        editor = pref.edit();
+        editor.putLong(LAUNCH_COUNT, launchCount);
+        editor.commit();
+    }
+
+    private String DATE_FIRST_LAUNCH = "date_firstlaunch";
+
+    public long getDateFirstLaunch() {
+        return pref.getLong(DATE_FIRST_LAUNCH, 0);
+    }
+
+    public void setDateFirstLaunch(long dateFirstLaunch) {
+        editor = pref.edit();
+        editor.putLong(DATE_FIRST_LAUNCH, dateFirstLaunch);
+        editor.commit();
+    }
+
+
     private String LAST_UUID = "last_uuid";
 
     public long getLastNews() {
