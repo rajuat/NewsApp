@@ -302,8 +302,6 @@ public class VerticalPager extends ViewGroup {
         if (!mIsPagingEnabled)
             return false;
 
-        // Log.d(TAG, "onInterceptTouchEvent::action=" + ev.getAction());
-
 		/*
          * This method JUST determines whether we want to intercept the motion. If we return true, onTouchEvent will be
 		 * called and we do the actual scrolling there.
@@ -417,6 +415,51 @@ public class VerticalPager extends ViewGroup {
         setChildrenDrawnWithCacheEnabled(false);
     }
 
+    int index = 0;
+    @Override
+    public void addView(View child) {
+        Log.d(TAG, "addView: View child" + index);
+        super.addView(child/*, index++*/);
+
+    }
+
+    /*@Override
+    public void addView(View child, int width, int height) {
+        Log.d(TAG, "addView: View child, int width, int height");
+        super.addView(child, width, height);
+    }
+
+    @Override
+    public void addView(View child, LayoutParams params) {
+        Log.d(TAG, "addView: View child, LayoutParams params");
+        super.addView(child, params);
+    }*/
+
+    @Override
+    public void addView(View child, int index, LayoutParams params) {
+        Log.d(TAG, "addView: View child, int index, LayoutParams params");
+        Log.d(TAG, "addView: " + index + " : " + child);
+        super.addView(child, index, params);
+    }
+
+    @Override
+    public void onViewAdded(View child) {
+        Log.d(TAG, "onViewAdded: child");
+        super.onViewAdded(child);
+    }
+
+    /*@Override
+    protected boolean addViewInLayout(View child, int index, LayoutParams params) {
+        Log.d(TAG, "addViewInLayout: View child, int index, LayoutParams params");
+        return super.addViewInLayout(child, index, params);
+    }
+
+    @Override
+    protected boolean addViewInLayout(View child, int index, LayoutParams params, boolean preventRequestLayout) {
+        Log.d(TAG, "addViewInLayout: View child, int index, LayoutParams params, boolean preventRequestLayou");
+        return super.addViewInLayout(child, index, params, preventRequestLayout);
+    }*/
+
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
         if (!mIsPagingEnabled)
@@ -472,7 +515,6 @@ public class VerticalPager extends ViewGroup {
 
                     // check scrolling past first or last page?
                     if (getScrollY() < 0) {
-                        Log.d(TAG, "onTouchEvent: reach top");
                         View view = getChildAt(0);
                         if (view != null && view instanceof SmartViewPager) {
                             SmartViewPager smartViewPager = (SmartViewPager) view;
@@ -485,7 +527,6 @@ public class VerticalPager extends ViewGroup {
                         }
                         snapToPage(0);
                     } else if (getScrollY() > measuredHeight - pageHeight) {
-                        Log.d(TAG, "onTouchEvent: reach bottom");
                         snapToPage(count - 1, BOTTOM, PAGE_SNAP_DURATION_DEFAULT);
                     } else {
                         for (int i = 0; i < count; i++) {
@@ -548,7 +589,6 @@ public class VerticalPager extends ViewGroup {
                 delta = childAt.getBottom() - pageHeight - getScrollY();
             }
             //autohide functionality
-            Log.d(TAG, childAt.toString());
             SmartViewPager svp = (SmartViewPager) childAt;
             svp.autoHideVerticalSwap();
         }

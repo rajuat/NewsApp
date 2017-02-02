@@ -100,14 +100,16 @@ public class PaoActivity extends AppCompatActivity implements FirebaseDatabaseSe
     }
 
     @Override
-    public void onNewPao(Pao pao) {
+    protected void onSaveInstanceState(Bundle outState) {
+        //No call for super(). Bug on API Level > 11.
+    }
+
+    @Override
+    public void onNewPao(Pao pao, boolean placeOnTop) {
         Log.d(TAG, "onNewPao");
         if (pao == null || pao.uuid == null || pao.title == null || pao.body == null)
             return;
-        addNewPao(pao);
-    }
 
-    void addNewPao(Pao pao) {
         if (fragmentTags.contains(pao.uuid)) {
             Log.d(TAG, "duplicates");
             return;
@@ -120,7 +122,11 @@ public class PaoActivity extends AppCompatActivity implements FirebaseDatabaseSe
         fragmentTransaction.add(R.id.activity_main_vertical_pager, centralCompositeFragment, pao.uuid);
         fragmentTransaction.commit();
         fragmentTags.add(pao.uuid);
-        snapPageWhenLayoutIsReady();
+        //if(placeOnTop){
+            /*Log.d(TAG, "onNewPao: " + centralCompositeFragment.getView());
+            mVerticalPager.bringChildToFront(centralCompositeFragment.getView());*/
+        //}
+
     }
 
     @Override
@@ -132,7 +138,8 @@ public class PaoActivity extends AppCompatActivity implements FirebaseDatabaseSe
 
     public void refreshForNewPao(long topPaoId) {
         Log.d(TAG, "refreshForNewPao: " + new Date(-topPaoId));
-        FirebaseDatabaseService.getPaoNotification(this, topPaoId);
+        //FirebaseDatabaseService.getInstance(null).getPaoLatest(this);
+        FirebaseDatabaseService.getPaoNotification(this, topPaoId, true);
     }
 
     @Override

@@ -68,7 +68,7 @@ public class FirebaseDatabaseService {
                 pao.uuid = pao.uuid != null ? pao.uuid.trim() : null;
                 if ("true".equalsIgnoreCase(pao.needsApproval)) return;
                 if (tags.contains(pao.uuid)) {
-                    listener.onNewPao(pao);
+                    listener.onNewPao(pao, false);
                     Log.d(TAG, "getUserPaoLatest.onChildAdded: " + pao.toString());
                 }
             }
@@ -98,7 +98,7 @@ public class FirebaseDatabaseService {
                 if ("true".equalsIgnoreCase(pao.needsApproval)) return;
                 pao.uuid = pao.uuid != null ? pao.uuid.trim() : null;
                 if (tags.contains(pao.uuid)) {
-                    listener.onNewPao(pao);
+                    listener.onNewPao(pao, false);
                     Log.d(TAG, "getUserPaoLatest.onChildAdded: " + pao.toString());
                 }
             }
@@ -154,9 +154,9 @@ public class FirebaseDatabaseService {
                 pao.uuid = pao.uuid != null ? pao.uuid.trim() : null;
                 //if category is null - showall, else look for categories in the pao
                 if (category == null) {
-                    listener.onNewPao(pao);
+                    listener.onNewPao(pao, false);
                 } else if (pao.tags != null && !pao.tags.isEmpty() && pao.tags.contains(category.trim())) {
-                    listener.onNewPao(pao);
+                    listener.onNewPao(pao, false);
                 }
             }
 
@@ -178,7 +178,7 @@ public class FirebaseDatabaseService {
         });
     }
 
-    public static void getPaoNotification(final PaoListener listener, long createdOn) {
+    public static void getPaoNotification(final PaoListener listener, long createdOn, final boolean placeOnTop) {
 
         final DatabaseReference df = FirebaseService.getInstance().getDatabase().getReference(DatabaseFolders.prod.name()).child(DatabaseFolders.frompao.name());
         Query paoref;
@@ -197,7 +197,7 @@ public class FirebaseDatabaseService {
                     return;
                 pao.uuid = pao.uuid != null ? pao.uuid.trim() : null;
                 if (pao.tags != null && !pao.tags.isEmpty()) {
-                    listener.onNewPao(pao);
+                    listener.onNewPao(pao, placeOnTop);
                 }
             }
 
@@ -242,6 +242,6 @@ public class FirebaseDatabaseService {
     }
 
     public interface PaoListener {
-        public void onNewPao(Pao pao);
+        public void onNewPao(Pao pao, boolean placeOnTop);
     }
 }

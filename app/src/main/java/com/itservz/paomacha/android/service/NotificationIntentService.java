@@ -73,11 +73,11 @@ public class NotificationIntentService extends IntentService implements Firebase
     private void processStartNotification() {
         Log.d(TAG, "processStartNotification");
         firstOneIsLatestNews = true;
-        FirebaseDatabaseService.getInstance(null).getPaoNotification(this, pf.getLastNews());
+        FirebaseDatabaseService.getInstance(null).getPaoNotification(this, pf.getLastNews(), true);
     }
 
     @Override
-    public void onNewPao(Pao pao) {
+    public void onNewPao(Pao pao, boolean bringToFront) {
         Log.d(TAG, "onNewPao");
         if (firstOneIsLatestNews) {
             pf.setLastNews(pao.createdOn);
