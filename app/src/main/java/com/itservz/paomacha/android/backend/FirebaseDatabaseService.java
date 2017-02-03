@@ -68,7 +68,7 @@ public class FirebaseDatabaseService {
                 pao.uuid = pao.uuid != null ? pao.uuid.trim() : null;
                 if ("true".equalsIgnoreCase(pao.needsApproval)) return;
                 if (tags.contains(pao.uuid)) {
-                    listener.onNewPao(pao, false);
+                    listener.onNewPao(pao);
                     Log.d(TAG, "getUserPaoLatest.onChildAdded: " + pao.toString());
                 }
             }
@@ -98,7 +98,7 @@ public class FirebaseDatabaseService {
                 if ("true".equalsIgnoreCase(pao.needsApproval)) return;
                 pao.uuid = pao.uuid != null ? pao.uuid.trim() : null;
                 if (tags.contains(pao.uuid)) {
-                    listener.onNewPao(pao, false);
+                    listener.onNewPao(pao);
                     Log.d(TAG, "getUserPaoLatest.onChildAdded: " + pao.toString());
                 }
             }
@@ -154,9 +154,9 @@ public class FirebaseDatabaseService {
                 pao.uuid = pao.uuid != null ? pao.uuid.trim() : null;
                 //if category is null - showall, else look for categories in the pao
                 if (category == null) {
-                    listener.onNewPao(pao, false);
+                    listener.onNewPao(pao);
                 } else if (pao.tags != null && !pao.tags.isEmpty() && pao.tags.contains(category.trim())) {
-                    listener.onNewPao(pao, false);
+                    listener.onNewPao(pao);
                 }
             }
 
@@ -197,7 +197,7 @@ public class FirebaseDatabaseService {
                     return;
                 pao.uuid = pao.uuid != null ? pao.uuid.trim() : null;
                 if (pao.tags != null && !pao.tags.isEmpty()) {
-                    listener.onNewPao(pao, placeOnTop);
+                    listener.onNewPao(pao);
                 }
             }
 
@@ -242,6 +242,6 @@ public class FirebaseDatabaseService {
     }
 
     public interface PaoListener {
-        public void onNewPao(Pao pao, boolean placeOnTop);
+        public void onNewPao(Pao pao);
     }
 }

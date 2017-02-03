@@ -77,7 +77,7 @@ public class NotificationIntentService extends IntentService implements Firebase
     }
 
     @Override
-    public void onNewPao(Pao pao, boolean bringToFront) {
+    public void onNewPao(Pao pao) {
         Log.d(TAG, "onNewPao");
         if (firstOneIsLatestNews) {
             pf.setLastNews(pao.createdOn);

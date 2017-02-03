@@ -20,6 +20,7 @@ import com.itservz.paomacha.android.adapter.FragmentsClassesPagerAdapter;
 import com.itservz.paomacha.android.fragment.CentralFragment;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -84,6 +85,7 @@ public class VerticalPager extends ViewGroup {
     private boolean mAllowLongPress;
 
     private Set<OnScrollListener> mListeners = new HashSet<OnScrollListener>();
+    private long then;
 
     /**
      * Used to inflate the Workspace from XML.
@@ -111,6 +113,7 @@ public class VerticalPager extends ViewGroup {
      * Initializes various states for this workspace.
      */
     private void init(Context context) {
+        then = System.currentTimeMillis();
         mScroller = new Scroller(getContext(), new DecelerateInterpolator());
         mCurrentPage = 0;
 
@@ -418,47 +421,17 @@ public class VerticalPager extends ViewGroup {
     int index = 0;
     @Override
     public void addView(View child) {
-        Log.d(TAG, "addView: View child" + index);
-        super.addView(child/*, index++*/);
+        long now = System.currentTimeMillis();
+        long lapse = now - then;
+        Log.d(TAG, "addView: " + lapse);
+        if(lapse > 15000){
+            super.addView(child, 0);
+        } else {
+            super.addView(child/*, index++*/);
+        }
+        then = now;
 
     }
-
-    /*@Override
-    public void addView(View child, int width, int height) {
-        Log.d(TAG, "addView: View child, int width, int height");
-        super.addView(child, width, height);
-    }
-
-    @Override
-    public void addView(View child, LayoutParams params) {
-        Log.d(TAG, "addView: View child, LayoutParams params");
-        super.addView(child, params);
-    }*/
-
-    @Override
-    public void addView(View child, int index, LayoutParams params) {
-        Log.d(TAG, "addView: View child, int index, LayoutParams params");
-        Log.d(TAG, "addView: " + index + " : " + child);
-        super.addView(child, index, params);
-    }
-
-    @Override
-    public void onViewAdded(View child) {
-        Log.d(TAG, "onViewAdded: child");
-        super.onViewAdded(child);
-    }
-
-    /*@Override
-    protected boolean addViewInLayout(View child, int index, LayoutParams params) {
-        Log.d(TAG, "addViewInLayout: View child, int index, LayoutParams params");
-        return super.addViewInLayout(child, index, params);
-    }
-
-    @Override
-    protected boolean addViewInLayout(View child, int index, LayoutParams params, boolean preventRequestLayout) {
-        Log.d(TAG, "addViewInLayout: View child, int index, LayoutParams params, boolean preventRequestLayou");
-        return super.addViewInLayout(child, index, params, preventRequestLayout);
-    }*/
 
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
