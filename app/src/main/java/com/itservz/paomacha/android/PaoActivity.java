@@ -76,7 +76,7 @@ public class PaoActivity extends AppCompatActivity implements FirebaseDatabaseSe
             }
         });
         showAllNews = true;
-        //gps
+        //gps no permission
         GpsHelper.turnGPSOn(getApplicationContext());
         if (new PrefManager(this).isNotificationEnabled()) {
             NotificationEventReceiver.setupAlarm(getApplicationContext());
