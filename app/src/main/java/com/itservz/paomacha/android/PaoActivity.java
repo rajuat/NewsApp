@@ -101,6 +101,7 @@ public class PaoActivity extends AppCompatActivity implements FirebaseDatabaseSe
         EventBus.getInstance().register(this);
     }
 
+    //http://stackoverflow.com/questions/7575921/illegalstateexception-can-not-perform-this-action-after-onsaveinstancestate-wit
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         //No call for super(). Bug on API Level > 11.
