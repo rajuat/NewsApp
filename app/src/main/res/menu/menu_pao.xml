@@ -9,10 +9,10 @@
         android:title=""
         app:showAsAction="always" />
 
-    <!--<item
+    <item
         android:id="@+id/refresh"
         android:icon="@drawable/ic_refresh_black_24dp"
         android:title=""
-        app:showAsAction="always"/>-->
+        app:showAsAction="always"/>
 
 </menu>

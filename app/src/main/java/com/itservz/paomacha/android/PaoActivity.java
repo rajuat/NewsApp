@@ -48,6 +48,8 @@ public class PaoActivity extends AppCompatActivity implements FirebaseDatabaseSe
     private ArrayList<String> categoriesFromDB = new ArrayList<>();
     private boolean showAllNews = true;
     private boolean doubleBackToExitPressedOnce;
+    private long latestCreatedOn = -1;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,9 +122,9 @@ public class PaoActivity extends AppCompatActivity implements FirebaseDatabaseSe
         centralCompositeFragment.setArguments(bundle);
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.add(R.id.activity_main_vertical_pager, centralCompositeFragment, pao.uuid);
-        fragmentTransaction.commit();
+        fragmentTransaction.commitAllowingStateLoss();
         fragmentTags.add(pao.uuid);
-
+        this.latestCreatedOn = pao.createdOn;
 
     }
 
@@ -150,7 +152,7 @@ public class PaoActivity extends AppCompatActivity implements FirebaseDatabaseSe
                     for (String tag : fragmentTags) {
                         Fragment fragment = fragmentManager.findFragmentByTag(tag);
                         if (fragment != null) {
-                            getSupportFragmentManager().beginTransaction().remove(fragment).commit();
+                            getSupportFragmentManager().beginTransaction().remove(fragment).commitAllowingStateLoss();
                             tempTags.add(tag);
                         }
                     }
@@ -200,6 +202,14 @@ public class PaoActivity extends AppCompatActivity implements FirebaseDatabaseSe
                     Intent intent = new Intent(PaoActivity.this, SettingActivity.class);
                     intent.putStringArrayListExtra(CATEGORY_TAG, categoriesFromDB);
                     startActivityForResult(intent, RETURN_FROM_SETTING);
+                    return true;
+                }
+            });
+        } else if (id == R.id.refresh) {
+            item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+                    refreshForNewPao(latestCreatedOn);
                     return true;
                 }
             });
